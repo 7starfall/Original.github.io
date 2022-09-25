@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title>
+<link rel="shortcut  icon" type="image/x-icon" href="favicon.ico" media="screen"/>
+<script>document.title='Welcome to Optimalgroup';</script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <style type="text/css">
+		h3{
+			width: 500px;
+		}
+		.daohang{
+			overflow: hidden;
+		}
+		/* 居中导航需要设置宽度 */
+		ul{
+			width: 1000px;
+		}
+		ul li{
+			list-style: none;
+			float: left;
+			padding-left: 50px;
+			text-align: left;
+			margin-left: 5px;
+			cursor:pointer;
+		}
+		
+		#container{
+			margin-top: 20px;
+		}
+		
+		/* 导航背景与居中 */
+		#navbg{
+			background: #a981a4;
+			margin: 0 auto;
+		}
+		#navbg a{
+			color: #fff !important;
+			font-size: 30px;
+			font-weight: 700;
+		}
+		
+		
+		
+		
+        .div_listview {
+            width: 1000px;
+        }
+
+        .div_item {
+            margin-bottom: 1px;
+            padding: 1px;
+            font-family: Georgia;
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+            .div_item:hover {
+                background-color: #dedede;
+            }
+
+            .div_item b {
+                text-shadow: 1px 1px 2px rgb(181, 181, 181);
+                font-size: 1.0em;
+            }
+
+            .div_item a {
+                text-decoration: none;
+                color: blue;
+                line-height: 10px;
+            }
+
+                .div_item a:hover {
+                    text-decoration: none;
+                    color: red;
+                }
+
+        .bullet li {
+            display: inline-block;
+            padding: 10px 20px 10px 20px;
+            font-size: 20px;
+        }
+		
+		
+    </style>
+</head>
+<body>
+    <div align="center">
+		<div id="navbg" class="daohang">
+		    <ul id="navlist">
+		        <li><a href="./index.html">Home </a></li>
+		        <li><a href="./Member.html">Members</a></li>
+		        <li><a href="./Publication.html">Publications </a></li>
+		        <li><a href="./Resource.html">Resources</a></li>
+				<li><a href="./Link.html">Links </a></li>
+		        <li><a href="./News.html">News</a></li>
+		    </ul>
+		</div>
+        <a href="./index.html" target="_blank">
+            <img id="Image1" src="Image/Optimal_img.jpg" style="width:75%;" />
+        </a>
+    </div>
+
+    <div id="container">
+
+        <div id="left">
+
+            <form method="post" action="./Publications.aspx" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTEzODU1MjQ3ODYPZBYCZg9kFgICBQ9kFgICAQ9kFggCAQ8UKwACDxYEHgtfIURhdGFCb3VuZGceC18hSXRlbUNvdW50AglkZBYCZg9kFhICAQ9kFgRmDxUGRVl1YW4tR2FuZyBQYW4sIEl2b3IgVyBUc2FuZywgV2VpLUppZSBDaGVuLCBHYW5nIE5pdSwgTWFzYXNoaSBTdWdpeWFtYSN3d3cuam1sci5vcmcvcGFwZXJzL3YyMy8yMC0zMTUuaHRtbD9GYXN0IGFuZCBSb2J1c3QgUmFuayBBZ2dyZWdhdGlvbiBhZ2FpbnN0IE1vZGVsIE1pc3NwZWNpZmljYXRpb24kSm91cm5hbCBvZiBNYWNoaW5lIExlYXJuaW5nIFJlc2VhcmNoBDIwMjINMjMoMjMpOjHiiJIzNWQCAQ9kFgJmDxUBEENvYXJzZW5SYW5rLmh0bWxkAgIPZBYEZg8VBjNDaHVuLU5hIExpLCBZdWFuLUhhaSBTaGFvKixXb3RhbyBZaW4sIE1pbmctWmVuZyBMaXUAXlJvYnVzdCBhbmQgc3BhcnNlIGxpbmVhciBkaXNjcmltaW5hbnQgYW5hbHlzaXMgdmlhIGFsdGVybmF0aW5nIGRpcmVjdGlvbiBtZXRob2Qgb2YgbXVsdGlwbGllcnM7IElFRUUgVHJhbnNhY3Rpb25zIG9uIE5ldXJhbCBOZXR3b3JrcyBhbmQgTGVhcm5pbmcgU3lzdGVtcy4EMjAyMQdpbnByZXNzZAIBD2QWAmYPFQEKUlNMREEuaHRtbGQCAw9kFgRmDxUGO1poZW4gV2FuZywgWXVhbi1IYWkgU2hhbyosIExhbiBCYWksIENodW4tTmEgTGksIExpLU1pbmcgTGl1GGFyeGl2Lm9yZy9hYnMvMTkwMS4wOTE3OD1BIGdlbmVyYWwgbW9kZWwgZm9yIHBsYW5lLWJhc2VkIGNsdXN0ZXJpbmcgd2l0aCBsb3NzIGZ1bmN0aW9uDmFyWGl2IHByZXByaW50BDIwMTkUIENvUlIgYWJzLzE5MDEuMDkxNzhkAgEPZBYCZg8VAQpSRkRQQy5odG1sZAIED2QWBGYPFQY+WmhlbiBXYW5nLCBZdWFuLUhhaSBTaGFvKiwgTGFuIEJhaSwgTGktTWluZyBMaXUsIE5haS1ZYW5nIERlbmcYYXJ4aXYub3JnL2Ficy8xNzA0LjA1NTk2VUluc2Vuc2l0aXZlIHN0b2NoYXN0aWMgZ3JhZGllbnQgdHdpbiBzdXBwb3J0IHZlY3RvciBtYWNoaW5lcyBmb3IgbGFyZ2Ugc2NhbGUgcHJvYmxlbXMUSW5mb3JtYXRpb24gU2NpZW5jZXMEMjAxOA00NjI6IDExNC0xMzEgZAIBD2QWAmYPFQELU0dUU1ZNLmh0bWxkAgUPZBYEZg8VBjZXZWktSmllIENoZW4sWXVhbi1IYWkgU2hhbyosIENodW4tTmEgTGksIE5haS1ZYW5nIERlbmcnZHguZG9pLm9yZy8xMC4xMDE2L2oucGF0Y29nLjIwMTUuMTAuMDA4Q01MVFNWTTogQSBub3ZlbCB0d2luIHN1cHBvcnQgdmVjdG9yIG1hY2hpbmUgdG8gbXVsdGktbGFiZWwgbGVhcm5pbmcTUGF0dGVybiBSZWNvZ25pdGlvbgQyMDE2CTUyOiA2MS03NGQCAQ9kFgJmDxUBC01MVFNWTS5odG1sZAIGD2QWBGYPFQYyWmhlbiBXYW5nKiwgWXVhbi1IYWkgU2hhbyosIExhbiBCYWksIE5haS1ZYW5nIERlbmclZHguZG9pLm9yZy8xMC4xMTA5L1ROTkxTLjIwMTQuMjM3OTkzMCpUd2luIFN1cHBvcnQgVmVjdG9yIE1hY2hpbmUgZm9yIENsdXN0ZXJpbmc5SUVFRSBUcmFuc2FjdGlvbnMgb24gTmV1cmFsIE5ldHdvcmtzIGFuZCBMZWFybmluZyBTeXN0ZW1zBDIwMTURMjYoMTApOiAyNTgzLTI1ODhkAgEPZBYCZg8VAQpUV1NWQy5odG1sZAIHD2QWBGYPFQYpQ2h1bi1OYSBMaSwgWXVhbi1IYWkgU2hhbyosIE5haS1ZYW5nIERlbmckZG9pLm9yZy8xMC4xMDE2L2oubmV1bmV0LjIwMTUuMDEuMDAzO1JvYnVzdCBMMS1ub3JtIHR3by1kaW1lbnNpb25hbCBsaW5lYXIgZGlzY3JpbWluYW50IGFuYWx5c2lzD05ldXJhbCBOZXR3b3JrcwQyMDE1CjY1OiA5Mi0xMDRkAgEPZBYCZg8VAQxMMTJETERBLmh0bWxkAggPZBYEZg8VBkdZdWFuLUhhaSBTaGFvLCBXZWktSmllIENoZW4sIEppbmctamluZyBaaGFuZywgWmhlbiBXYW5nLCBOYWktWWFuZyBEZW5nKidkeC5kb2kub3JnLzEwLjEwMTYvai5wYXRjb2cuMjAxNC4wMy4wMDhhICBBbiBlZmZpY2llbnQgd2VpZ2h0ZWQgTGFncmFuZ2lhbiB0d2luIHN1cHBvcnQgdmVjdG9yIG1hY2hpbmUgZm9yIGltYmFsYW5jZWQgZGF0YSBjbGFzc2lmaWNhdGlvbhQgUGF0dGVybiBSZWNvZ25pdGlvbgQyMDE0EDQ3KDkpOiAzMTU4LTMxNjdkAgEPZBYCZg8VAQpMVFNWTS5odG1sZAIJD2QWBGYPFQY7WXVhbi1IYWkgU2hhbywgQ2h1bi1IdWEgWmhhbmcsIFhpYW8tQm8gV2FuZywgTmFpLVlhbmcgRGVuZyojZHguZG9pLm9yZy8xMC4xMTA5L1ROTi4yMDExLjIxMzA1NDAtIEltcHJvdmVtZW50cyBvbiBUd2luIFN1cHBvcnQgVmVjdG9yIE1hY2hpbmVzJElFRUUgVHJhbnNhY3Rpb25zIG9uIE5ldXJhbCBOZXR3b3JrcwQyMDExBzk2Mi05NjhkAgEPZBYCZg8VAQpUV1NWTS5odG1sZAIFDxAPFgIfAGdkEBUMBDIwMjIEMjAyMQQyMDIwBDIwMTkEMjAxOAQyMDE3BDIwMTYEMjAxNQQyMDE0BDIwMTMEMjAxMgQyMDExFQwEMjAyMgQyMDIxBDIwMjAEMjAxOQQyMDE4BDIwMTcEMjAxNgQyMDE1BDIwMTQEMjAxMwQyMDEyBDIwMTEUKwMMZ2dnZ2dnZ2dnZ2dnFgFmZAIJDxQrAAIPFgQfAGcfAQIFZGQWAmYPZBYKAgEPZBYEZg8VBkVDaHVuLU5hIExpIE1lbmctUWkgU2hhbmcgWXVhbi1IYWkgU2hhbyBZYW4gWHUqIExpLU1pbmcgTGl1IFpoZW4gV2FuZyAkZG9pLm9yZy8xMC4xMDE2L2oubmV1Y29tLjIwMTkuMDEuMDQ5alNwYXJzZSBMMS1ub3JtIHR3byBkaW1lbnNpb25hbCBsaW5lYXIgZGlzY3JpbWluYW50IGFuYWx5c2lzIHZpYSB0aGUgZ2VuZXJhbGl6ZWQgZWxhc3RpYyBuZXQgcmVndWxhcml6YXRpb24OTmV1cm9jb21wdXRpbmcEMjAxOQszMzc6ICA4MC05NmQCAQ8WAh4HVmlzaWJsZWgWAmYPFQEAZAICD2QWBGYPFQZUV2VpLUppZSBDaGVuIDsgS2FpLUxpIFlhbmcgOyBZdWFuLUhhaSBTaGFvIDsgWXUtSnVhbiBDaGVuIDsgSnUgWmhhbmcgOyBKaW5nLUppbmcgWWFvI2RvaS5vcmcvMTAuMTEwOS9BQ0NFU1MuMjAxOS4yODkzNTMxZUEgVHJhY2UgTGFzc28gUmVndWxhcml6ZWQgUm9idXN0IE5vbnBhcmFsbGVsIFByb3hpbWFsIFN1cHBvcnQgVmVjdG9yIE1hY2hpbmUgZm9yIE5vaXN5IENsYXNzaWZpY2F0aW9uC0lFRUUgQWNjZXNzBDIwMTkbMTAuMTEwOS9BQ0NFU1MuMjAxOS4yODkzNTMxZAIBDxYCHwJoFgJmDxUBAGQCAw9kFgRmDxUGQFdlaS1KaWUgQ2hlbixDaHVuLU5hIExpLCBZdWFuLUhhaSBTaGFvKiwgSnUgWmhhbmcsIE5haS1ZYW5nIERlbmckZG9pLm9yZy8xMC4xMDE2L2oua25vc3lzLjIwMTkuMDEuMDIyUTJEUkxQUDogUm9idXN0IHR3by1kaW1lbnNpb25hbCBsb2NhbGl0eSBwcmVzZXJ2aW5nIHByb2plY3Rpb24gd2l0aCByZWd1bGFyaXphdGlvbhdLbm93bGVkZ2UtQmFzZWQgU3lzdGVtcwQyMDE5CzE2OTogIDUzLTY2ZAIBDxYCHwJoFgJmDxUBAGQCBA9kFgRmDxUGLUxhbiBCYWksIFl1YW4tSGFpIFNoYW8sIFpoZW4gV2FuZywgQ2h1bi1OYSBMaSRkb2kub3JnLzEwLjEwMTYvai5rbm9zeXMuMjAxOC4wOC4wMzR0Q2x1c3RlcmluZyBieSB0d2luIHN1cHBvcnQgdmVjdG9yIG1hY2hpbmUgYW5kIGxlYXN0IHNxdWFyZSB0d2luIHN1cHBvcnQgdmVjdG9yIGNsYXNzaWZpZXIgd2l0aCB1bmlmb3JtIG91dHB1dCBjb2RpbmcTS25vd2wuLUJhc2VkIFN5c3QuIAQyMDE5DDE2MzogMjI3LTI0MGQCAQ9kFgJmDxUBAGQCBQ9kFgRmDxUGO1poZW4gV2FuZywgWXVhbi1IYWkgU2hhbyosIExhbiBCYWksIENodW4tTmEgTGksIExpLU1pbmcgTGl1GGFyeGl2Lm9yZy9hYnMvMTkwMS4wOTE3OD1BIGdlbmVyYWwgbW9kZWwgZm9yIHBsYW5lLWJhc2VkIGNsdXN0ZXJpbmcgd2l0aCBsb3NzIGZ1bmN0aW9uDmFyWGl2IHByZXByaW50BDIwMTkUIENvUlIgYWJzLzE5MDEuMDkxNzhkAgEPZBYCZg8VAQpSRkRQQy5odG1sZAILDw9kDxAWAWYWARYCHg5QYXJhbWV0ZXJWYWx1ZWQWAQIFZGQYAgUdY3RsMDAkQ1BIX1JpZ2h0Ym9keSRMaXN0VmlldzEPFCsADmRkZGRkZGQ8KwAFAAIFZGRkZgL/////D2QFHWN0bDAwJENQSF9SaWdodGJvZHkkTGlzdFZpZXcyDxQrAA5kZGRkZGRkPCsACQACCWRkZGYC/////w9kZ6WdGggslhympIl9rxXsTsXKPqEsTbIC8tbs335o1pM=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+		
+		<div id="PrintLinkDiv">
+			
+		</div>
+		
+		<div id="RssLinkDiv">
+			
+		</div>
+	
+	</div>
+	
+	<div id="PageContentDiv" >
+		<a id="msc"> </a>
+		<!-- <div id="center"> -->
+<a href="CH.Edit.aspx?Page=CH.MSc_students&amp;Section=0" class="editsectionlink"></a><h1 class="separator"> Postgraduate </h1>
+<p></p>
+<!-- </div> -->
+<big>(按年级排序)</big>
+
+<table border="0">
+<p><big></big></p>
+<tr>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="./member/gyr.html" title="Yan-Ru Guo（郭艳茹）" target="_blank">Yan-Ru Guo（郭艳茹）</a> </td>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="./member/whj.html" title="He-Ji Wu（吴和吉）" target="_blank">He-Ji Wu（吴和吉）</a> </td>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="./member/wtt.html" title="Tian-Tian Wang（王甜甜）" target="_blank">Tian-Tian Wang（王甜甜）</a> </td>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="./member/phx.html" title="Hua-Xin Pei（裴华欣）" target="_blank">Hua-Xin Pei（裴华欣）</a> </td>
+</tr>
+<tr>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="./member/wc.html" title="Chen Wang（王晨）" target="_blank">Chen Wang（王晨）</a> </td>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="./member/hyy.html" title="Yi-Yao Hu（胡亦尧）" target="_blank">Yi-Yao Hu（胡亦尧）</a> </td>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="" title="./member/ykl.html" title="Kai-Li Yang（杨凯丽）"  target="_blank">Kai-Li Yang（杨凯丽）</a> </td>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="" title="./member/hlw.html" title="Ling-Wei Huang（黄凌伟）" target="_blank">Ling-Wei Huang（黄凌伟）</a> </td>
+</tr>
+<tr>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="./member/zj.html" title="Jun Zhang （张军）" target="_blank">Jun Zhang （张军）</a> </td>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="./member/zyt.html" title="Yu-Ting Zhao(赵雨婷)" target="_blank">Yu-Ting Zhao(赵雨婷)</a> </td>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="./member/tjy.html" title="Jia-Ying Teng（滕佳颖）" target="_blank">Jia-Ying Teng（滕佳颖）</a> </td>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="./member/gb.html" title="Ben Guo （郭犇）" target="_blank">Ben Guo （郭犇）</a> </td>
+</tr>
+<tr>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="./member/hy.html" title="Yang He （何洋）" target="_blank">Yang He （何洋）</a> </td>
+    <td width="270" height="50" ><font size="4"><a class="externallink" href="./member/qyf.html" title="Yi-Fan Qi(齐一帆)" target="_blank">Yi-Fan Qi(齐一帆)</a> </td>
+</tr>
+</table>
+
+
+
+	</div>
+<p style="border-bottom: 1px dotted #CCCCCC; margin-top: 60px;" />
+    <p>[<a href="#top" target="_self">go top</a>]</p>
+                
+				</div>
+            </form>
+
+  
+
+        </div>
+
+ 
+    </div>
+	
+
+
+
+</body>
+</html>	

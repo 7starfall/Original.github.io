@@ -1,0 +1,653 @@
+
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title>
+<link rel="shortcut  icon" type="image/x-icon" href="favicon.ico" media="screen"/>
+<script>document.title='Welcome to Optimalgroup';</script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <style type="text/css">
+		h3{
+			width: 1000px;
+		}
+		.daohang{
+			overflow: hidden;
+		}
+		/* 居中导航需要设置宽度 */
+		ul{
+			width: 1000px;
+		}
+		ul li{
+			list-style: none;
+			float: left;
+			padding-left: 50px;
+			text-align: left;
+			margin-left: 5px;
+			cursor:pointer;
+		}
+		
+		#container{
+			margin-top: 20px;
+		}
+		
+		/* 导航背景与居中 */
+		#navbg{
+			background: #a981a4;
+			margin: 0 auto;
+		}
+		#navbg a{
+			color: #fff !important;
+			font-size: 30px;
+			font-weight: 700;
+		}
+		
+		
+		
+		
+        .div_listview {
+            width: 1000px;
+        }
+
+        .div_item {
+            margin-bottom: 1px;
+            padding: 1px;
+            font-family: Georgia;
+            font-size: 16px;
+            line-height: 22px;
+        }
+
+            .div_item:hover {
+                background-color: #dedede;
+            }
+
+            .div_item b {
+                text-shadow: 1px 1px 2px rgb(181, 181, 181);
+                font-size: 1.0em;
+            }
+
+            .div_item a {
+                text-decoration: none;
+                color: blue;
+                line-height: 10px;
+            }
+
+                .div_item a:hover {
+                    text-decoration: none;
+                    color: red;
+                }
+
+        .bullet li {
+            display: inline-block;
+            padding: 10px 20px 10px 20px;
+            font-size: 20px;
+        }
+		
+		
+    </style>
+</head>
+<body>
+    <div align="center">
+		<div id="navbg" class="daohang">
+		    <ul id="navlist">
+		        <li><a href="./index.html">Home </a></li>
+		        <li><a href="./Member.html">Members</a></li>
+		        <li><a href="./Publication.html">Publications </a></li>
+		        <li><a href="./Resource.html">Resources</a></li>
+				<li><a href="./Link.html">Links </a></li>
+		        <li><a href="./News.html">News</a></li>
+		    </ul>
+		</div>
+        <a href="./index.html" target="_blank">
+            <img id="Image1" src="Image/Optimal_img.jpg" style="width:75%;" />
+        </a>
+    </div>
+
+    <div id="container">
+
+        <div id="left">
+
+            <form method="post" action="./Publications.aspx" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTEzODU1MjQ3ODYPZBYCZg9kFgICBQ9kFgICAQ9kFggCAQ8UKwACDxYEHgtfIURhdGFCb3VuZGceC18hSXRlbUNvdW50AglkZBYCZg9kFhICAQ9kFgRmDxUGRVl1YW4tR2FuZyBQYW4sIEl2b3IgVyBUc2FuZywgV2VpLUppZSBDaGVuLCBHYW5nIE5pdSwgTWFzYXNoaSBTdWdpeWFtYSN3d3cuam1sci5vcmcvcGFwZXJzL3YyMy8yMC0zMTUuaHRtbD9GYXN0IGFuZCBSb2J1c3QgUmFuayBBZ2dyZWdhdGlvbiBhZ2FpbnN0IE1vZGVsIE1pc3NwZWNpZmljYXRpb24kSm91cm5hbCBvZiBNYWNoaW5lIExlYXJuaW5nIFJlc2VhcmNoBDIwMjINMjMoMjMpOjHiiJIzNWQCAQ9kFgJmDxUBEENvYXJzZW5SYW5rLmh0bWxkAgIPZBYEZg8VBjNDaHVuLU5hIExpLCBZdWFuLUhhaSBTaGFvKixXb3RhbyBZaW4sIE1pbmctWmVuZyBMaXUAXlJvYnVzdCBhbmQgc3BhcnNlIGxpbmVhciBkaXNjcmltaW5hbnQgYW5hbHlzaXMgdmlhIGFsdGVybmF0aW5nIGRpcmVjdGlvbiBtZXRob2Qgb2YgbXVsdGlwbGllcnM7IElFRUUgVHJhbnNhY3Rpb25zIG9uIE5ldXJhbCBOZXR3b3JrcyBhbmQgTGVhcm5pbmcgU3lzdGVtcy4EMjAyMQdpbnByZXNzZAIBD2QWAmYPFQEKUlNMREEuaHRtbGQCAw9kFgRmDxUGO1poZW4gV2FuZywgWXVhbi1IYWkgU2hhbyosIExhbiBCYWksIENodW4tTmEgTGksIExpLU1pbmcgTGl1GGFyeGl2Lm9yZy9hYnMvMTkwMS4wOTE3OD1BIGdlbmVyYWwgbW9kZWwgZm9yIHBsYW5lLWJhc2VkIGNsdXN0ZXJpbmcgd2l0aCBsb3NzIGZ1bmN0aW9uDmFyWGl2IHByZXByaW50BDIwMTkUIENvUlIgYWJzLzE5MDEuMDkxNzhkAgEPZBYCZg8VAQpSRkRQQy5odG1sZAIED2QWBGYPFQY+WmhlbiBXYW5nLCBZdWFuLUhhaSBTaGFvKiwgTGFuIEJhaSwgTGktTWluZyBMaXUsIE5haS1ZYW5nIERlbmcYYXJ4aXYub3JnL2Ficy8xNzA0LjA1NTk2VUluc2Vuc2l0aXZlIHN0b2NoYXN0aWMgZ3JhZGllbnQgdHdpbiBzdXBwb3J0IHZlY3RvciBtYWNoaW5lcyBmb3IgbGFyZ2Ugc2NhbGUgcHJvYmxlbXMUSW5mb3JtYXRpb24gU2NpZW5jZXMEMjAxOA00NjI6IDExNC0xMzEgZAIBD2QWAmYPFQELU0dUU1ZNLmh0bWxkAgUPZBYEZg8VBjZXZWktSmllIENoZW4sWXVhbi1IYWkgU2hhbyosIENodW4tTmEgTGksIE5haS1ZYW5nIERlbmcnZHguZG9pLm9yZy8xMC4xMDE2L2oucGF0Y29nLjIwMTUuMTAuMDA4Q01MVFNWTTogQSBub3ZlbCB0d2luIHN1cHBvcnQgdmVjdG9yIG1hY2hpbmUgdG8gbXVsdGktbGFiZWwgbGVhcm5pbmcTUGF0dGVybiBSZWNvZ25pdGlvbgQyMDE2CTUyOiA2MS03NGQCAQ9kFgJmDxUBC01MVFNWTS5odG1sZAIGD2QWBGYPFQYyWmhlbiBXYW5nKiwgWXVhbi1IYWkgU2hhbyosIExhbiBCYWksIE5haS1ZYW5nIERlbmclZHguZG9pLm9yZy8xMC4xMTA5L1ROTkxTLjIwMTQuMjM3OTkzMCpUd2luIFN1cHBvcnQgVmVjdG9yIE1hY2hpbmUgZm9yIENsdXN0ZXJpbmc5SUVFRSBUcmFuc2FjdGlvbnMgb24gTmV1cmFsIE5ldHdvcmtzIGFuZCBMZWFybmluZyBTeXN0ZW1zBDIwMTURMjYoMTApOiAyNTgzLTI1ODhkAgEPZBYCZg8VAQpUV1NWQy5odG1sZAIHD2QWBGYPFQYpQ2h1bi1OYSBMaSwgWXVhbi1IYWkgU2hhbyosIE5haS1ZYW5nIERlbmckZG9pLm9yZy8xMC4xMDE2L2oubmV1bmV0LjIwMTUuMDEuMDAzO1JvYnVzdCBMMS1ub3JtIHR3by1kaW1lbnNpb25hbCBsaW5lYXIgZGlzY3JpbWluYW50IGFuYWx5c2lzD05ldXJhbCBOZXR3b3JrcwQyMDE1CjY1OiA5Mi0xMDRkAgEPZBYCZg8VAQxMMTJETERBLmh0bWxkAggPZBYEZg8VBkdZdWFuLUhhaSBTaGFvLCBXZWktSmllIENoZW4sIEppbmctamluZyBaaGFuZywgWmhlbiBXYW5nLCBOYWktWWFuZyBEZW5nKidkeC5kb2kub3JnLzEwLjEwMTYvai5wYXRjb2cuMjAxNC4wMy4wMDhhICBBbiBlZmZpY2llbnQgd2VpZ2h0ZWQgTGFncmFuZ2lhbiB0d2luIHN1cHBvcnQgdmVjdG9yIG1hY2hpbmUgZm9yIGltYmFsYW5jZWQgZGF0YSBjbGFzc2lmaWNhdGlvbhQgUGF0dGVybiBSZWNvZ25pdGlvbgQyMDE0EDQ3KDkpOiAzMTU4LTMxNjdkAgEPZBYCZg8VAQpMVFNWTS5odG1sZAIJD2QWBGYPFQY7WXVhbi1IYWkgU2hhbywgQ2h1bi1IdWEgWmhhbmcsIFhpYW8tQm8gV2FuZywgTmFpLVlhbmcgRGVuZyojZHguZG9pLm9yZy8xMC4xMTA5L1ROTi4yMDExLjIxMzA1NDAtIEltcHJvdmVtZW50cyBvbiBUd2luIFN1cHBvcnQgVmVjdG9yIE1hY2hpbmVzJElFRUUgVHJhbnNhY3Rpb25zIG9uIE5ldXJhbCBOZXR3b3JrcwQyMDExBzk2Mi05NjhkAgEPZBYCZg8VAQpUV1NWTS5odG1sZAIFDxAPFgIfAGdkEBUMBDIwMjIEMjAyMQQyMDIwBDIwMTkEMjAxOAQyMDE3BDIwMTYEMjAxNQQyMDE0BDIwMTMEMjAxMgQyMDExFQwEMjAyMgQyMDIxBDIwMjAEMjAxOQQyMDE4BDIwMTcEMjAxNgQyMDE1BDIwMTQEMjAxMwQyMDEyBDIwMTEUKwMMZ2dnZ2dnZ2dnZ2dnFgFmZAIJDxQrAAIPFgQfAGcfAQIFZGQWAmYPZBYKAgEPZBYEZg8VBkVDaHVuLU5hIExpIE1lbmctUWkgU2hhbmcgWXVhbi1IYWkgU2hhbyBZYW4gWHUqIExpLU1pbmcgTGl1IFpoZW4gV2FuZyAkZG9pLm9yZy8xMC4xMDE2L2oubmV1Y29tLjIwMTkuMDEuMDQ5alNwYXJzZSBMMS1ub3JtIHR3byBkaW1lbnNpb25hbCBsaW5lYXIgZGlzY3JpbWluYW50IGFuYWx5c2lzIHZpYSB0aGUgZ2VuZXJhbGl6ZWQgZWxhc3RpYyBuZXQgcmVndWxhcml6YXRpb24OTmV1cm9jb21wdXRpbmcEMjAxOQszMzc6ICA4MC05NmQCAQ8WAh4HVmlzaWJsZWgWAmYPFQEAZAICD2QWBGYPFQZUV2VpLUppZSBDaGVuIDsgS2FpLUxpIFlhbmcgOyBZdWFuLUhhaSBTaGFvIDsgWXUtSnVhbiBDaGVuIDsgSnUgWmhhbmcgOyBKaW5nLUppbmcgWWFvI2RvaS5vcmcvMTAuMTEwOS9BQ0NFU1MuMjAxOS4yODkzNTMxZUEgVHJhY2UgTGFzc28gUmVndWxhcml6ZWQgUm9idXN0IE5vbnBhcmFsbGVsIFByb3hpbWFsIFN1cHBvcnQgVmVjdG9yIE1hY2hpbmUgZm9yIE5vaXN5IENsYXNzaWZpY2F0aW9uC0lFRUUgQWNjZXNzBDIwMTkbMTAuMTEwOS9BQ0NFU1MuMjAxOS4yODkzNTMxZAIBDxYCHwJoFgJmDxUBAGQCAw9kFgRmDxUGQFdlaS1KaWUgQ2hlbixDaHVuLU5hIExpLCBZdWFuLUhhaSBTaGFvKiwgSnUgWmhhbmcsIE5haS1ZYW5nIERlbmckZG9pLm9yZy8xMC4xMDE2L2oua25vc3lzLjIwMTkuMDEuMDIyUTJEUkxQUDogUm9idXN0IHR3by1kaW1lbnNpb25hbCBsb2NhbGl0eSBwcmVzZXJ2aW5nIHByb2plY3Rpb24gd2l0aCByZWd1bGFyaXphdGlvbhdLbm93bGVkZ2UtQmFzZWQgU3lzdGVtcwQyMDE5CzE2OTogIDUzLTY2ZAIBDxYCHwJoFgJmDxUBAGQCBA9kFgRmDxUGLUxhbiBCYWksIFl1YW4tSGFpIFNoYW8sIFpoZW4gV2FuZywgQ2h1bi1OYSBMaSRkb2kub3JnLzEwLjEwMTYvai5rbm9zeXMuMjAxOC4wOC4wMzR0Q2x1c3RlcmluZyBieSB0d2luIHN1cHBvcnQgdmVjdG9yIG1hY2hpbmUgYW5kIGxlYXN0IHNxdWFyZSB0d2luIHN1cHBvcnQgdmVjdG9yIGNsYXNzaWZpZXIgd2l0aCB1bmlmb3JtIG91dHB1dCBjb2RpbmcTS25vd2wuLUJhc2VkIFN5c3QuIAQyMDE5DDE2MzogMjI3LTI0MGQCAQ9kFgJmDxUBAGQCBQ9kFgRmDxUGO1poZW4gV2FuZywgWXVhbi1IYWkgU2hhbyosIExhbiBCYWksIENodW4tTmEgTGksIExpLU1pbmcgTGl1GGFyeGl2Lm9yZy9hYnMvMTkwMS4wOTE3OD1BIGdlbmVyYWwgbW9kZWwgZm9yIHBsYW5lLWJhc2VkIGNsdXN0ZXJpbmcgd2l0aCBsb3NzIGZ1bmN0aW9uDmFyWGl2IHByZXByaW50BDIwMTkUIENvUlIgYWJzLzE5MDEuMDkxNzhkAgEPZBYCZg8VAQpSRkRQQy5odG1sZAILDw9kDxAWAWYWARYCHg5QYXJhbWV0ZXJWYWx1ZWQWAQIFZGQYAgUdY3RsMDAkQ1BIX1JpZ2h0Ym9keSRMaXN0VmlldzEPFCsADmRkZGRkZGQ8KwAFAAIFZGRkZgL/////D2QFHWN0bDAwJENQSF9SaWdodGJvZHkkTGlzdFZpZXcyDxQrAA5kZGRkZGRkPCsACQACCWRkZGYC/////w9kZ6WdGggslhympIl9rxXsTsXKPqEsTbIC8tbs335o1pM=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="79A28BD2" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAA7S9dyfyKL1dTS1l63u2mn8C8GpGxalhgECLeqel0CVMaqHt6+Rp7jqcbeaWuz5YpfVjQrw7df4zTYcvYWNY1ZPh1+RA21sYKABfMfWjFcZJX7QA4EEpQV8aUD4GC2gNKDQ+1Sy5tEuM7rvBfSJ7Az3Y1JaSHp22kI+BbH4t42f7pJ9bIM1MP2nbf2cZPhgo9vsICv5JHt3WlvT8TJPs1ZsjcHq06WwPCqud9A8JxtNKPWruTH9crSUxrcbFRNzq+S6tXbShqerRIuMcIJKKu0UxSZhUsBPe9TFEhcyBiQpI5BMF1U72E7cvDBlwjKqJZqHiZ5jRJP051PR32lRICw1" />
+</div>
+                <div>
+  
+      <div id="PageContentDiv">
+		 <!-- <div class="date_box"></div> -->
+    <h3><b><a name="Director"></a></b>
+			  <b class="buleR" ><a href="./Publication.html#Publications by year:" target="_blank" title="Publications by year:">Publications by year:</a></b> 
+                      
+					  
+	</h3>
+	</div>      
+    
+<body>
+	<table border="0">
+		<tr>	
+			<td width="270" height="50" ><font size="4"><button type="button" onclick="showDiv('year2022-form')">{2022}</button></td>
+			
+			<td width="270" height="50" ><font size="4"><button type="button" onclick="showDiv('year2021-form')">{2021}</button></td>
+			
+			<td width="270" height="50" ><font size="4"><button type="button" onclick="showDiv('year2020-form')">{2020}</button></td>
+			
+			<td width="270" height="50" ><font size="4"><button type="button" onclick="showDiv('year2019-form')">{2019}</button></td>
+			
+			<td width="270" height="50" ><font size="4"><button type="button" onclick="showDiv('year2018-form')">{2018}</button></td>
+			
+			<td width="270" height="50" ><font size="4"><button type="button" onclick="showDiv('year2017-form')">{2017}</button></td>
+			
+			<td width="270" height="50" ><font size="4"><button type="button" onclick="showDiv('year2016-form')">{2016}</button></td>
+			
+			<td width="270" height="50" ><font size="4"><button type="button" onclick="showDiv('year2015-form')">{2015}</button></td>
+			
+			<td width="270" height="50" ><font size="4"><button type="button" onclick="showDiv('year2014-form')">{2014}</button></td>
+
+			<td width="270" height="50" ><font size="4"><button type="button" onclick="showDiv('year2013-form')">{2013}</button></td>
+			
+			<td width="270" height="50" ><font size="4"><button type="button" onclick="showDiv('year before 2012-form')">{before&nbsp;2012}</button></td>
+		</tr>		
+	</table>		
+		
+	<div1 id="year2022-form" style="display: none;">
+			<li style="width: 1000px;">Yuan-Gang Pan, Ivor W Tsang, Wei-Jie Chen, Gang Niu, Masashi Sugiyama. <a href='http://www.jmlr.org/papers/v23/20-315.html' target="_blank">&nbspFast and Robust Rank Aggregation against Model Misspecification</a>, 
+				<b>Journal of Machine Learning Research</b>, 2022, 23(23):1−35. 
+				<span><a href='Resources/Code/CoarsenRank.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		</div1>
+		<div1 id="year2021-form" style="display: none;">
+			<li style="width: 1000px;">Chun-Na Li, Yuan-Hai Shao*,Wotao Yin, Ming-Zeng Liu. <a href='http://' target="_blank">Robust and sparse linear discriminant analysis via alternating direction method of multipliers</a>, 
+				<b> IEEE Transactions on Neural Networks and Learning Systems.</b>, 2021, inpress. 
+				<span><a href='Resources/Code/RSLDA.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+			<li style="width: 1000px;">Bai Lan, Yuan-Hai Shao, Zhen Wang, Wei-Jie Chen, Nai-Yang Deng. <a href='http://ieeexplore.ieee.org/abstract/document/9343292/' target="_blank">Multiple flat projections for cross-manifold clustering</a>, 
+				<b>IEEE Transactions on Cybernetics</b>, 2021, inpress. 
+			</li>
+		</div1>
+		<div1 id="year2020-form" style="display: none;">
+			<li style="width: 1000px;">Wei-Jie Chen, Yuan-Hai Shao, Chun-Na Li, Ming-Zeng Liu, Zhen Wang, Nai-Yang Deng. <a href='http://dx.doi.org/10.1016/j.neucom.2019.09.069' target="_blank"> ν-projection twin support vector machine for pattern classification</a>, 
+				<b>Neurocomputing</b>, 2020, 376: 10-24. 
+			</li>
+		</div1>
+		<div1 id="year2019-form" style="display: none;">
+			<li style="width: 1000px;">Chun-Na Li Meng-Qi Shang Yuan-Hai Shao Yan Xu* Li-Ming Liu Zhen Wang . <a href='http://doi.org/10.1016/j.neucom.2019.01.049' target="_blank">Sparse L1-norm two dimensional linear discriminant analysis via the generalized elastic net regularization</a>, 
+							<b>Neurocomputing</b>, 2019, 337:  80-96. 
+						
+			</li>
+		
+
+		
+			<li style="width: 1000px;">Wei-Jie Chen ; Kai-Li Yang ; Yuan-Hai Shao ; Yu-Juan Chen ; Ju Zhang ; Jing-Jing Yao. <a href='http://doi.org/10.1109/ACCESS.2019.2893531' target="_blank">A Trace Lasso Regularized Robust Nonparallel Proximal Support Vector Machine for Noisy Classification</a>, 
+							<b>IEEE Access</b>, 2019, 10.1109/ACCESS.2019.2893531. 
+						
+			</li>
+		
+
+		
+			<li style="width: 1000px;">Wei-Jie Chen,Chun-Na Li, Yuan-Hai Shao*, Ju Zhang, Nai-Yang Deng. <a href='http://doi.org/10.1016/j.knosys.2019.01.022' target="_blank">2DRLPP: Robust two-dimensional locality preserving projection with regularization</a>, 
+							<b>Knowledge-Based Systems</b>, 2019, 169:  53-66. 
+						
+			</li>
+		
+		
+			<li style="width: 1000px;">Lan Bai, Yuan-Hai Shao, Zhen Wang, Chun-Na Li. <a href='http://doi.org/10.1016/j.knosys.2018.08.034' target="_blank">Clustering by twin support vector machine and least square twin support vector classifier with uniform output coding</a>, 
+							<b>Knowl.-Based Syst. </b>, 2019, 163: 227-240. 
+						<span><a href='Resources/Code/' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+
+		
+			<li style="width: 1000px;">Zhen Wang, Yuan-Hai Shao*, Lan Bai, Chun-Na Li, Li-Ming Liu. <a href='http://arxiv.org/abs/1901.09178' target="_blank">A general model for plane-based clustering with loss function</a>, 
+							<b>arXiv preprint</b>, 2019,  CoRR abs/1901.09178. 
+						<span><a href='Resources/Code/RFDPC.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		</div1>
+		<div1 id="year2018-form" style="display: none;">
+			<li style="width: 1000px;">Lan Bai, Zhen Wang, Yuan-Hai Shao, Chun-Na Li. <a href='http://doi.org/10.1109/ACCESS.2018.2881256' target="_blank">Reversible Discriminant Analysis</a>, 
+				 <b>IEEE Access</b>, 2018, 6, 72551-72562. 
+									
+			</li>
+		
+
+	   
+			<li style="width: 1000px;">XQ Sun, YJ Chen, YH Shao, CN Li, CH Wang. <a href='http://doi.org/10.1109/ACCESS.2018.2822546' target="_blank">Robust nonparallel proximal support vector machine with Lp-norm regularization</a>, 
+							<b>IEEE Access </b>, 2018, 6, 20334-20347. 
+						
+			</li>
+		
+
+		
+			<li style="width: 1000px;">Zhen Wang, Xu Chen, Chun-Na Li, Yuan-Hai Shao. <a href='http://arxiv.org/abs/1812.03710' target="_blank">Ramp-based Twin Support Vector Clustering</a>, 
+							<b>arXiv preprint</b>, 2018, arXiv:1812.03710. 
+						
+			</li>
+	   
+
+		
+			<li style="width: 1000px;">Wei-Jie Chen, Chun-Na Li, Yuan-Hai Shao, Ju Zhang, Nai-Yang Deng. <a href='http://doi.org/10.1016/j.neucom.2018.04.083' target="_blank">Robust L1-norm multi-weight vector projection support vector machine with efficient algorithm</a>, 
+							<b>Neurocomputing</b>, 2018, 315:345-361. 
+						
+			</li>
+		
+
+	   
+			<li style="width: 1000px;">Chun-Na Li, Yuan-Hai Shao, Zhen Wang, Nai-Yang Deng. <a href='http://doi.org/10.1016/j.neucom.2018.04.083' target="_blank">Robust Bhattacharyya bound linear discriminant analysis through adaptive algorithm</a>, 
+							<b>arXiv preprint</b>, 2018, arXiv:1811.02384. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">邵元海， 杨凯丽， 刘明增. <a href='http://' target="_blank">从支持向量机到非平行支持向量机</a>, 
+							<b>运筹学学报</b>, 2018, 22：55-65. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Mingzeng Liu, Yuanhai Shao. <a href='http://doi.org/10.1007/978-3-319-93713-7_69' target="_blank">Large Margin Proximal Non-parallel Support Vector Classifiers</a>, 
+							<b>International Conference on Computational Science</b>, 2018, 715-721. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Ming-Zeng Liu, Yuan-Hai Shao, Zhen Wang, Chun-Na Li, Wei-Jie Chen. <a href='http://doi.org/10.1016/j.knosys.2018.02.002' target="_blank">Minimum deviation distribution machine for large scale regression</a>, 
+							<b>Knowledge-Based Systems</b>, 2018, 146:167-180. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Chun-Na Li, Yuan-Hai Shao, Wei-Jie Chen, Zhen Wang, Nai-Yang Deng. <a href='http://arxiv.org/abs/1801.07426' target="_blank">Generalized two-dimensional linear discriminant analysis with regularization</a>, 
+							<b>arXiv preprint</b>, 2018, arXiv:1801.07426. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Mingzeng Liu, Baojun Li, Qingjie Guo, Chungang Zhu, Ping Hu, Yuanhai Shao. <a href='http://doi.org/10.1016/j.cam.2017.06.013' target="_blank">Progressive iterative approximation for regularized least square bivariate B-spline surface fitting</a>, 
+							<b>Journal of Computational and Applied Mathematics</b>, 2018, 327:175-187. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Zhen Wang, Yuan-Hai Shao*, Lan Bai, Li-Ming Liu, Nai-Yang Deng. <a href='http://arxiv.org/abs/1704.05596' target="_blank">Insensitive stochastic gradient twin support vector machines for large scale problems</a>, 
+							<b>Information Sciences</b>, 2018, 462: 114-131 . 
+						<span><a href='Resources/Code/SGTSVM.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao, Chun-Na Li, Ming-Zeng Liu, Zhen Wang, Nai-Yang Deng. <a href='http://doi.org/10.1016/j.patcog.2018.01.016' target="_blank">Sparse Lq-norm least squares support vector machine with feature selection</a>, 
+							<b>Pattern Recognition</b>, 2018, 78: 167-181. 
+						
+			</li>
+		</div1>
+		<div1 id="year2017-form" style="display: none;">
+			<li style="width: 1000px;">Chun-Na Li, Zeng-Rong Zheng, Ming-Zeng Liu, Yuan-Hai Shao, Wei-Jie Chen. <a href='http://doi.org/10.1016/j.neunet.2017.05.011Get ' target="_blank">Robust recursive absolute value inequalities discriminant analysis with sparseness</a>, 
+							<b>Neural Networks</b>, 2017, 93:205-218. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Li-Ming Liu, Yan-Ru Guo, Zhen Wang, Zhi-Min Yang, Yuan-Hai Shao. <a href='http://doi.org/10.1007/s13042-016-0526-y' target="_blank">k-Proximal plane clustering</a>, 
+							<b>International Journal of Machine Learning and Cybernetics</b>, 2017, 8(5):1537-1554. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Hua-Xin Pei, Zeng-Rong Zheng, Chen Wang, Chun-Na Li, Yuan-Hai Shao. <a href='http://doi.org/10.1016/j.procs.2017.11.387' target="_blank">D-FCM: Density based fuzzy c-means clustering algorithm with application in medical image segmentation</a>, 
+							<b>Procedia Computer Science</b>, 2017, 122:407-414. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Chen Wang, Chun-Na Li, Hua-Xin Pei, Yan-Ru Guo, Yuan-Hai Shao. <a href='http://doi.org/10.1016/j.procs.2017.05.049' target="_blank">Alternating Direction Method of Multipliers for L1-and L2-norm Best Fitting Hyperplane Classifier</a>, 
+							<b>Procedia Computer Science</b>, 2017, 108:1292-1301. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Ya-Fen Ye, Chao Ying, Yuan-Hai Shao, Chun-Na Li, Yu-Juan Chen. <a href='http://doi.org/10.20965/jaciii.2017.p0989' target="_blank">Robust and Sparse LP-Norm Support Vector Regression</a>, 
+							<b>Journal of Advanced Computational Intelligence and Intelligent Informatics</b>, 2017, 21(6):989-997. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Ya-Fen Ye, Yuan-Hai Shao*, Nai-Yang Deng*, Chun-Na Li, Xiang-Yu Hua. <a href='http://http://www.sciencedirect.com/science/article/pii/S0096300317300887' target="_blank">Robust Lp-norm least squares support vector regression with feature selection</a>, 
+							<b>Applied Mathematics and Computation</b>, 2017, 305, 32-52. 
+						
+			</li>
+		
+			<li style="width: 1000px;">李春娜， 陈伟杰， 邵元海. <a href='http://doi.org/10.16383/j.aas.2017.c150512' target="_blank">鲁棒的稀疏Lp-模主成分分析</a>, 
+							<b>自动化学报</b>, 2017, 43(1):142-151. 
+						
+			</li>
+		</div1>
+		<div1 id="year2016-form" style="display: none;">
+					
+			<li style="width: 1000px;"> Chun-Na Li, Yun-Feng Huang, He-Ji Wu, Yuan-Hai Shao, Zhi-Min Yang. <a href='http://doi.org/10.1007/s13042-014-0289-2' target="_blank">Multiple recursive projection twin support vector machine for multi-class classification</a>, 
+							<b>International Journal of Machine Learning and Cybernetics</b>, 2016, 7(5):729-740. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Zhi-Min Yang, He-Ji Wu, Chun-Na Li, Yuan-Hai Shao. <a href='http://doi.org/10.1007/s13042-015-0394-x' target="_blank">Least squares recursive projection twin support vector machine for multi-class classification</a>, 
+							<b>International Journal of Machine Learning and Cybernetics</b>, 2016, 7(3):411-426. 
+						
+			</li>
+		
+			<li style="width: 1000px;">陈伟杰， 邵元海， 李春娜， 邓乃扬. <a href='http://' target="_blank">基于流形正则化的半监督投影双子支持向量机</a>, 
+							<b>模式识别与人工智能</b>, 2016, 29(2):97-107. 
+						
+			</li>
+		
+			<li style="width: 1000px;">白兰， 王震， 邵元海. <a href='http://' target="_blank">回归问题中的 k 近邻加权方法研究</a>, 
+							<b>小型微型计算机系统</b>, 2016, 37(7):1557-1561. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Wei-Jie Chen,Yuan-Hai Shao*, Chun-Na Li, Nai-Yang Deng. <a href='http://dx.doi.org/10.1016/j.patcog.2015.10.008' target="_blank">MLTSVM: A novel twin support vector machine to multi-label learning</a>, 
+							<b>Pattern Recognition</b>, 2016, 52: 61-74. 
+						<span><a href='Resources/Code/MLTSVM.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+			<li style="width: 1000px;">Zhi-Min Yang,Xiang-Yu Hua*,  Yuan-Hai Shao*,  Ya-Fen Ye. <a href='http://dx.doi.org/10.1016/j.neucom.2015.07.003' target="_blank">  A novel parametric-insensitive nonparallel support vector machine for regression</a>, 
+							<b>Neurocomputing</b>, 2016, 171: 649-663. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Chun-Na Li,  Yuan-Hai Shao*, Nai-Yang Deng. <a href='http://dx.doi.org/10.1080/02331934.2014.994627' target="_blank"> Robust L1-norm nonparallel proximal support vector machine</a>, 
+							<b>Optimization</b>, 2016,  65 (1), 169-183. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Tanveer, M.*, Mangal, M., Ahmad, I.,  Yuan-Hai Shao. <a href='http://dx.doi.org/10.1016/j.neucom.2015.09.024' target="_blank"> One norm linear programming support vector regression</a>, 
+							<b>Neurocomputing</b>, 2016, 173: 1508-1518. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Ya-Fen Ye, Lan Bai, Xiang-Yu Hua, Yuan-Hai Shao*, Zhen Wang, Nai-Yang Deng*. <a href='http://dx.doi.org/doi:10.1016/j.neucom.2016.01.038' target="_blank">Weighted Lagrange ε-twin support vector regression</a>, 
+							<b>Neurocomputing</b>, 2016, 197(C):53-68. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Zhen Wang, Yuan-Hai Shao*, Lan Bai, Chun-Na Li, Li-Ming Liu, Nai-Yang Deng. <a href='http://dx.doi.org/10.1016/j.ins.2016.05.031' target="_blank">MBLDA: a novel multiple between-class linear discriminant analysis</a>, 
+							<b>Information Sciences</b>, 2016, 369(10):199-220. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao*, Ya-Fen Ye, Yong-Cui Wang, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1016/j.neucom.2016.08.073' target="_blank"> Extensive semi-quantitative regression</a>, 
+							<b>Neurocomputing</b>, 2016, 218:26-36. 
+						
+			</li>
+		</div1>
+		<div1 id="year2015-form" style="display: none;">
+	   
+			<li style="width: 1000px;">Chun-Na Li, Yuan-Hai Shao*, Nai-Yang Deng. <a href='http://doi.org/10.1016/j.neunet.2015.01.003' target="_blank">Robust L1-norm two-dimensional linear discriminant analysis</a>, 
+							<b>Neural Networks</b>, 2015, 65: 92-104. 
+						<span><a href='Resources/Code/L12DLDA.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao*, Zhen Wang, Chun-Na Li, Nai-Yang Deng. <a href='http://doi.ieeecomputersociety.org/10.1109/ICDMW.2015.180' target="_blank">Local sensitive proximal classifier with consistency for small sample size problem</a>, 
+							<b>In: Proceedings of the 15th IEEE International Conference on Data Mining Workshops (ICDM'15)</b>, 2015, 1163-1170. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Zhen Wang*, Yuan-Hai Shao*, Lan Bai, Nai-Yang Deng. <a href='http://dx.doi.org/10.1109/TNNLS.2014.2379930' target="_blank">Twin Support Vector Machine for Clustering</a>, 
+							<b>IEEE Transactions on Neural Networks and Learning Systems</b>, 2015, 26(10): 2583-2588. 
+						<span><a href='Resources/Code/TWSVC.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+			<li style="width: 1000px;">Xiang-Yu Hua,Zhi-Min Yang*,Ya-Fen Ye*, Yuan-Hai Shao. <a href='http://dx.doi.org/10.1016/j.procs.2015.07.109' target="_blank">A Novel Dynamic Financial Conditions Index Approach Based on Accurate Online Support Vector Regression</a>, 
+							<b>Procedia Computer Science</b>, 2015, 944-952. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Zhi-Min Yang,He-Ji Wu,Chun-Na Li,  Yuan-Hai Shao*.. <a href='http://dx.doi.org/10.1007/s13042-015-0394-x' target="_blank">Least squares recursive projection twin support vector machine for multi-class classification</a>, 
+							<b>International Journal of Machine Learning and Cybernetics</b>, 2015, 7(3):411-426. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Ya-Fen Ye, Yuan-Hai Shao,Chun-Na Li . <a href='http://id.ndl.go.jp/bib/026500718/eng' target="_blank">Wavelet Lp-norm support vector regression with feature selection</a>, 
+							<b>Journal of Advanced Computational Intelligence and Intelligent Informatics</b>, 2015, 19(3): 407-416. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Ya-Fen Ye, Yue-Xiang Jiang, Yuan-Hai Shao,Chun-Na Li.. <a href='http://id.ndl.go.jp/bib/026500708/eng' target="_blank">Financial conditions index construction through weighted Lp-norm support vector regression</a>, 
+							<b>Journal of Advanced Computational Intelligence and Intelligent Informatics</b>, 2015,  19(3): 397-406. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Yuan-Hai Shao*, Xiang-Yu Hua, Li-Ming Liu, Zhi-Min Yang, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1007/s10489-015-0655-0' target="_blank"> Combined outputs framework for twin support vector machines</a>, 
+							<b>Applied Intelligence </b>, 2015, 43(2): 424-438. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao, Wei-Jie Chen, Zhen Wang, Chun-Na Li, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1016/j.knosys.2014.10.011' target="_blank"> Weighted linear loss twin support vector machine for large-scale classification</a>, 
+							<b>Knowledge-Based Systems</b>, 2015, 73: 276-288 . 
+						<span><a href='Resources/Code/LSPTSVM.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1007/s10957-014-0647-y' target="_blank">  The Equivalence between Principal Component Analysis and Nearest Flat in the Least Square Sense</a>, 
+							<b> Journal of Optimization Theory and Applications</b>, 2015, 166(1): 278-284 . 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Yuan-Hai Shao*, Wei-Jie Chen, Li-Ming Liu, Nai-Yang Deng. <a href='http://dx.doi.org/10.1016/j.ins.2015.03.066' target="_blank">  Laplacian unit-hyperplane learning from positive and unlabeled examples</a>, 
+							<b>Information Sciences</b>, 2015, 314: 152-168 . 
+						<span><a href='Resources/Code/LUHC.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+			<li style="width: 1000px;">Chun-Na Li,  Yuan-Hai Shao*, Nai-Yang Deng. <a href='http://dx.doi.org/10.1016/j.neunet.2015.01.003' target="_blank">  Robust L1-norm two-dimensional linear discriminant analysis</a>, 
+							<b>Neural Networks </b>, 2015,  65: 92-104. 
+						<span><a href='Resources/Code/L12DLDA.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+			<li style="width: 1000px;">Zhi-Min Yang, Yan-Ru Guo*, Chun-Na Li,  Yuan-Hai Shao. <a href='http://dx.doi.org/10.1007/s00521-014-1707-9' target="_blank"> Local k-proximal plane clustering</a>, 
+							<b> Neural Computing and Applications</b>, 2015, 26(1): 199-211 . 
+						<span><a href='Resources/Code/LkPPC.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		</div1>
+		<div1 id="year2014-form" style="display: none;">
+
+			<li style="width: 1000px;">Chun-Na Li, Yun-Feng Huang, He-Ji Wu,  Yuan-Hai Shao*, Zhi-Min Yang. <a href='http://dx.doi.org/10.1007/s13042-014-0289-2' target="_blank">  Multiple recursive projection twin support vector machine for multi-class classification</a>, 
+							<b>International Journal of Machine Learning and Cybernetics</b>, 2014, 1-12. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao*, Chun-Na Li, Zhen Wang , Ming-Zeng Liu, Nai-Yang Deng. <a href='http://doi.ieeecomputersociety.org/10.1109/ICDMW.2014.14' target="_blank">Proximal Classifier via Absolute Value Inequalities.</a>, 
+							<b>In: Proceedings of the 14th IEEE International Conference on Data Mining Workshops (ICDM'14)</b>, 2014, 74-79. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao, Wei-Jie Chen,Zhen Wang, Hai-Bin Zhang, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1016/j.neucom.2014.05.050' target="_blank"> A proximal classifier with positive and negative local regions</a>, 
+							<b>Neurocomputing</b>, 2014, 145:131-139. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao, Zhen Wang, Zhi-Min Yang*, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1016/j.procs.2014.05.311' target="_blank"> Weighted linear loss support vector machine for large scale problems</a>, 
+							<b>Procedia Computer Science</b>, 2014, 31C: 639-647. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Wei-Jie Chen*, Yuan-Hai Shao*, Nai-Yang Deng, Zhi-Lin Feng. <a href='http://dx.doi.org/10.1016/j.neucom.2014.05.007' target="_blank"> Laplacian least squares twin support vector machine for semi-supervised classification</a>, 
+							<b>Neurocomputing</b>, 2014, 145:465-476. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Yuan-Hai Shao, Wei-Jie Chen, Jing-jing Zhang, Zhen Wang, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1016/j.patcog.2014.03.008' target="_blank">  An efficient weighted Lagrangian twin support vector machine for imbalanced data classification</a>, 
+							<b> Pattern Recognition</b>, 2014, 47(9): 3158-3167. 
+						<span><a href='Resources/Code/LTSVM.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+			<li style="width: 1000px;">Lan Bai, Zhen Wang, Yuan-Hai Shao*, Nai-Yang Deng. <a href='http://dx.doi.org/10.1016/j.knosys.2014.01.025' target="_blank">  A novel feature selection method for twin support vector machine</a>, 
+							<b>Knowledge-Based Systems</b>, 2014, 59 1-8. 
+						<span><a href='Resources/Code/FSTWSVM.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao, Wei-Jie Chen,Nai-Yang Deng*. <a href='http://dx.doi.org/10.1016/j.ins.2013.11.003' target="_blank">  Nonparallel hyperplane support vector machine for binary classification problems.</a>, 
+							<b>Information Sciences</b>, 2014, 263(1) 2014, 22–35. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Wei-Jie Chen*,Yuan-Hai Shao, Deng-Ke Xu, Yong-Feng Fu. <a href='http://dx.doi.org/10.1007/s10489-013-0491-z' target="_blank">  Manifold proximal support vector machine for semi-supervised classification</a>, 
+							<b>Applied Intelligence</b>, 2014, 40(4):623-638. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Wei-Jie Chen*,Yuan-Hai Shao, Ning Hong. <a href='http://dx.doi.org/10.1007/s13042-013-0183-3' target="_blank">  Laplacian smooth twin support vector machine for semi-supervised classification[J]</a>, 
+							<b>International Journal of Machine Learning and Cybernetics</b>, 2014, 5(3):459–468. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Zhen Wang*, Yuan-Hai Shao, Tie-Ru Wu. <a href='http://dx.doi.org/10.1007/s00521-012-1278-6' target="_blank"> Proximal parametric-margin support vector classifier and its applications</a>, 
+							<b>Neural Computing and Applications</b>, 2014, 24 (3-4), 755-764 . 
+						
+			</li>
+					
+		</div1>
+		<div1 id="year2013-form" style="display: none;">
+	 
+			<li style="width: 1000px;">Yuan-Hai Shao, Nai-Yang Deng*, Wei-Jie Chen. <a href='http://dx.doi.org/10.1016/j.knosys.2013.05.015' target="_blank">  A proximal classifier with consistency</a>, 
+							<b> Knowledge-Based Systems</b>, 2013, 49:171-178 . 
+						<span><a href='Resources/Code/PCC.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+	   
+			<li style="width: 1000px;">Zhi-Min Yang, Yuan-Hai Shao*, Jing Liang. <a href='http://dx.doi.org/10.3724/SP.J.1004.2013.00895' target="_blank"> Unascertained Support Vector Machines</a>, 
+							<b>Acta Automatica Sinica (In Chinese)</b>, 2013, 39 (6): 895-901. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao*, Lan Bai, Zhen Wang, Xiang-Yu Hua, Nai-Yang Deng. <a href='http://dx.doi.org/10.1016/j.procs.2013.05.007' target="_blank">  Proximal Plane Clustering via Eigenvalues</a>, 
+							<b>Procedia Computer Science(IAITQM)</b>, 2013, 17: 41–47. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Zhi-Min Yang, Jun-Yun He*, Yuan-Hai Shao. <a href='http://dx.doi.org/10.1016/j.procs.2013.05.132' target="_blank">  Feature Selection Based on Linear Twin Support Vector Machines</a>, 
+							<b>Procedia Computer Science (IAITQM)</b>, 2013, 17: 1039-1046. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao*, Wei-Jie Chen, Wen-Biao Huang, Zhi-Min Yang, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1016/j.procs.2013.05.131' target="_blank"> The Best Separating Decision Tree Twin Support Vector Machine for Multi-Class Classification</a>, 
+							<b> Procedia Computer Science (IAITQM)</b>, 2013, 17: 1032-1038. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Wei-Jie Chen*, Yuan-Hai Shao*, Ya-Fen Ye. <a href='http://dx.doi.org/10.1016/j.procs.2013.05.006' target="_blank"> Improving Lap-TSVM with successive overrelaxation and differential evolution</a>, 
+							<b> Procedia Computer Science(IAITQM)</b>, 2013,  17: 33–40. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Ya-Fen Ye, Hui Cao*, Lan Bai, Zhen Wang, Yuan-Hai Shao. <a href='http://dx.doi.org/10.1016/j.procs.2013.05.066' target="_blank">. Exploring Determinants of Inflation in China Based on L1-Epsilon-Twin Support Vector Regression</a>, 
+							<b> Procedia Computer Science (IAITQM)</b>, 2013, 17:514–522. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao, Zhen Wang, Wei-Jie Chen, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1007/s10489-013-0423-y' target="_blank"> Least squares twin parametric-margin support vector machines for classification</a>, 
+							<b>Applied Intelligence</b>, 2013, 39(3):451-464 . 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Zhen Wang*, Yuan-Hai Shao, Tie-Ru Wu. <a href='http://dx.doi.org/10.1016/j.patcog.2013.01.023' target="_blank"> A GA-based Model Selection for Smooth Twin Parametric-Margin Support Vector Machine</a>, 
+							<b> Pattern Recognition</b>, 2013, 46: 2267–2277. 
+						<span><a href='Resources/Code/STPMSVM.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao*, Nai-Yang Deng, Wei-Jie Chen, Zhen Wang. <a href='http://dx.doi.org/10.1109/LSP.2012.2216874' target="_blank">  Improved generalized eigenvalue proximal support vector machine</a>, 
+							<b>IEEE Signal Processing Letters</b>, 2013, 20(3):213- 216. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Yuan-Hai Shao, Zhen Wang , Wei-Jie Chen, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1016/j.knosys.2012.08.001' target="_blank"> A regularization for the projection twin support vector machine</a>, 
+							<b> Knowledge-Based Systems</b>, 2013, 37:203–210. 
+						
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao, Chun-Hua Zhang*, Zhi-Min Yang, Ling Jing, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1007/s00521-012-0924-3' target="_blank"> An \varepsilon-twin support vector machine for regression</a>, 
+							<b> Neural Computing and Applications</b>, 2013, 23:175–185. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Zhi-Xia Yang*, Yuan-Hai Shao, Xiang-Sun Zhang. <a href='http://dx.doi.org/10.1007/s00521-012-1108-x' target="_blank">  Multiple Birth Support Vector Machine for Multi-class Classification.</a>, 
+							<b>Neural Computing and Applications</b>, 2013, 153–161. 
+						
+			</li>
+	   
+			<li style="width: 1000px;">Chun-Hua Zhang, Yuan-Hai Shao, Jun-Yan Tan*. <a href='http://dx.doi.org/10.1007/s00521-012-1166-0' target="_blank">Nai-Yang Deng.  Mixed-norm Linear Support Vector Machine</a>, 
+							<b>Neural Computing and Applications</b>, 2013, 23 (7-8), 2159-2166 . 
+						
+			</li>
+					
+		</div1>
+		<div1 id="year before 2012-form" style="display: none;">
+   
+			<li style="width: 1000px;">Yuan-Hai Shao, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1007/s00521-012-0894-5' target="_blank"> A novel margin based twin support vector machine with unity norm hyperplanes</a>, 
+							<b>Neural Computing and Applications</b>, 2012, 22(7-8). 
+						
+			</li>
+		
+			<li style="width: 1000px;">Yuan-Hai Shao*, Nai-Yang Deng, Zhi-Min Yang, Wei-Jie Chen, Zhen Wang. <a href='http://dx.doi.org/10.1016/j.knosys.2012.04.006' target="_blank"> Probabilistic outputs for twin support vector machines</a>, 
+							<b>Knowledge-Based Systems</b>, 2012, 33: 145–151. 
+						<span><a href='Resources/Code/TWSVM.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+	   
+			<li style="width: 1000px;">Yuan-Hai Shao, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1016/j.neunet.2011.08.003' target="_blank">A coordinate descent margin based-twin support vector machine for classification</a>, 
+							<b>Neural Networks</b>, 2012,  25: 114-121. 
+						
+			</li>
+
+			<li style="width: 1000px;">Yuan-Hai Shao, Nai-Yang Deng*, Zhi-Min Yang. <a href='http://dx.doi.org/10.1016/j.patcog.2011.11.028' target="_blank"> Least squares recursive projection twin support vector machine for classification</a>, 
+							<b>Pattern Recognition</b>, 2012, 45(6): 2299-2307. 
+						<span><a href='Resources/Code/LSPTSVM.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+
+			<li style="width: 1000px;">Yuan-Hai Shao, Chun-Hua Zhang, Xiao-Bo Wang, Nai-Yang Deng*. <a href='http://dx.doi.org/10.1109/TNN.2011.2130540' target="_blank"> Improvements on Twin Support Vector Machines</a>, 
+							<b>IEEE Transactions on Neural Networks</b>, 2011, 962-968. 
+						<span><a href='Resources/Code/TWSVM.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+			<li style="width: 1000px;">Yu-Xin Li, Yuan-Hai Shao, Nai-Yang Deng*. <a href='http://dx.doi.org/10.2174/092986611794475084' target="_blank">  Improved Prediction of Palmitoylation SitesUsing PWMs and SVM</a>, 
+							<b> Protein \& Peptide Letters</b>, 2011, 18(2): 186-193(8).. 
+						<span><a href='Resources/Code/PPWMs.html' target="_blank" style="color: green">[Material]</a></span>
+			</li>
+		
+			<li style="width: 1000px;">Yu-Xin Li, Yuan-Hai Shao, Ling Jing, Nai-Yang Deng*. <a href='http://dx.doi.org/10.2174/092986611795222731' target="_blank"> An Efficient Support Vector Machine Approach for Identifying Protein S-Nitrosylation Sites</a>, 
+							<b>Protein \& Peptide Letters</b>, 2011, 18(6): 573-587(15). 
+						
+			</li>
+		</div1>
+		<script type="text/javascript">
+			let divs=document.querySelectorAll('div1');
+			let showDiv=(str)=>{
+				for(let div of divs){
+					div.style.display="none";
+				}
+				document.getElementById(str).style.display = "block";
+			}
+		</script>
+</body>
+	<p style="border-bottom: 1px dotted #CCCCCC;margin-top: 60px;" />
+    <p>[<a href="#top" target="_self">go top</a>]</p>
+
+                </div>
+            </form>
+
+
+        </div>
+
+    </div>
+</body>
+</html>

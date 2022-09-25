@@ -1,0 +1,418 @@
+
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+
+</title>
+<link rel="shortcut  icon" type="image/x-icon" href="favicon.ico" media="screen"/>
+<script>document.title='Welcome to Optimalgroup';</script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <style type="text/css">
+        .daohang{
+			overflow: hidden;
+		}
+		/* 居中导航需要设置宽度 */
+		ul{
+			width: 1000px;
+		}
+		ul li{
+			list-style: none;
+			float: left;
+			padding-left: 50px;
+			text-align: left;
+			margin-left: 5px;
+			cursor:pointer;
+		}
+		
+		#container{
+			margin-top: 20px;
+		}
+		
+		/* 导航背景与居中 */
+		#navbg{
+			background: #a981a4;
+			margin: 0 auto;
+		}
+		#navbg a{
+			color: #fff !important;
+			font-size: 30px;
+			font-weight: 700;
+		}
+		
+        .div_listview {
+            width: 1000px;
+        }
+
+        .div_item {
+            font-family: Georgia;
+            font-size: 17px;
+            line-height: 25px;
+        }
+
+            .div_item:hover {
+                background-color: #dedede;
+            }
+
+            .div_item b {
+                text-shadow: 1px 1px 2px rgb(181, 181, 181);
+                font-size: 1.0em;
+            }
+
+            .div_item a {
+                text-decoration: none;
+                color: #6600FF;
+                line-height: 20px;
+            }
+
+                .div_item a:hover {
+                    text-decoration: none;
+                    color: red;
+                }
+    </style>
+</head>
+<body>
+    <div align="center">
+	<div id="navbg" class="daohang">
+		    <ul id="navlist">
+		        <li><a href="./index.html">Home </a></li>
+		        <li><a href="./Member.html">Members</a></li>
+		        <li><a href="./Publication.html">Publications </a></li>
+		        <li><a href="./Resource.html">Resources</a></li>
+				<li><a href="./Link.html">Links </a></li>
+		        <li><a href="./News.html">News</a></li>
+		    </ul>
+		</div>
+        <a href="./index.html" target="_blank">
+            <img id="Image1" src="Image/Optimal_img.jpg" style="width:75%;" />
+        </a>
+    </div>
+
+    <div id="container">
+        <div id="left">
+            
+        </div>
+
+        
+            <form method="post" action="./Activities.aspx" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUJNTM2MDYwMjU4D2QWAmYPZBYCAgUPZBYCAgEPZBYCAgEPFCsAAg8WBB4LXyFEYXRhQm91bmRnHgtfIUl0ZW1Db3VudAIvZGQWAmYPZBZeAgEPZBYCZg8VBUlUZW5zb3IgUm9idXN0IFByaW5jaXBhbCBDb21wb25lbnQgQW5hbHlzaXMgd2l0aCBBIE5ldyBUZW5zb3IgTnVjbGVhciBOb3JtCTIwMTkvOS8yOQ5YaWFuZy1GZWkgWWFuZyRodHRwczovL2FyeGl2Lm9yZy9wZGYvMTgwNC4wMzcyOC5wZGalAUx1LCBDYW55aSwgZXQgYWwuICJUZW5zb3Igcm9idXN0IHByaW5jaXBhbCBjb21wb25lbnQgYW5hbHlzaXMgd2l0aCBhIG5ldyB0ZW5zb3IgbnVjbGVhciBub3JtLiIgSUVFRSB0cmFuc2FjdGlvbnMgb24gcGF0dGVybiBhbmFseXNpcyBhbmQgbWFjaGluZSBpbnRlbGxpZ2VuY2UgKDIwMTkpLmQCAg9kFgJmDxUFMkEgU2ltcGxlIGFuZCBGYXN0IEFsZ29yaXRobSBmb3IgTDEtbm9ybSBLZXJuZWwgUENBCTIwMTkvOS8yMgpDaHVuLU5hIExpH0RPSTogMTAuMTEwOS9UUEFNSS4yMDE5LjI5MDM1MDWeAUtpbSwgQ2hlb2xtaW4sIGFuZCBEaWVnbyBLbGFiamFuLiAiQSBTaW1wbGUgYW5kIEZhc3QgQWxnb3JpdGhtIGZvciBMMS1ub3JtIEtlcm5lbCBQQ0EuIiBJRUVFIHRyYW5zYWN0aW9ucyBvbiBwYXR0ZXJuIGFuYWx5c2lzIGFuZCBtYWNoaW5lIGludGVsbGlnZW5jZSAoMjAxOSkuZAIDD2QWAmYPFQU+QSBEaXZpZGUtYW5kLUNvbnF1ZXIgU29sdmVyIGZvciBLZXJuZWwgU3VwcG9ydCBWZWN0b3IgTWFjaGluZXMJMjAxOS85LzE1CUp1biBaaGFuZy1odHRwOi8vcHJvY2VlZGluZ3MubWxyLnByZXNzL3YzMi9oc2llaGExNC5wZGaiAUhzaWVoLCBDaG8tSnVpLCBTaSBTaSwgYW5kIEluZGVyaml0IERoaWxsb24uICJBIGRpdmlkZS1hbmQtY29ucXVlciBzb2x2ZXIgZm9yIGtlcm5lbCBzdXBwb3J0IHZlY3RvciBtYWNoaW5lcy4iIEludGVybmF0aW9uYWwgY29uZmVyZW5jZSBvbiBtYWNoaW5lIGxlYXJuaW5nLiAyMDE0LmQCBA9kFgJmDxUFLk1lbWJlcnNoaXAgQWZmaW5pdHkgTGFzc28gZm9yIEZ1enp5IENsdXN0ZXJpbmcIMjAxOS85LzgKWWFuLVJ1IEd1bx9ET0k6IDEwLjExMDkvVEZVWlouMjAxOS4yOTA1MTE0bEd1bywgTGksIGV0IGFsLiAiTWVtYmVyc2hpcCBBZmZpbml0eSBMYXNzbyBmb3IgRnV6enkgQ2x1c3RlcmluZy4iIElFRUUgVHJhbnNhY3Rpb25zIG9uIEZ1enp5IFN5c3RlbXMgKDIwMTkpLmQCBQ9kFgJmDxUFKkFic2VudCBNdWx0aXBsZSBLZXJuZWwgTGVhcm5pbmcgQWxnb3JpdGhtcwgyMDE5LzkvMQxZdS1UaW5nIFpoYW9HaHR0cHM6Ly93d3cuYWFhaS5vcmcvb2NzL2luZGV4LnBocC9BQUFJL0FBQUkxNS9wYXBlci92aWV3RmlsZS85Mjk4Lzk5NDV2TGl1LCBYaW53YW5nLCBldCBhbC4gIkFic2VudCBtdWx0aXBsZSBrZXJuZWwgbGVhcm5pbmcuIiBUd2VudHktTmludGggQUFBSSBDb25mZXJlbmNlIG9uIEFydGlmaWNpYWwgSW50ZWxsaWdlbmNlLiAyMDE1LmQCBg9kFgJmDxUFMExlYXJuaW5nIFNWTSBDbGFzc2lmaWVycyB3aXRoIEluZGVmaW5pdGUgS2VybmVscwgyMDE5LzcvNw5MaW5nLVdlaSBIdWFuZ0dodHRwczovL3d3dy5hYWFpLm9yZy9vY3MvaW5kZXgucGhwL0FBQUkvQUFBSTEyL3BhcGVyL3ZpZXdGaWxlLzQ5NjUvNTUwNJABR3UsIFN1aWNoZW5nLCBhbmQgWXVob25nIEd1by4gIkxlYXJuaW5nIFNWTSBjbGFzc2lmaWVycyB3aXRoIGluZGVmaW5pdGUga2VybmVscy4iIFR3ZW50eS1TaXh0aCBBQUFJIENvbmZlcmVuY2Ugb24gQXJ0aWZpY2lhbCBJbnRlbGxpZ2VuY2UuIDIwMTIuZAIHD2QWAmYPFQUtQ2xhc3NpZmljYXRpb24gV2l0aCBUcnVuY2F0ZWQgRGlzdGFuY2UgS2VybmVsCTIwMTkvNi8xNg1ZdWFuLUhhaSBTaGFvH0RPSTogMTAuMTEwOS9UTk5MUy4yMDE3LjI2Njg2MTCnAUh1YW5nLCBYaWFvbGluLCBldCBhbC4gIkNsYXNzaWZpY2F0aW9uIFdpdGggVHJ1bmNhdGVkICRcZWxsIF8gezF9ICQgRGlzdGFuY2UgS2VybmVsLiIgSUVFRSB0cmFuc2FjdGlvbnMgb24gbmV1cmFsIG5ldHdvcmtzIGFuZCBsZWFybmluZyBzeXN0ZW1zIDI5LjUgKDIwMTcpOiAyMDI1LTIwMzAuZAIID2QWAmYPFQUxSW50dWl0aW9uaXN0aWMgRnV6enkgVHdpbiBTdXBwb3J0IFZlY3RvciBNYWNoaW5lcwgyMDE5LzYvOQlaaGVuIFdhbmcfRE9JOiAxMC4xMTA5L1RGVVpaLjIwMTkuMjg5Mzg2M5IBUmV6dmFuaSwgU2FsaW0sIFhpemhhbyBXYW5nLCBhbmQgRmFyaGFkIFBvdXJwYW5haC4gIkludHVpdGlvbmlzdGljIEZ1enp5IFR3aW4gU3VwcG9ydCBWZWN0b3IgTWFjaGluZXMuIiBJRUVFIFRyYW5zYWN0aW9ucyBvbiBGdXp6eSBTeXN0ZW1zICgyMDE5KS5kAgkPZBYCZg8VBTxDbHVzdGVydmlzaW9uOiBWaXN1YWwgc3VwZXJ2aXNpb24gb2YgdW5zdXBlcnZpc2VkIGNsdXN0ZXJpbmcJMjAxOS81LzI2CVpoZW4gV2FuZzVwZXJlci5vcmcvcGFwZXJzL2FkYW1QZXJlci1DbHVzdGVydmlzaW9uLVZBU1QyMDE3LnBkZrcBS3dvbiBCIEMsIEV5c2VuYmFjaCBCLCBWZXJtYSBKLCBldCBhbC4gQ2x1c3RlcnZpc2lvbjogVmlzdWFsIHN1cGVydmlzaW9uIG9mIHVuc3VwZXJ2aXNlZCBjbHVzdGVyaW5nW0pdLiBJRUVFIHRyYW5zYWN0aW9ucyBvbiB2aXN1YWxpemF0aW9uIGFuZCBjb21wdXRlciBncmFwaGljcywgMjAxNywgMjQoMSk6IDE0Mi0xNTEuZAIKD2QWAmYPFQVHU2VtaS1TdXBlcnZpc2VkIE9yZGluYWwgUmVncmVzc2lvbiBCYXNlZCBvbiBFbXBpcmljYWwgUmlzayBNaW5pbWl6YXRpb24JMjAxOS81LzE5DFhpbi1YaW4gRHVhbhxhcnhpdi5vcmcvcGRmLzE5MDEuMTEzNTEucGRmnwFUc3VjaGl5YSBULCBDaGFyb2VucGhha2RlZSBOLCBTYXRvIEksIGV0IGFsLiBTZW1pLVN1cGVydmlzZWQgT3JkaW5hbCBSZWdyZXNzaW9uIEJhc2VkIG9uIEVtcGlyaWNhbCBSaXNrIE1pbmltaXphdGlvbltKXS4gYXJYaXYgcHJlcHJpbnQgYXJYaXY6MTkwMS4xMTM1MSwgMjAxOS5kAgsPZBYCZg8VBXlMU0NDQS1DYW5vbmljYWwgQ29ycmVsYXRpb24gQW5hbHlzaXMgZm9yIE11bHRpbGFiZWwgQ2xhc3NpZmljYXRpb25fIEEgTGVhc3QtU3F1YXJlcyBGb3JtdWxhdGlvbiwgRXh0ZW5zaW9ucywgYW5kIEFuYWx5c2lzCTIwMTkvNS8xMg1NaW5nLVplbmcgTGl1eGNpdGVzZWVyeC5pc3QucHN1LmVkdS92aWV3ZG9jL2Rvd25sb2FkO2pzZXNzaW9uaWQ9NDFCNDIwN0I4OTlFNzNFNEIwQkUxMjZEODcyNjIwOTQ/ZG9pPTEwLjEuMS4xNzIuMTkxNCZyZXA9cmVwMSZ0eXBlPXBkZuIBU3VuIEwgLCBKaSBTICwgWWUgSiAuIENhbm9uaWNhbCBDb3JyZWxhdGlvbiBBbmFseXNpcyBmb3IgTXVsdGlsYWJlbCBDbGFzc2lmaWNhdGlvbjogQSBMZWFzdC1TcXVhcmVzIEZvcm11bGF0aW9uLCBFeHRlbnNpb25zLCBhbmQgQW5hbHlzaXNbSl0uIElFRUUgVHJhbnNhY3Rpb25zIG9uIFBhdHRlcm4gQW5hbHlzaXMgYW5kIE1hY2hpbmUgSW50ZWxsaWdlbmNlLCAyMDEwLCAzMygxKToxOTQtMjAwLmQCDA9kFgJmDxUFN0RpbWVuc2lvbmFsaXR5IHJlZHVjdGlvbiBpbiBtdWx0aXBsZSBvcmRpbmFsIHJlZ3Jlc3Npb24IMjAxOS81LzUNWW9uZy1HYW5nIExpdVJ3d3cuY29tcC5oa2J1LmVkdS5oay9+eW1jL3BhcGVycy9qb3VybmFsL1ROTkxTLTIwMTYtUC02NDkyLXB1YmxpY2F0aW9uX3ZlcnNpb24ucGRmrAFaZW5nIEosIExpdSBZLCBMZW5nIEIsIGV0IGFsLiBEaW1lbnNpb25hbGl0eSByZWR1Y3Rpb24gaW4gbXVsdGlwbGUgb3JkaW5hbCByZWdyZXNzaW9uW0pdLiBJRUVFIHRyYW5zYWN0aW9ucyBvbiBuZXVyYWwgbmV0d29ya3MgYW5kIGxlYXJuaW5nIHN5c3RlbXMsIDIwMTcsIDI5KDkpOiA0MDg4LTQxMDEuZAIND2QWAmYPFQUvQSBnZW5lcmFsIG1vZGVsIGZvciBwbGFuZS1iYXNlZCBjbHVzdGVyaW5nIHdpdGgJMjAxOS80LzI4DFl1LVRpbmcgWmhhbxxhcnhpdi5vcmcvcGRmLzE5MDEuMDkxNzgucGRmiAFXYW5nIFosIFNoYW8gWSBILCBCYWkgTCwgZXQgYWwuIEEgZ2VuZXJhbCBtb2RlbCBmb3IgcGxhbmUtYmFzZWQgY2x1c3RlcmluZyB3aXRoIGxvc3MgZnVuY3Rpb25bSl0uIGFyWGl2IHByZXByaW50IGFyWGl2OjE5MDEuMDkxNzgsIDIwMTkuZAIOD2QWAmYPFQUqQWJzZW50IE11bHRpcGxlIEtlcm5lbCBMZWFybmluZyBBbGdvcml0aG1zCTIwMTkvNC8xNAlKdW4gWmhhbmdMY2l0ZXNlZXJ4LmlzdC5wc3UuZWR1L3ZpZXdkb2MvZG93bmxvYWQ/ZG9pPTEwLjEuMS43MjQuNDU4NSZyZXA9cmVwMSZ0eXBlPXBkZlpMaXUgWCAsIFdhbmcgTCAsIFlpbiBKICwgZXQgYWwuIEFic2VudCBNdWx0aXBsZSBLZXJuZWwgTGVhcm5pbmdbQ10vLyBBQUFJMjAxNS4gSUVFRSwgMjAxNS5kAg8PZBYCZg8VBSpNdWx0aS10YXNrIHByb3hpbWFsIHN1cHBvcnQgdmVjdG9yIG1hY2hpbmUIMjAxOS80LzcMV2VpLUppZSBDaGVuJmRvaS5vcmcvMTAuMTAxNi9qLnBhdGNvZy4yMDE1LjAxLjAxNA0KeUxpIFksIFRpYW4gWCwgU29uZyBNLCBldCBhbC4gTXVsdGktdGFzayBwcm94aW1hbCBzdXBwb3J0IHZlY3RvciBtYWNoaW5lW0pdLiBQYXR0ZXJuIFJlY29nbml0aW9uLCAyMDE1LCA0OCgxMCk6IDMyNDktMzI1Ny5kAhAPZBYCZg8VBSBLZXJuZWwgTWV0aG9kcyBmb3IgRGVlcCBMZWFybmluZwkyMDE5LzMvMjQNWXVhbi1IYWkgU2hhbz5wYXBlcnMubmlwcy5jYy9wYXBlci8zNjI4LWtlcm5lbC1tZXRob2RzLWZvci1kZWVwLWxlYXJuaW5nLnBkZndDaG8gWSwgU2F1bCBMIEsuIEtlcm5lbCBtZXRob2RzIGZvciBkZWVwIGxlYXJuaW5nW0NdLy9BZHZhbmNlcyBpbiBuZXVyYWwgaW5mb3JtYXRpb24gcHJvY2Vzc2luZyBzeXN0ZW1zLiAyMDA5OiAzNDItMzUwLmQCEQ9kFgJmDxUFT1N1cHBvcnQgVmVjdG9yIE1hY2hpbmUgTGVhcm5pbmcgZm9yIEludGVyZGVwZW5kZW50IGFuZCBTdHJ1Y3R1cmVkIE91dHB1dCBTcGFjZXMJMjAxOS8zLzE3CkNodW4tTmEgTGl3Y2l0ZXNlZXIuaXN0LnBzdS5lZHUvdmlld2RvYy9kb3dubG9hZDtqc2Vzc2lvbmlkPTM3NzE1QUFBQUY1NUJDREVGNjdBRTgwRkUzODgzNDY3P2RvaT0xMC4xLjEuMTUxLjMyNDMmcmVwPXJlcDEmdHlwZT1wZGaeAVRzb2NoYW50YXJpZGlzIEkgLCBIb2ZtYW5uIFQgLCBKb2FjaGltcyBUICwgZXQgYWwuIFN1cHBvcnQgVmVjdG9yIE1hY2hpbmUgTGVhcm5pbmcgZm9yIEludGVyZGVwZW5kZW50IGFuZCBTdHJ1Y3R1cmVkIE91dHB1dCBTcGFjZXNbSl0uIE1hY2hpbmUgTGVhcm5pbmcsIDIwMDQuZAISD2QWAmYPFQUxRmFzdCBDcm9zcy1WYWxpZGF0aW9uIGZvciBLZXJuZWwtYmFzZWQgQWxnb3JpdGhtcwgyMDE5LzMvMw5MaW5nLVdlaSBIdWFuZyBET0k6IDEwLjExMDkvVFBBTUkuMjAxOS4yODkyMzcxIJoBTGl1IFksIExpYW8gUywgSmlhbmcgUywgZXQgYWwuIEZhc3QgQ3Jvc3MtVmFsaWRhdGlvbiBmb3IgS2VybmVsLWJhc2VkIEFsZ29yaXRobXNbSl0uIElFRUUgdHJhbnNhY3Rpb25zIG9uIHBhdHRlcm4gYW5hbHlzaXMgYW5kIG1hY2hpbmUgaW50ZWxsaWdlbmNlLCAyMDE5LmQCEw9kFgJmDxUFRURDIHByb2dyYW1taW5nIGFuZCBEQ0EgZm9yIHNwYXJzZSBGaXNoZXIgbGluZWFyIGRpc2NyaW1pbmFudCBhbmFseXNpcwgyMDE5LzEvNgpDaHVuLU5hIExpPWxpbmsuc3ByaW5nZXIuY29tL2NvbnRlbnQvcGRmLzEwLjEwMDclMkZzMDA1MjEtMDE2LTIyMTYtOS5wZGaaAUxlIFRoaSBIIEEsIFBoYW4gRCBOLiBEQyBwcm9ncmFtbWluZyBhbmQgRENBIGZvciBzcGFyc2UgRmlzaGVyIGxpbmVhciBkaXNjcmltaW5hbnQgYW5hbHlzaXNbSl0uIE5ldXJhbCBDb21wdXRpbmcgYW5kIEFwcGxpY2F0aW9ucywgMjAxNywgMjgoOSk6IDI4MDktMjgyMi5kAhQPZBYCZg8VBWVGYWNlIHJlY29nbml0aW9uIHVzaW5nIGRpc2NyaW1pbmFudCBsb2NhbGl0eSBwcmVzZXJ2aW5nIHByb2plY3Rpb25zIGJhc2VkIG9uIG1heGltdW0gbWFyZ2luIGNyaXRlcmlvbgoyMDE4LzEyLzIzC0thaS1MaSBZYW5nO3d3dy5zY2llbmNlZGlyZWN0LmNvbS9zY2llbmNlL2FydGljbGUvcGlpL1MwMDMxMzIwMzEwMDAxNTM2rQFMdSBHIEYsIExpbiBaLCBKaW4gWi4gRmFjZSByZWNvZ25pdGlvbiB1c2luZyBkaXNjcmltaW5hbnQgbG9jYWxpdHkgcHJlc2VydmluZyBwcm9qZWN0aW9ucyBiYXNlZCBvbiBtYXhpbXVtIG1hcmdpbiBjcml0ZXJpb24uW0pdLiBQYXR0ZXJuIFJlY29nbml0aW9uLCAyMDEwLCA0MygxMCk6MzU3Mi0zNTc5LmQCFQ9kFgJmDxUFXEluZGVmaW5pdGUga2VybmVscyBpbiBsZWFzdCBzcXVhcmVzIHN1cHBvcnQgdmVjdG9yIG1hY2hpbmVzIGFuZCBwcmluY2lwYWwgY29tcG9uZW50IGFuYWx5c2lzCjIwMTgvMTIvMTYJSnVuIFpoYW5nO3d3dy5zY2llbmNlZGlyZWN0LmNvbS9zY2llbmNlL2FydGljbGUvcGlpL1MxMDYzNTIwMzE2MzAwNDk1zgFIdWFuZyBYICwgTWFpZXIgQSAsIEhvcm5lZ2dlciBKICwgZXQgYWwuIEluZGVmaW5pdGUga2VybmVscyBpbiBsZWFzdCBzcXVhcmVzIHN1cHBvcnQgdmVjdG9yIG1hY2hpbmVzIGFuZCBwcmluY2lwYWwgY29tcG9uZW50IGFuYWx5c2lzW0pdLiBBcHBsaWVkIGFuZCBDb21wdXRhdGlvbmFsIEhhcm1vbmljIEFuYWx5c2lzLCAyMDE2OlMxMDYzNTIwMzE2MzAwNDk1LmQCFg9kFgJmDxUFTUZyb20gQ29udmV4IHRvIE5vbmNvbnZleDogQSBMb3NzIEZ1bmN0aW9uIEFuYWx5c2lzIGZvciBCaW5hcnkgQ2xhc3NpZmljYXRpb24gCTIwMTgvMTIvOQ5MaW5nLVdlaSBIdWFuZxtET0k6IDEwLjExMDkvSUNETVcuMjAxMC41NyCvAVpoYW8gTCwgTWFtbWFkb3YgTSwgWWVhcndvb2QgSi4gRnJvbSBDb252ZXggdG8gTm9uY29udmV4OiBBIExvc3MgRnVuY3Rpb24gQW5hbHlzaXMgZm9yIEJpbmFyeSBDbGFzc2lmaWNhdGlvbltDXS8vIElFRUUgSW50ZXJuYXRpb25hbCBDb25mZXJlbmNlIG9uIERhdGEgTWluaW5nIFdvcmtzaG9wcy4gMjAxMC5kAhcPZBYCZg8VBW9BIHJlZmluZWQgY29udmVyZ2VuY2UgYW5hbHlzaXMgb2YgcERDQWUgd2l0aCBhcHBsaWNhdGlvbnMgdG8gc2ltdWx0YW5lb3VzIHNwYXJzZSByZWNvdmVyeSBhbmQgb3V0bGllciBkZXRlY3Rpb24JMjAxOC8xMi8yCkNodW4tTmEgTGmbAXd3dy5yZXNlYXJjaGdhdGUubmV0L3B1YmxpY2F0aW9uLzMyNDY0MzkzNl9BX3JlZmluZWRfY29udmVyZ2VuY2VfYW5hbHlzaXNfb2ZfcERDQV9lX3dpdGhfYXBwbGljYXRpb25zX3RvX3NpbXVsdGFuZW91c19zcGFyc2VfcmVjb3ZlcnlfYW5kX291dGxpZXJfZGV0ZWN0aW9ulwFMaXUgVCwgUG9uZyBUIEssIFRha2VkYSBBLiBBIHJlZmluZWQgY29udmVyZ2VuY2UgYW5hbHlzaXMgb2YgcERDQSRfZSQgd2l0aCBhcHBsaWNhdGlvbnMgdG8gc2ltdWx0YW5lb3VzIHNwYXJzZSByZWNvdmVyeSBhbmQgb3V0bGllciBkZXRlY3Rpb25bSl0uIDIwMTguZAIYD2QWAmYPFQUxQ2x1c3RlcmluZyB3aXRoIFBhcnRpdGlvbiBMZXZlbCBTaWRlIEluZm9ybWF0aW9uIAoyMDE4LzExLzI1CVpoZW4gV2FuZxxET0k6IDEwLjExMDkvSUNETS4yMDE1LjE4IA0KkQFMaXUgSCwgRnUgWS4gQ2x1c3RlcmluZyB3aXRoIHBhcnRpdGlvbiBsZXZlbCBzaWRlIGluZm9ybWF0aW9uW0NdLy9EYXRhIE1pbmluZyAoSUNETSksIDIwMTUgSUVFRSBJbnRlcm5hdGlvbmFsIENvbmZlcmVuY2Ugb24uIElFRUUsIDIwMTU6IDg3Ny04ODIuZAIZD2QWAmYPFQU2VGhlIEdFUFNWTSBDbGFzc2lmaWVyIEJhc2VkIG9uIEwxLU5vcm0gRGlzdGFuY2UgTWV0cmljCjIwMTgvMTEvMTELS2FpLUxpIFlhbmchRE9JOiAxMC4xMDA3Lzk3OC05ODEtMTAtMzAwMi00XzU3lgFZYW4gQSBIICwgWWUgQiBRICwgQy4gWWluZ+KAmWFuIExpdSwgZXQgYWwuIFRoZSBHRVBTVk0gQ2xhc3NpZmllciBCYXNlZCBvbiBMMS1Ob3JtIERpc3RhbmNlIE1ldHJpY1tNXS8vIFBhdHRlcm4gUmVjb2duaXRpb24uIFNwcmluZ2VyIFNpbmdhcG9yZSwgMjAxNi5kAhoPZBYCZg8VBUBBIG11bHRpLWtlcm5lbCBmcmFtZXdvcmsgd2l0aCBub25wYXJhbGxlbCBzdXBwb3J0IHZlY3RvciBtYWNoaW5lCTIwMTgvMTEvNAlKdW4gWmhhbmc7d3d3LnNjaWVuY2VkaXJlY3QuY29tL3NjaWVuY2UvYXJ0aWNsZS9waWkvUzA5MjUyMzEyMTczMDg3MzFvVGFuZyBKLCBUaWFuIFkuIEEgbXVsdGkta2VybmVsIGZyYW1ld29yayB3aXRoIG5vbnBhcmFsbGVsIHN1cHBvcnQgdmVjdG9yIG1hY2hpbmVbSl0uIE5ldXJvY29tcHV0aW5nLCAyMDE3LCAyNjYuZAIbD2QWAmYPFQU/RGVlcCBSZXN0cmljdGVkIEtlcm5lbCBNYWNoaW5lcyBVc2luZyBDb25qdWdhdGUgRmVhdHVyZSBEdWFsaXR5CjIwMTgvMTAvMjgNWXVhbi1IYWkgU2hhbzV3d3cubWl0cHJlc3Nqb3VybmFscy5vcmcvZG9pL3BkZi8xMC4xMTYyL05FQ09fYV8wMDk4NHhTdXlrZW5zIEogQSBLLiBEZWVwIFJlc3RyaWN0ZWQgS2VybmVsIE1hY2hpbmVzIFVzaW5nIENvbmp1Z2F0ZSBGZWF0dXJlIER1YWxpdHlbSl0uIE5ldXJhbCBDb21wdXRhdGlvbiwgMjAxNywgMjkoOCk6MS00MS5kAhwPZBYCZg8VBRpTdXBlcnZpc2VkIHRlbnNvciBsZWFybmluZwoyMDE4LzEwLzIxCVlhLUZlbiBZZRtET0k6IDEwLjExMDkvSUNETS4yMDA1LjEzOSBtVGFvIEQsIExpIFgsIFd1IFgsIGV0IGFsLiBTdXBlcnZpc2VkIHRlbnNvciBsZWFybmluZ1tKXS4gS25vd2xlZGdlIGFuZCBJbmZvcm1hdGlvbiBTeXN0ZW1zLCAyMDA3LCAxMygxKToxLTQyLmQCHQ9kFgJmDxUFN0RpbWVuc2lvbmFsaXR5IHJlZHVjdGlvbiBpbiBtdWx0aXBsZSBvcmRpbmFsIHJlZ3Jlc3Npb24JMjAxOC85LzMwDU1pbmctWmVuZyBMaXUkaWVlZXhwbG9yZS5pZWVlLm9yZy9kb2N1bWVudC84MDY0MjA1lAFaZW5nIEosIExpdSBZLCBMZW5nIEIsIGV0IGFsLiBEaW1lbnNpb25hbGl0eSBSZWR1Y3Rpb24gaW4gTXVsdGlwbGUgT3JkaW5hbCBSZWdyZXNzaW9uLltKXS4gSUVFRSBUcmFucyBOZXVyYWwgTmV0dyBMZWFybiBTeXN0LCAyMDE4LCAyOSg5KTo0MDg4LTQxMDEuZAIeD2QWAmYPFQVmTGVhc3Qgc3F1YXJlcyB0d2luIGJvdW5kZWQgc3VwcG9ydCB2ZWN0b3IgbWFjaGluZXMgYmFzZWQgb24gTDEtbm9ybSBkaXN0YW5jZSBtZXRyaWMgZm9yIGNsYXNzaWZpY2F0aW9uCTIwMTgvOS8yMwxXZWktSmllIENoZW4iRE9JOiAxMC4xMDE2L2oucGF0Y29nLjIwMTcuMDkuMDM1IKYBWWFuIEgsIFllIFEsIFpoYW5nIFQsIGV0IGFsLiBMZWFzdCBzcXVhcmVzIHR3aW4gYm91bmRlZCBzdXBwb3J0IHZlY3RvciBtYWNoaW5lcyBiYXNlZCBvbiBMMS1ub3JtIGRpc3RhbmNlIG1ldHJpYyBmb3IgY2xhc3NpZmljYXRpb25bSl0uIFBhdHRlcm4gUmVjb2duaXRpb24sIDIwMTcsIDc0LmQCHw9kFgJmDxUFM05ldyBBcHByb2FjaGVzIHRvIFN1cHBvcnQgVmVjdG9yIE9yZGluYWwgUmVncmVzc2lvbgkyMDE4LzkvMTYNWW9uZy1HYW5nIExpdV1zdGF0aWMuYW1pbmVyLm9yZy9wZGYvUERGLzAwMC8zMzQvNTgxL25ld19hcHByb2FjaGVzX3RvX3N1cHBvcnRfdmVjdG9yX29yZGluYWxfcmVncmVzc2lvbi5wZGaNAVdlaSBDLCBLZWVydGhpIFMgUy4gTmV3IGFwcHJvYWNoZXMgdG8gc3VwcG9ydCB2ZWN0b3Igb3JkaW5hbCByZWdyZXNzaW9uW0NdLy8gSW50ZXJuYXRpb25hbCBDb25mZXJlbmNlIG9uIE1hY2hpbmUgTGVhcm5pbmcuIEFDTSwgMjAwNToxNDUtMTUyLmQCIA9kFgJmDxUFRU5vbi1wYXJhbGxlbCBzdXBwb3J0IHZlY3RvciBjbGFzc2lmaWVycyB3aXRoIGRpZmZlcmVudCBsb3NzIGZ1bmN0aW9ucwgyMDE4LzkvNA5MaW5nLVdlaSBIdWFuZyRjb3JlLmFjLnVrL2Rvd25sb2FkL3BkZi8zNDYwNjAyMS5wZGaXAU1laHJrYW5vb24gUywgSHVhbmcgWCwgU3V5a2VucyBKIEEgSy4gTm9uLXBhcmFsbGVsIHN1cHBvcnQgdmVjdG9yIGNsYXNzaWZpZXJzIHdpdGggZGlmZmVyZW50IGxvc3MgZnVuY3Rpb25zW01dLiBFbHNldmllciBTY2llbmNlIFB1Ymxpc2hlcnMgQi4gVi4gMjAxNC5kAiEPZBYCZg8VBSxNdWx0aXZpZXcgUHJpdmlsZWdlZCBTdXBwb3J0IFZlY3RvciBNYWNoaW5lcwoyMDE3LzEwLzE3DVl1YW4tSGFpIFNoYW8laWVlZXhwbG9yZS5pZWVlLm9yZy9kb2N1bWVudC84MDA4ODExL5kBVGFuZywgSi4sIFRpYW4sIFkuLCBaaGFuZywgUC4sICYgTGl1LCBYLiAoMjAxNykuIE11bHRpdmlldyBQcml2aWxlZ2VkIFN1cHBvcnQgVmVjdG9yIE1hY2hpbmVzLiBJRUVFIFRyYW5zYWN0aW9ucyBvbiBOZXVyYWwgTmV0d29ya3MgYW5kIExlYXJuaW5nIFN5c3RlbXMuZAIiD2QWAmYPFQUsUm9idXN0IGNsdXN0ZXJpbmcgYnkgZGV0ZWN0aW5nIGRlbnNpdHkgcGVha3MIMjAxNy81LzILS2FpLUxpIFlhbmcAjAFKdWFueWluZyBYaWUs4oiX77yMSG9uZ2NoYW8gR2Fv77yMV2VpeGluIFhpZe+8jFhpYW9odWkgTGl177yMUGhpbGlwIFcuIEdyYW50ICAgICAgICAgICBKLiBYaWUgZXQgYWwuIEluZm9ybWF0aW9uIFNjaWVuY2VzIDM1NCAoMjAxNikgMTnigJM0MGQCIw9kFgJmDxUFETEtTlJUU1ZNIHZpYSBBRE1NCTIwMTcvMy8yOAlDaGVuIFdhbmcAmgFYVSBIYWl0YW/vvIxMIEZhbi4gMS1OUlRTVk0gdmlhIEFETU0gZm9yIEF1dG9tYXRpY2FsIEZlYXR1cmUgU2VsZWN0aW9uIGFuZCBDbGFzc2lmaWNhdGlvbiBTaW11bHRhbmVvdXNseSwgV1NFQVMgVHJhbnNhY3Rpb25zIG9uIENvbXB1dGVycy4gNTYoMTQpOjEzMy0xNDIuZAIkD2QWAmYPFQUOQURNTSBmb3IgTlBTVk0JMjAxNy8zLzIxCUNoZW4gV2FuZwC/AVNoZW4gWCwgTml1IEwsIFRpYW4gWSwgZXQgYWwuIEFsdGVybmF0aW5nIERpcmVjdGlvbiBNZXRob2Qgb2YgTXVsdGlwbGllcnMgZm9yIE5vbnBhcmFsbGVsIFN1cHBvcnQgVmVjdG9yIE1hY2hpbmVzLCBJRUVFIEludGVybmF0aW9uYWwgQ29uZmVyZW5jZSBvbiBEYXRhIE1pbmluZyBXb3Jrc2hvcC4gSUVFRSwgMjAxNToxMTcxLTExNzYuZAIlD2QWAmYPFQUaU3BhcnNlIFN1YnNwYWNlIENsdXN0ZXJpbmcKMjAxNi8xMi8zMQlaaGVuIFdhbme9AXh1ZXNodS5iYWlkdS5jb20vcz93ZD1wYXBlcnVyaTooY2NkNTYwYjFlYmQ5ZDM2OTIzYjAzNzU0NDVhMTMxYzgpJmZpbHRlcj1zY19sb25nX3NpZ24mc2Nfa3NfcGFyYT1xJTNEU3BhcnNlK3N1YnNwYWNlK2NsdXN0ZXJpbmcmdG49U0VfYmFpZHV4dWVzaHVfYzFnamV1cGEmaWU9dXRmLTgmc2NfdXM9ODMwMjQ5ODEzODY2OTQwMzk3NJwBRWxoYW1pZmFyIEUsIFZpZGFsIFIuIFNwYXJzZSBzdWJzcGFjZSBjbHVzdGVyaW5nLiBDb21wdXRlciBWaXNpb24gYW5kIFBhdHRlcm4gUmVjb2duaXRpb24sIDIwMDkuIENWUFIgMjAwOS4gSUVFRSBDb25mZXJlbmNlIG9uLiBJRUVFIFhwbG9yZSwgMjAwOToyNzkwLTI3OTcuZAImD2QWAmYPFQUpTGFyZ2Utc2NhbGUgQmluYXJ5IFF1YWRyYXRpYyBPcHRpbWl6YXRpb24KMjAxNi8xMi8xMA9KaWFuZy1Sb25nIENoZW4laWVlZXhwbG9yZS5pZWVlLm9yZy9kb2N1bWVudC83NDMxOTg4L6QBTGFyZ2Utc2NhbGUgQmluYXJ5IFF1YWRyYXRpYyBPcHRpbWl6YXRpb24gVXNpbmcgU2VtaWRlZmluaXRlIFJlbGF4YXRpb24gYW5kIEFwcGxpY2F0aW9ucy4gSUVFRSBUcmFuc2FjdGlvbnMgb24gUGF0dGVybiBBbmFseXNpcyBhbmQgTWFjaGluZSBJbnRlbGxpZ2VuY2UuIChJbiBQcmVzcylkAicPZBYCZg8VBR5SZXByZXNlbnRhdGl2ZSBWZWN0b3IgTWFjaGluZXMKMjAxNi8xMS8yNg1ZdWFuLUhhaSBTaGFvJWllZWV4cGxvcmUuaWVlZS5vcmcvZG9jdW1lbnQvNzE5NDc2My+IAVJlcHJlc2VudGF0aXZlIHZlY3RvciBtYWNoaW5lczogYSB1bmlmaWVkIGZyYW1ld29yayBmb3IgY2xhc3NpY2FsIGNsYXNzaWZpZXJzLiAgSUVFRSBUcmFuc2FjdGlvbnMgb24gQ3liZXJuZXRpY3MsIDQ2KDgpOiAxODc3LTE4ODgsMjAxNi5kAigPZBYCZg8VBSNPcHRpbWFsIE1hcmdpbiBEaXN0cmlidXRpb24gTWFjaGluZQoyMDE2LzExLzEyDU1pbmctWmVuZyBMaXUYYXJ4aXYub3JnL2Ficy8xNjA0LjAzMzQ4Um9wdGltYWwgbWFyZ2luIGRpc3RyaWJ1dGlvbiBtYWNoaW5lLCBBcnRpZmljaWFsIEludGVsbGlnZW5jZSBKb3VybmFsIChzdWJtaXR0ZWQpDQpkAikPZBYCZg8VBTNTdXBwb3J0IFZlY3RvciBNYWNoaW5lIENsYXNzaWZpZXIgd2l0aCBQaW5iYWxsIExvc3MKMjAxNi8xMC8yOQlDaGVuIFdhbmcnaWVlZXhwbG9yZS5pZWVlLm9yZy9kb2N1bWVudC82NjA0Mzg5Lw0KpQFIdWFuZywgWC4sIFNoaSwgTC4sICYgSm9oYW4gQS5LLiBTdXlrZW5zLiBTdXBwb3J0IFZlY3RvciBNYWNoaW5lIENsYXNzaWZpZXIgd2l0aCBQaW5iYWxsIExvc3MgLCBJRUVFIFRyYW5zYWN0aW9ucyBvbiBQYXR0ZXJuIEFuYWx5c2lzIGFuZCBNYWNoaW5lIEludGVsbGlnZW5jZSwyMDE0DQpkAioPZBYCZg8VBR5VbmNvbnN0cmFpbmVkIExhZ3JhbmdpYW4gVFdTVk0KMjAxNi8xMC8xNQxXZWktSmllIENoZW4kZHguZG9pLm9yZy8xMC4xMDA3L3MxMDQ4OS0wMTYtMDgwOS04ugFTIEJhbGFzdW5kYXJhbSwgRCBHdXB0YSwgUyBQcmFzYWQuIEEgbmV3IGFwcHJvYWNoIGZvciB0cmFpbmluZyBMYWdyYW5naWFuIHR3aW4gc3VwcG9ydCB2ZWN0b3IgbWFjaGluZSB2aWEgdW5jb25zdHJhaW5lZCBjb252ZXggbWluaW1pemF0aW9uW0pdLiBBcHBsaWVkIEludGVsbGlnZW5jZS4gMjAxNjogMS0xMS4oSW5wcmVzcylkAisPZBYCZg8VBRdNdWx0aXBsZSBHcmFwaCBMZWFybmluZwkyMDE2LzkvMjgMSHVhLVhpbmcgUGVpK3d3dy5pamNhaS5vcmcvUHJvY2VlZGluZ3MvMTYvUGFwZXJzLzI2OS5wZGaiAU5pZSwgRi4sIExpLCBKLiwgJiBMaSwgWC4gUGFyYW1ldGVyLUZyZWUgQXV0by1XZWlnaHRlZCBNdWx0aXBsZSBHcmFwaCBMZWFybmluZzogQSBGcmFtZXdvcmsgZm9yIE11bHRpdmlldyBDbHVzdGVyaW5nIGFuZCBTZW1pLVN1cGVydmlzZWQgQ2xhc3NpZmljYXRpb24uSUpDQUksMjAxNmQCLA9kFgJmDxUFFEV4dGVuc2lvbnMgb2YgS21lYW5zCTIwMTYvOS8xNAlaaGVuIFdhbmclaWVlZXhwbG9yZS5pZWVlLm9yZy9kb2N1bWVudC82Njg0MjkwL/UBWGlhb2h1aSBIdWFuZywgZXQuIGFsLiBFeHRlbnNpb25zIG9mIEttZWFucy1UeXBlIEFsZ29yaXRobXM6IEEgTmV3DQpDbHVzdGVyaW5nIEZyYW1ld29yayBieSBJbnRlZ3JhdGluZyBJbnRyYWNsdXN0ZXINCkNvbXBhY3RuZXNzIGFuZCBJbnRlcmNsdXN0ZXIgU2VwYXJhdGlvbi4gSUVFRSBUUkFOU0FDVElPTlMgT04gTkVVUkFMIE5FVFdPUktTIEFORCBMRUFSTklORyBTWVNURU1TLCBWT0wuIDI1LCBOTy4gOCwgQVVHVVNUIDIwMTRkAi0PZBYCZg8VBSBLZXJuZWwgTWV0aG9kcyBmb3IgRGVlcCBMZWFybmluZwkyMDEzLzMvMjQNWXVhbi1IYWkgU2hhb3djaXRlc2Vlci5pc3QucHN1LmVkdS92aWV3ZG9jL2Rvd25sb2FkO2pzZXNzaW9uaWQ9QzFCRDhBMUY3RjhBOUQwRDREMDkzMDQwMTFCNTY5NjQ/ZG9pPTEwLjEuMS4xNTguMTE1OCZyZXA9cmVwMSZ0eXBlPXBkZndDaG8gWSwgU2F1bCBMIEsuIEtlcm5lbCBtZXRob2RzIGZvciBkZWVwIGxlYXJuaW5nW0NdLy9BZHZhbmNlcyBpbiBuZXVyYWwgaW5mb3JtYXRpb24gcHJvY2Vzc2luZyBzeXN0ZW1zLiAyMDA5OiAzNDItMzUwLmQCLg9kFgJmDxUFIEtlcm5lbCBNZXRob2RzIGZvciBEZWVwIExlYXJuaW5nCTIwMTMvMy8yNA1ZdWFuLUhhaSBTaGFvd2NpdGVzZWVyLmlzdC5wc3UuZWR1L3ZpZXdkb2MvZG93bmxvYWQ7anNlc3Npb25pZD1DMUJEOEExRjdGOEE5RDBENEQwOTMwNDAxMUI1Njk2ND9kb2k9MTAuMS4xLjE1OC4xMTU4JnJlcD1yZXAxJnR5cGU9cGRmd0NobyBZLCBTYXVsIEwgSy4gS2VybmVsIG1ldGhvZHMgZm9yIGRlZXAgbGVhcm5pbmdbQ10vL0FkdmFuY2VzIGluIG5ldXJhbCBpbmZvcm1hdGlvbiBwcm9jZXNzaW5nIHN5c3RlbXMuIDIwMDk6IDM0Mi0zNTAuZAIvD2QWAmYPFQUAAAAAAGQYAQUdY3RsMDAkQ1BIX1JpZ2h0Ym9keSRMaXN0VmlldzEPFCsADmRkZGRkZGQ8KwAvAAIvZGRkZgL/////D2TLmaJGLLYnoEYixVHiEVR7Ryi6V1IYj2OD84jvIIFLOQ==" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="29D20F7E" />
+</div>
+                <div>
+                    
+
+    <p style="font-size: 18px;">The seminars are held biweekly via QQ group (175761622), and the topics are listed as following: </p>
+                <div id="div_listview">
+                    
+                            
+                            <div class="div_item">
+                                <p><b>Topic: </b>Tensor Robust Principal Component Analysis with A New Tensor Nuclear Norm &nbsp; (2019/9/29)</p>
+                                <p><b>Reporter: </b>Xiang-Fei Yang</p>
+                                <p><b>Reference: </b><a href='http://https://arxiv.org/pdf/1804.03728.pdf' target="_blank">Lu, Canyi, et al. "Tensor robust principal component analysis with a new tensor nuclear norm." IEEE transactions on pattern analysis and machine intelligence (2019).</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>A Simple and Fast Algorithm for L1-norm Kernel PCA &nbsp; (2019/9/22)</p>
+                                <p><b>Reporter: </b>Chun-Na Li</p>
+                                <p><b>Reference: </b><a href='http://DOI: 10.1109/TPAMI.2019.2903505' target="_blank">Kim, Cheolmin, and Diego Klabjan. "A Simple and Fast Algorithm for L1-norm Kernel PCA." IEEE transactions on pattern analysis and machine intelligence (2019).</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>A Divide-and-Conquer Solver for Kernel Support Vector Machines &nbsp; (2019/9/15)</p>
+                                <p><b>Reporter: </b>Jun Zhang</p>
+                                <p><b>Reference: </b><a href='http://http://proceedings.mlr.press/v32/hsieha14.pdf' target="_blank">Hsieh, Cho-Jui, Si Si, and Inderjit Dhillon. "A divide-and-conquer solver for kernel support vector machines." International conference on machine learning. 2014.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Membership Affinity Lasso for Fuzzy Clustering &nbsp; (2019/9/8)</p>
+                                <p><b>Reporter: </b>Yan-Ru Guo</p>
+                                <p><b>Reference: </b><a href='http://DOI: 10.1109/TFUZZ.2019.2905114' target="_blank">Guo, Li, et al. "Membership Affinity Lasso for Fuzzy Clustering." IEEE Transactions on Fuzzy Systems (2019).</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Absent Multiple Kernel Learning Algorithms &nbsp; (2019/9/1)</p>
+                                <p><b>Reporter: </b>Yu-Ting Zhao</p>
+                                <p><b>Reference: </b><a href='http://https://www.aaai.org/ocs/index.php/AAAI/AAAI15/paper/viewFile/9298/9945' target="_blank">Liu, Xinwang, et al. "Absent multiple kernel learning." Twenty-Ninth AAAI Conference on Artificial Intelligence. 2015.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Learning SVM Classifiers with Indefinite Kernels &nbsp; (2019/7/7)</p>
+                                <p><b>Reporter: </b>Ling-Wei Huang</p>
+                                <p><b>Reference: </b><a href='http://https://www.aaai.org/ocs/index.php/AAAI/AAAI12/paper/viewFile/4965/5504' target="_blank">Gu, Suicheng, and Yuhong Guo. "Learning SVM classifiers with indefinite kernels." Twenty-Sixth AAAI Conference on Artificial Intelligence. 2012.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Classification With Truncated Distance Kernel &nbsp; (2019/6/16)</p>
+                                <p><b>Reporter: </b>Yuan-Hai Shao</p>
+                                <p><b>Reference: </b><a href='http://DOI: 10.1109/TNNLS.2017.2668610' target="_blank">Huang, Xiaolin, et al. "Classification With Truncated $\ell _ {1} $ Distance Kernel." IEEE transactions on neural networks and learning systems 29.5 (2017): 2025-2030.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Intuitionistic Fuzzy Twin Support Vector Machines &nbsp; (2019/6/9)</p>
+                                <p><b>Reporter: </b>Zhen Wang</p>
+                                <p><b>Reference: </b><a href='http://DOI: 10.1109/TFUZZ.2019.2893863' target="_blank">Rezvani, Salim, Xizhao Wang, and Farhad Pourpanah. "Intuitionistic Fuzzy Twin Support Vector Machines." IEEE Transactions on Fuzzy Systems (2019).</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Clustervision: Visual supervision of unsupervised clustering &nbsp; (2019/5/26)</p>
+                                <p><b>Reporter: </b>Zhen Wang</p>
+                                <p><b>Reference: </b><a href='http://perer.org/papers/adamPerer-Clustervision-VAST2017.pdf' target="_blank">Kwon B C, Eysenbach B, Verma J, et al. Clustervision: Visual supervision of unsupervised clustering[J]. IEEE transactions on visualization and computer graphics, 2017, 24(1): 142-151.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Semi-Supervised Ordinal Regression Based on Empirical Risk Minimization &nbsp; (2019/5/19)</p>
+                                <p><b>Reporter: </b>Xin-Xin Duan</p>
+                                <p><b>Reference: </b><a href='http://arxiv.org/pdf/1901.11351.pdf' target="_blank">Tsuchiya T, Charoenphakdee N, Sato I, et al. Semi-Supervised Ordinal Regression Based on Empirical Risk Minimization[J]. arXiv preprint arXiv:1901.11351, 2019.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>LSCCA-Canonical Correlation Analysis for Multilabel Classification_ A Least-Squares Formulation, Extensions, and Analysis &nbsp; (2019/5/12)</p>
+                                <p><b>Reporter: </b>Ming-Zeng Liu</p>
+                                <p><b>Reference: </b><a href='http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=41B4207B899E73E4B0BE126D87262094?doi=10.1.1.172.1914&rep=rep1&type=pdf' target="_blank">Sun L , Ji S , Ye J . Canonical Correlation Analysis for Multilabel Classification: A Least-Squares Formulation, Extensions, and Analysis[J]. IEEE Transactions on Pattern Analysis and Machine Intelligence, 2010, 33(1):194-200.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Dimensionality reduction in multiple ordinal regression &nbsp; (2019/5/5)</p>
+                                <p><b>Reporter: </b>Yong-Gang Liu</p>
+                                <p><b>Reference: </b><a href='http://www.comp.hkbu.edu.hk/~ymc/papers/journal/TNNLS-2016-P-6492-publication_version.pdf' target="_blank">Zeng J, Liu Y, Leng B, et al. Dimensionality reduction in multiple ordinal regression[J]. IEEE transactions on neural networks and learning systems, 2017, 29(9): 4088-4101.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>A general model for plane-based clustering with &nbsp; (2019/4/28)</p>
+                                <p><b>Reporter: </b>Yu-Ting Zhao</p>
+                                <p><b>Reference: </b><a href='http://arxiv.org/pdf/1901.09178.pdf' target="_blank">Wang Z, Shao Y H, Bai L, et al. A general model for plane-based clustering with loss function[J]. arXiv preprint arXiv:1901.09178, 2019.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Absent Multiple Kernel Learning Algorithms &nbsp; (2019/4/14)</p>
+                                <p><b>Reporter: </b>Jun Zhang</p>
+                                <p><b>Reference: </b><a href='http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.724.4585&rep=rep1&type=pdf' target="_blank">Liu X , Wang L , Yin J , et al. Absent Multiple Kernel Learning[C]// AAAI2015. IEEE, 2015.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Multi-task proximal support vector machine &nbsp; (2019/4/7)</p>
+                                <p><b>Reporter: </b>Wei-Jie Chen</p>
+                                <p><b>Reference: </b><a href='http://doi.org/10.1016/j.patcog.2015.01.014
+' target="_blank">Li Y, Tian X, Song M, et al. Multi-task proximal support vector machine[J]. Pattern Recognition, 2015, 48(10): 3249-3257.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Kernel Methods for Deep Learning &nbsp; (2019/3/24)</p>
+                                <p><b>Reporter: </b>Yuan-Hai Shao</p>
+                                <p><b>Reference: </b><a href='http://papers.nips.cc/paper/3628-kernel-methods-for-deep-learning.pdf' target="_blank">Cho Y, Saul L K. Kernel methods for deep learning[C]//Advances in neural information processing systems. 2009: 342-350.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Support Vector Machine Learning for Interdependent and Structured Output Spaces &nbsp; (2019/3/17)</p>
+                                <p><b>Reporter: </b>Chun-Na Li</p>
+                                <p><b>Reference: </b><a href='http://citeseer.ist.psu.edu/viewdoc/download;jsessionid=37715AAAAF55BCDEF67AE80FE3883467?doi=10.1.1.151.3243&rep=rep1&type=pdf' target="_blank">Tsochantaridis I , Hofmann T , Joachims T , et al. Support Vector Machine Learning for Interdependent and Structured Output Spaces[J]. Machine Learning, 2004.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Fast Cross-Validation for Kernel-based Algorithms &nbsp; (2019/3/3)</p>
+                                <p><b>Reporter: </b>Ling-Wei Huang</p>
+                                <p><b>Reference: </b><a href='http://DOI: 10.1109/TPAMI.2019.2892371 ' target="_blank">Liu Y, Liao S, Jiang S, et al. Fast Cross-Validation for Kernel-based Algorithms[J]. IEEE transactions on pattern analysis and machine intelligence, 2019.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>DC programming and DCA for sparse Fisher linear discriminant analysis &nbsp; (2019/1/6)</p>
+                                <p><b>Reporter: </b>Chun-Na Li</p>
+                                <p><b>Reference: </b><a href='http://link.springer.com/content/pdf/10.1007%2Fs00521-016-2216-9.pdf' target="_blank">Le Thi H A, Phan D N. DC programming and DCA for sparse Fisher linear discriminant analysis[J]. Neural Computing and Applications, 2017, 28(9): 2809-2822.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Face recognition using discriminant locality preserving projections based on maximum margin criterion &nbsp; (2018/12/23)</p>
+                                <p><b>Reporter: </b>Kai-Li Yang</p>
+                                <p><b>Reference: </b><a href='http://www.sciencedirect.com/science/article/pii/S0031320310001536' target="_blank">Lu G F, Lin Z, Jin Z. Face recognition using discriminant locality preserving projections based on maximum margin criterion.[J]. Pattern Recognition, 2010, 43(10):3572-3579.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Indefinite kernels in least squares support vector machines and principal component analysis &nbsp; (2018/12/16)</p>
+                                <p><b>Reporter: </b>Jun Zhang</p>
+                                <p><b>Reference: </b><a href='http://www.sciencedirect.com/science/article/pii/S1063520316300495' target="_blank">Huang X , Maier A , Hornegger J , et al. Indefinite kernels in least squares support vector machines and principal component analysis[J]. Applied and Computational Harmonic Analysis, 2016:S1063520316300495.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>From Convex to Nonconvex: A Loss Function Analysis for Binary Classification  &nbsp; (2018/12/9)</p>
+                                <p><b>Reporter: </b>Ling-Wei Huang</p>
+                                <p><b>Reference: </b><a href='http://DOI: 10.1109/ICDMW.2010.57 ' target="_blank">Zhao L, Mammadov M, Yearwood J. From Convex to Nonconvex: A Loss Function Analysis for Binary Classification[C]// IEEE International Conference on Data Mining Workshops. 2010.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>A refined convergence analysis of pDCAe with applications to simultaneous sparse recovery and outlier detection &nbsp; (2018/12/2)</p>
+                                <p><b>Reporter: </b>Chun-Na Li</p>
+                                <p><b>Reference: </b><a href='http://www.researchgate.net/publication/324643936_A_refined_convergence_analysis_of_pDCA_e_with_applications_to_simultaneous_sparse_recovery_and_outlier_detection' target="_blank">Liu T, Pong T K, Takeda A. A refined convergence analysis of pDCA$_e$ with applications to simultaneous sparse recovery and outlier detection[J]. 2018.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Clustering with Partition Level Side Information  &nbsp; (2018/11/25)</p>
+                                <p><b>Reporter: </b>Zhen Wang</p>
+                                <p><b>Reference: </b><a href='http://DOI: 10.1109/ICDM.2015.18 
+' target="_blank">Liu H, Fu Y. Clustering with partition level side information[C]//Data Mining (ICDM), 2015 IEEE International Conference on. IEEE, 2015: 877-882.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>The GEPSVM Classifier Based on L1-Norm Distance Metric &nbsp; (2018/11/11)</p>
+                                <p><b>Reporter: </b>Kai-Li Yang</p>
+                                <p><b>Reference: </b><a href='http://DOI: 10.1007/978-981-10-3002-4_57' target="_blank">Yan A H , Ye B Q , C. Ying’an Liu, et al. The GEPSVM Classifier Based on L1-Norm Distance Metric[M]// Pattern Recognition. Springer Singapore, 2016.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>A multi-kernel framework with nonparallel support vector machine &nbsp; (2018/11/4)</p>
+                                <p><b>Reporter: </b>Jun Zhang</p>
+                                <p><b>Reference: </b><a href='http://www.sciencedirect.com/science/article/pii/S0925231217308731' target="_blank">Tang J, Tian Y. A multi-kernel framework with nonparallel support vector machine[J]. Neurocomputing, 2017, 266.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Deep Restricted Kernel Machines Using Conjugate Feature Duality &nbsp; (2018/10/28)</p>
+                                <p><b>Reporter: </b>Yuan-Hai Shao</p>
+                                <p><b>Reference: </b><a href='http://www.mitpressjournals.org/doi/pdf/10.1162/NECO_a_00984' target="_blank">Suykens J A K. Deep Restricted Kernel Machines Using Conjugate Feature Duality[J]. Neural Computation, 2017, 29(8):1-41.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Supervised tensor learning &nbsp; (2018/10/21)</p>
+                                <p><b>Reporter: </b>Ya-Fen Ye</p>
+                                <p><b>Reference: </b><a href='http://DOI: 10.1109/ICDM.2005.139 ' target="_blank">Tao D, Li X, Wu X, et al. Supervised tensor learning[J]. Knowledge and Information Systems, 2007, 13(1):1-42.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Dimensionality reduction in multiple ordinal regression &nbsp; (2018/9/30)</p>
+                                <p><b>Reporter: </b>Ming-Zeng Liu</p>
+                                <p><b>Reference: </b><a href='http://ieeexplore.ieee.org/document/8064205' target="_blank">Zeng J, Liu Y, Leng B, et al. Dimensionality Reduction in Multiple Ordinal Regression.[J]. IEEE Trans Neural Netw Learn Syst, 2018, 29(9):4088-4101.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Least squares twin bounded support vector machines based on L1-norm distance metric for classification &nbsp; (2018/9/23)</p>
+                                <p><b>Reporter: </b>Wei-Jie Chen</p>
+                                <p><b>Reference: </b><a href='http://DOI: 10.1016/j.patcog.2017.09.035 ' target="_blank">Yan H, Ye Q, Zhang T, et al. Least squares twin bounded support vector machines based on L1-norm distance metric for classification[J]. Pattern Recognition, 2017, 74.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>New Approaches to Support Vector Ordinal Regression &nbsp; (2018/9/16)</p>
+                                <p><b>Reporter: </b>Yong-Gang Liu</p>
+                                <p><b>Reference: </b><a href='http://static.aminer.org/pdf/PDF/000/334/581/new_approaches_to_support_vector_ordinal_regression.pdf' target="_blank">Wei C, Keerthi S S. New approaches to support vector ordinal regression[C]// International Conference on Machine Learning. ACM, 2005:145-152.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Non-parallel support vector classifiers with different loss functions &nbsp; (2018/9/4)</p>
+                                <p><b>Reporter: </b>Ling-Wei Huang</p>
+                                <p><b>Reference: </b><a href='http://core.ac.uk/download/pdf/34606021.pdf' target="_blank">Mehrkanoon S, Huang X, Suykens J A K. Non-parallel support vector classifiers with different loss functions[M]. Elsevier Science Publishers B. V. 2014.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Multiview Privileged Support Vector Machines &nbsp; (2017/10/17)</p>
+                                <p><b>Reporter: </b>Yuan-Hai Shao</p>
+                                <p><b>Reference: </b><a href='http://ieeexplore.ieee.org/document/8008811/' target="_blank">Tang, J., Tian, Y., Zhang, P., & Liu, X. (2017). Multiview Privileged Support Vector Machines. IEEE Transactions on Neural Networks and Learning Systems.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Robust clustering by detecting density peaks &nbsp; (2017/5/2)</p>
+                                <p><b>Reporter: </b>Kai-Li Yang</p>
+                                <p><b>Reference: </b><a href='http://' target="_blank">Juanying Xie,∗，Hongchao Gao，Weixin Xie，Xiaohui Liu，Philip W. Grant           J. Xie et al. Information Sciences 354 (2016) 19–40</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>1-NRTSVM via ADMM &nbsp; (2017/3/28)</p>
+                                <p><b>Reporter: </b>Chen Wang</p>
+                                <p><b>Reference: </b><a href='http://' target="_blank">XU Haitao，L Fan. 1-NRTSVM via ADMM for Automatical Feature Selection and Classification Simultaneously, WSEAS Transactions on Computers. 56(14):133-142.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>ADMM for NPSVM &nbsp; (2017/3/21)</p>
+                                <p><b>Reporter: </b>Chen Wang</p>
+                                <p><b>Reference: </b><a href='http://' target="_blank">Shen X, Niu L, Tian Y, et al. Alternating Direction Method of Multipliers for Nonparallel Support Vector Machines, IEEE International Conference on Data Mining Workshop. IEEE, 2015:1171-1176.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Sparse Subspace Clustering &nbsp; (2016/12/31)</p>
+                                <p><b>Reporter: </b>Zhen Wang</p>
+                                <p><b>Reference: </b><a href='http://xueshu.baidu.com/s?wd=paperuri:(ccd560b1ebd9d36923b0375445a131c8)&filter=sc_long_sign&sc_ks_para=q%3DSparse+subspace+clustering&tn=SE_baiduxueshu_c1gjeupa&ie=utf-8&sc_us=8302498138669403974' target="_blank">Elhamifar E, Vidal R. Sparse subspace clustering. Computer Vision and Pattern Recognition, 2009. CVPR 2009. IEEE Conference on. IEEE Xplore, 2009:2790-2797.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Large-scale Binary Quadratic Optimization &nbsp; (2016/12/10)</p>
+                                <p><b>Reporter: </b>Jiang-Rong Chen</p>
+                                <p><b>Reference: </b><a href='http://ieeexplore.ieee.org/document/7431988/' target="_blank">Large-scale Binary Quadratic Optimization Using Semidefinite Relaxation and Applications. IEEE Transactions on Pattern Analysis and Machine Intelligence. (In Press)</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Representative Vector Machines &nbsp; (2016/11/26)</p>
+                                <p><b>Reporter: </b>Yuan-Hai Shao</p>
+                                <p><b>Reference: </b><a href='http://ieeexplore.ieee.org/document/7194763/' target="_blank">Representative vector machines: a unified framework for classical classifiers.  IEEE Transactions on Cybernetics, 46(8): 1877-1888,2016.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Optimal Margin Distribution Machine &nbsp; (2016/11/12)</p>
+                                <p><b>Reporter: </b>Ming-Zeng Liu</p>
+                                <p><b>Reference: </b><a href='http://arxiv.org/abs/1604.03348' target="_blank">optimal margin distribution machine, Artificial Intelligence Journal (submitted)
+</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Support Vector Machine Classifier with Pinball Loss &nbsp; (2016/10/29)</p>
+                                <p><b>Reporter: </b>Chen Wang</p>
+                                <p><b>Reference: </b><a href='http://ieeexplore.ieee.org/document/6604389/
+' target="_blank">Huang, X., Shi, L., & Johan A.K. Suykens. Support Vector Machine Classifier with Pinball Loss , IEEE Transactions on Pattern Analysis and Machine Intelligence,2014
+</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Unconstrained Lagrangian TWSVM &nbsp; (2016/10/15)</p>
+                                <p><b>Reporter: </b>Wei-Jie Chen</p>
+                                <p><b>Reference: </b><a href='http://dx.doi.org/10.1007/s10489-016-0809-8' target="_blank">S Balasundaram, D Gupta, S Prasad. A new approach for training Lagrangian twin support vector machine via unconstrained convex minimization[J]. Applied Intelligence. 2016: 1-11.(Inpress)</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Multiple Graph Learning &nbsp; (2016/9/28)</p>
+                                <p><b>Reporter: </b>Hua-Xing Pei</p>
+                                <p><b>Reference: </b><a href='http://www.ijcai.org/Proceedings/16/Papers/269.pdf' target="_blank">Nie, F., Li, J., & Li, X. Parameter-Free Auto-Weighted Multiple Graph Learning: A Framework for Multiview Clustering and Semi-Supervised Classification.IJCAI,2016</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Extensions of Kmeans &nbsp; (2016/9/14)</p>
+                                <p><b>Reporter: </b>Zhen Wang</p>
+                                <p><b>Reference: </b><a href='http://ieeexplore.ieee.org/document/6684290/' target="_blank">Xiaohui Huang, et. al. Extensions of Kmeans-Type Algorithms: A New
+Clustering Framework by Integrating Intracluster
+Compactness and Intercluster Separation. IEEE TRANSACTIONS ON NEURAL NETWORKS AND LEARNING SYSTEMS, VOL. 25, NO. 8, AUGUST 2014</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Kernel Methods for Deep Learning &nbsp; (2013/3/24)</p>
+                                <p><b>Reporter: </b>Yuan-Hai Shao</p>
+                                <p><b>Reference: </b><a href='http://citeseer.ist.psu.edu/viewdoc/download;jsessionid=C1BD8A1F7F8A9D0D4D09304011B56964?doi=10.1.1.158.1158&rep=rep1&type=pdf' target="_blank">Cho Y, Saul L K. Kernel methods for deep learning[C]//Advances in neural information processing systems. 2009: 342-350.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b>Kernel Methods for Deep Learning &nbsp; (2013/3/24)</p>
+                                <p><b>Reporter: </b>Yuan-Hai Shao</p>
+                                <p><b>Reference: </b><a href='http://citeseer.ist.psu.edu/viewdoc/download;jsessionid=C1BD8A1F7F8A9D0D4D09304011B56964?doi=10.1.1.158.1158&rep=rep1&type=pdf' target="_blank">Cho Y, Saul L K. Kernel methods for deep learning[C]//Advances in neural information processing systems. 2009: 342-350.</a></p>
+                            </div>
+                        
+                            <div class="div_item">
+                                <p><b>Topic: </b> &nbsp; ()</p>
+                                <p><b>Reporter: </b></p>
+                                <p><b>Reference: </b><a href='http://' target="_blank"></a></p>
+                            </div>
+                        
+                        
+                    
+                </div>
+                <p>[<a href="#top" target="_self">go top</a>]</p>
+
+
+                </div>
+            </form>
+
+
+        </div>
+
+    </div>
+</body>
+</html>
