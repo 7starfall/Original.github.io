@@ -1,0 +1,7 @@
+Pos   Site     Score     Prediction Palm
+>sp|P49802|RGS7_HUMAN Regulator of G-protein signaling 7 OS=Homo sapiens GN=RGS7 PE=1 SV=3
+120    C     0.111572      Palm
+133    C     0.304411      Palm
+206    C     0.039831      No Palm
+480    C     0.000000      No Palm
+484    C     0.000000      No Palm

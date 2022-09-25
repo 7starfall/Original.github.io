@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>RPTSVM</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>RPTSVM</b></font></h5>
+<hr />
+<p> A Matlab code for recursive projection twin support vector machine.
+(You could Right-Click <a href="./RPTSVM/RPTSVM.rar">[Code]</a> , and Save, then you can download the whole matlab code.) </p>
+
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Yuan-Hai Shao, Zhen Wang, Wei-Jie Chen, Nai-Yang Deng*. A regularization for the projection twin support vector machine[J]. <b>Knowledge-Based Systems</b>, 2013, 37: 203–210. </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+
+<div style="white-space:pre">
+<b class="purple">function Predict_Y = RPTSVM(TestX,DataTrain,FunPara)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% RPTSVM: recursive projection twin support vector machine
+%
+% Predict_Y = RPTSVM(TestX,DataTrain,FunPara)
+% 
+% Input:
+%    TestX - Test Data matrix. Each row vector of fea is a data point.
+%
+%    DataTrain - Struct value in Matlab(Training data).
+%                DataTrain.A: Positive input of Data matrix.
+%                DataTrain.B: Negative input of Data matrix.
+%
+%    FunPara - Struct value in Matlab. The fields in options that can be set: 
+%              c1: [0,inf] Paramter to tune the weight. 
+%              c2: [0,inf] Paramter to tune the weight. 
+%              v1: [0,inf] Paramter to tune the weight. 
+%              v2: [0,inf] Paramter to tune the weight.
+%              kerpara: Paramter of kernel function. 
+%
+% Output:
+%    Predict_Y - Predict value of the TestX.
+%
+% Examples:
+%    DataTrain.A = rand(50,10);
+%    DataTrain.B = rand(60,10);
+%    TestX = rand(20,10);
+%    FunPara.c1=0.1;
+%    FunPara.c2=0.1;
+%    FunPara.v1=0.1;
+%    FunPara.v2=0.1;
+%    FunPara.kerpara.type='rbf'
+%    FunPara.kerpara.pars=1
+%    Predict_Y = RPTSVM(TestX,DataTrain,FunPara);
+%
+% Reference:
+%   Yuan-Hai Shao, Zhen Wang, Wei-Jie Chen, Nai-Yang Deng*. 
+%   A regularization for the projection twin support vector machine[J]. 
+%   Knowledge-Based Systems,2013, 37: 203–210.
+% 
+%    Version 1.0 --Apr/2011 
+%    Written by Yuan-Hai Shao (shaoyuanhai21@163.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+%tic;
+inputA = DataTrain.A;
+inputB = DataTrain.B;
+m = size(TestX,1);
+c1 = FunPara.c1;
+c2 = FunPara.c2;
+v1 = FunPara.v1;
+v2 = FunPara.v2;
+m1 = size(inputA,1);
+m2 = size(inputB,1);
+e1 = ones(m1,1);
+e2 = ones(m2,1);
+kerpara = FunPara.kerpara;
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Compute w1 and w2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+if strcmp(kerpara.type,'rbf')
+    X = [DataTrain.A;DataTrain.B];
+    inputA = kernelfun(inputA,kerpara,X);
+    inputB = kernelfun(inputB,kerpara,X);
+    TestX = kernelfun(TestX,kerpara,X);
+end
+s1 = m1*cov(inputA,1);   
+s2 = m2*cov(inputB,1);
+I = eye(length(s1));
+E1 = v1*s1 + I;
+E2 = v2*s2 + I;
+H = inputB-1/m1*e2*e1'*inputA;
+G = inputA-1/m2*e1*e2'*inputB;
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%RPTWSVM1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+HE = E1\H';
+HHE = H*HE;
+HHE = (HHE+HHE')/2;
+alpha = qpSOR(HHE,0.5,c1,0.05); %SOR
+w1 = E1\H'*alpha;
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%RPTWSVM2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+GE = E2\G';
+GGE = G*GE;
+GGE = (GGE+GGE')/2;
+beta = qpSOR(GGE,0.5,c2,0.05);  %SOR
+w2 = E2\G'*beta;
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Record w1 and w2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+W1 = w1;
+W2 = w2;
+center1 = mean(inputA,1);
+center2 = mean(inputB,1);
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%While multiple orthogonal recursive projection
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+% mop=0;
+% while mop>0
+%         for i=1:m1
+%             inputA(i,:)=inputA(i,:)-(w1*inputA(i,:)*w1)';
+%         end
+%         for i=1:m2
+%             inputB(i,:)=inputB(i,:)-(w2*inputB(i,:)*w2)';
+%         end
+%         s1 = m1*cov(inputA,1);   
+%         s2 = m2*cov(inputB,1);
+%         I = eye(length(s1));
+%         E1 = v1*s1 + I;
+%         E2 = v2*s2 + I;
+%         H = inputB-1/m1*e2*e1'*inputA;
+%         G = inputA-1/m2*e1*e2'*inputB;
+%         HE = E1\H';
+%         HHE = H*HE;
+%         HHE = (HHE+HHE')/2;
+%         alpha = qpSOR(HHE,0.5,c1,0.05); %SOR
+%         w1 = E1\H'*alpha;
+%         GE = E2\G';
+%         GGE = G*GE;
+%         GGE = (GGE+GGE')/2;
+%         beta = qpSOR(GGE,0.5,c2,0.05); %SOR
+%         w2 = E2\G'*beta;
+%         W1=[W1,w1];
+%         W2=[W2,w2];
+%         mop=mop-1;
+% end
+% toc
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict and output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+Predict_Y = zeros(m1,1);
+for i=1:m
+Y11(i,:)=TestX(i,:)*W1-center1*W1;
+Y22(i,:)=TestX(i,:)*W2-center2*W2; 
+if norm(Y11(i,:)) <= norm(Y22(i,:))
+Predict_Y(i,:)=1;
+else
+Predict_Y(i,:)=-1;
+end
+end
+</b>
+
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to shaoyuanhai21@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Jun 5, 2013
+
+
+<br />
+<br />
+
+
+
+
+
+
+
+  <div class="rssfeed">
+    
+ </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

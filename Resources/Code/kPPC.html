@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>kPPC</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+
+<h5><font face="Times New Roman" size="4"><b>kPPC</b></font></h5>
+<hr />
+<p> A Matlab code for  k-Proximal Plane Clustering. <a href="./kPPC/kPPC.rar">[Code]</a></p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Yuan-Hai Shao,Yan-Ru Guo, Zhen Wang, Zhi-Min Yang, and Nai-Yang Deng.  k-Proximal Plane Clustering,2013,Submitted. </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+<p>Need stdata;kernelfun;Initialization11;GepOneSide;Getchushi8;GepCluster8 function.</p>
+
+<div style="white-space:pre">
+<b class="purple"> pY =kPPC(X,rX,k,knn,W,FunPara);</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% kPPC: k-Proximal Plane Clustering
+%
+% pY =kPPC(X,rX,k,knn,W,FunPara); 
+% 
+% Input:  X -  data points matrix. Each row vector of fea is a data point
+%         rX-  the data points who is used to construct the initial plane
+%         k-   number of cluster;
+%         knn- number of nearest neighbors;
+%         W- the construct the initial plane;
+%          FunPara - Struct value in Matlab. The fields in options that can be set:
+%          c: [0,inf] appropriate parameter to tune the weight. 
+%          kerfPara: Kernel parameters. See kernelfun.m.
+%    
+%
+% Examples:
+%    X = rand(50,10);Y=[ones(20,1); ones(20,1)+1; ones(10,1)+2];
+%    c=0.01;k=3; kerfPara.type = 'lin';
+%    pY =kPPC(X,rX,k,knn,W,FunPara);
+%
+% Reference:
+%   Yuan-Hai Shao,Yan-Ru Guo and Zhen Wang. k-Proximal Plane Clustering,2013,Submitted. 
+%
+%    Version 1.0 --Dec/2013 
+%
+%    Written by Yan-Ru Guo ("Guoyanru211@163.com")
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+%tic;
+m=size(X,1);Y1=zeros(m,1);book=sparse(m,m);cnt=sparse(m,m);d=1; knn=3;
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Each data point is normalized with the mean 0 and standard deviation 1. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+stX=stdata(X);
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% initialize the input stX to get the cluster Y1 and rX
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+[Y1,rX]=Initialization11(stX,k,knn); 
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Construct the initial plane W
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+ W=Getchushi8(rX,k,c);   
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Update plane W:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+[s,t]=size(stX); pY=crossvalind('kfold',s,k);pYnew=zeros(s,1);z=0;
+while(~isempty(find(pY~=pYnew, 1)) && z~=1000)   
+    pYnew=pY;
+    z=z+1;
+    % update plane W
+     for i=1:k
+            tA=stX((pY==i),:);
+            tB=stX((pY~=i),:); 
+            mi=size(tA,1);
+         if ~isempty(find(pY==i, 1))
+            W(i,:)=GepOneSide(tA,tB,c);
+         end 
+     end
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict and output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+   if strcmp(kerfPara.type,'lin')
+               pY=abs(stX*W(:,1:t)'+ones(s,1)*W(:,t+1)');
+           else    
+              pY=abs(stX*W(:,1:s)'+ones(s,1)*W(:,s+1)');
+         end
+       [tmp,pY]=min(pY');
+        pY=pY';               
+                
+   end
+
+</b>
+
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to shaoyuanhai21@163.com and Guoyanru211@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: December 27, 2013
+
+<br />
+<br />
+
+
+</div>
+
+</div>
+
+</body>
+</html>

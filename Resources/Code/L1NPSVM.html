@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>L1NPSVM</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>TWSVC</b></font></h5>
+<hr />
+<p> A Matlab code for  L1-norm nonparallel proximal svm. <a href="./L1NPSVM/L1NPSVM.zip">[Code]</a></p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Chun-Na Li, Yuan-Hai Shao, Nai-Yang Deng. Robust L1-norm nonparallel proximal support vector machine[J]. Optimization. 2014. </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+<div style="white-space:pre">
+<b class="purple"> function [ClassAC,fw] = L1NPSVM(Data,d)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% L1NPSVM: L1-norm nonparallel proximal svm
+%
+% Predict_Y=L1NPSVM(TestX,DataTrain)
+% 
+% w is a column vector
+%
+% Reference:
+%
+%    Version 1.0 --16.Dec/2013 
+%    Written by Wei-Jie Chen and Chun-Na Li, wjcper2008@126.com and na1013na@163.com.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initialization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+%tic;
+[~,nFea] = size(Data.TrainX); 
+gamma = 0.0005; % Learning rate
+classLabel = unique(Data.TrainY);
+nClass = length(classLabel);
+
+ClassAC = zeros(d,1);     
+fw = zeros(nFea+1,d,nClass);
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Greedy Search Algorithm find multiple features for each class
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+for c = 1:nClass
+    A = Data.TrainX((Data.TrainY==classLabel(c)),:); A = [A, ones(length(A(:,1)),1)];
+    B = Data.TrainX((Data.TrainY~=classLabel(c)),:); B = [B, ones(length(B(:,1)),1)];
+
+    % Greedy Search Algorithm Come On!!!
+    for k=1:d
+        obj = 0;
+        w = rand(nFea+1,1);
+        w = w/norm(w);
+        while 1
+            %Polarity check 
+            S = sign(A*w);R = sign(B*w);
+
+            %Updata wn
+            TempL = sum(diag(S)*A);  TempR = sum(diag(R)*B); 
+            Ldenomi = TempL*w; Rdenomi = TempR*w;        
+
+            %Check two denominators in equ (9) whether to 0
+            if (Ldenomi ==0) || (Rdenomi ==0)
+                    w = w + (rand(nFea, 1)-0.5)*0.002;                
+                    fprintf('Convergence break,De:%d\n',k);
+                    continue;
+            end        
+            G = TempR/Rdenomi -TempL/Ldenomi;
+            wn = w + gamma*G';
+
+            %Convergence check
+            objn = sum(abs(A*wn))/sum(abs(B*wn));
+            if abs(objn - obj) < 0.0001
+    %             fprintf('Convergence,De:%d\n',k);
+                break; 
+            end
+            obj = objn;
+            w = wn;
+        end
+        fw(:,k,c) = wn/norm(wn);
+        A = A - (A*wn)*wn'; B = B - (B*wn)*wn'; 
+    end
+    clear A B
+
+end
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% output and predict
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">   
+nTest = length(Data.TestX(:,1));
+TestX =[Data.TestX, ones(nTest,1)];
+DemTeX = zeros(nTest,c);
+
+for k=1:d
+    for c=1:nClass
+        DemTeX(:,c) = TestX*fw(:,1:k,c); %redundency X
+    end
+    [~,PTestY] = min(abs(DemTeX),[],2); %Classification
+    ClassAC(k) = sum(PTestY == Data.TestY)/length(PTestY);
+end
+end
+
+</b>
+
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to na1013na@163.com or shaoyuanhai21@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Otc 26, 2014
+
+
+<br />
+<br />
+
+<div class="rssfeed"> 
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

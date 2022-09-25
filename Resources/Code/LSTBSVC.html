@@ -1,0 +1,267 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>TBSVCandLSTBSVC</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>TWSVC</b></font></h5>
+<hr />
+<p> Matlab code for twin bounded support vector clustering (TBSVC) and least squares twin bounded support vector clustering (LSTBSVC). </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Lan Bai, Yuan-Hai Shao*, Zhen Wang, Chun-Na Li. Clustering by twin support vector machine and least square twin support vector classifier with uniform output coding[J]. Submitted. 2018</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+<div style="white-space:pre">
+<b class="purple"> pY= TBSVC(X,Y,c1,c2) </b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TBSVC: 
+%   
+% pY= TBSVC(X,Y,c1,c2)
+% 
+% Input:
+%    X: Data matrix. (nolinear version is obtained by K(X,X))
+%    Y: First initial labels of X (can be given randomly or by NN-graph).
+%    Parameters - c1,c2. The fields in options that can be set:
+%              c1, c2: (0,inf) Paramter to tune the weight. 
+%              
+% Output:
+%     pY: The prediction of X.
+% Examples:
+%    X=rand(50,10);
+%    Y = randint(50,1,[1,5]);
+%    c1=1;c2=1;;
+%    pY= TBSVC(X,Y,c1,c2)
+%
+%    Version 1.0 --Apr/2018 
+%
+%    Written by Zhen Wang (wangzhen@imu.edu.cn)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">   
+tol=0.001;
+num=max(Y);
+totalu=zeros(1+size(X,2),num);
+maxite=30;
+flag=0;
+outite=0;
+pY=Y;
+while flag==0 && outite<maxite
+    outite=outite+1;
+    tY=pY;
+    for i=1:num
+        inputA=X(tY==i,:);
+        inputB=X(tY~=i,:);
+        u0=FirstStep(inputA);
+        [m1,n]=size(inputA);
+        m2=size(inputB,1);
+        u=zeros(n+1,1);
+        ite=0;
+        som=1;
+        while som>tol && ite<30
+            ite=ite+1;
+            u=u0;
+            e1=ones(m1,1);
+            e2=ones(m2,1);
+            G=[inputB,e2];
+            D=diag(sign(G*u))*G;
+            H=[inputA,e1];
+            K=(H'*H+diag([c1*ones(n,1);0]))\D';
+            %gamma=quadprog();
+            gamma=qpSOR(D*K,0.7,c2,0.05); % using SOR method, one may use the above to solve it
+            u0=K*gamma;
+            som=norm(u-u0);
+        end
+        totalu(:,i)=u0;
+    end
+    for i=1:num
+        totalu(:,i)=totalu(:,i)/norm(totalu(1:n,i));
+    end
+    [~,pY]=min(abs([X,ones(size(X,1),1)]*totalu),[],2);
+    if getAC(pY,tY)>0.9999  % check if there are some changes
+        flag=1;
+    end
+end
+end
+
+</b>
+
+</div>
+
+<div style="white-space:pre">
+<b class="purple"> pY= LSTBSVC(X,Y,c1,c2) </b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LSTBSVC: 
+%   
+% pY= LSTBSVC(X,Y,c1,c2)
+% 
+% Input:
+%    X: Data matrix. (nolinear version is obtained by K(X,X))
+%    Y: First initial labels of X (can be given randomly or by NN-graph).
+%    Parameters - c1,c2. The fields in options that can be set:
+%              c1, c2: (0,inf) Paramter to tune the weight. 
+%              
+% Output:
+%     pY: The prediction of X.
+% Examples:
+%    X=rand(50,10);
+%    Y = randint(50,1,[1,5]);
+%    c1=1;c2=1;;
+%    pY= LSTBSVC(X,Y,c1,c2)
+%
+%    Version 1.0 --Apr/2018 
+%
+%    Written by Zhen Wang (wangzhen@imu.edu.cn)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">   
+num=max(Y);
+totalu=zeros(1+size(X,2),num);
+maxite=30;
+flag=0;
+outite=0;
+pY=Y;
+m=size(X,1);
+while flag==0 && outite< maxite
+    outite=outite+1;
+    tY=pY;
+    for i=1:num
+        inputA=X(tY==i,:);
+        inputB=X(tY~=i,:);
+        [m1,n]=size(inputA);
+        m2=size(inputB,1);
+        H=[inputA,ones(m1,1)];
+        G=[inputB,ones(m2,1)];
+        totalu(:,i)=(H'*H+G'*G*c2+c1*diag([ones(n,1);0]))\(G'*ones(m2,1))*c2;
+    end
+    % Prediction by code
+    for i=1:m
+        Dis=zeros(2*num,1);
+        for j=1:num
+            val=X(i,:)*totalu(1:n,j)+totalu(n+1,j);
+            Dis(j,1)=abs(val)/norm(totalu(1:n,j));
+            Dis(num+j,1)=abs(val-1)/norm(totalu(1:n,j));
+        end
+        code=Code(Dis,num);
+        sumcode=sum(code,2);
+        ind=find(sumcode==max(sumcode));
+        if length(ind)==1
+            pY(i,1)=ind;
+        else
+            normu=zeros(1,num);
+            for t=1:num
+                normu(1,t)=norm(totalu(:,t));
+            end
+            [~,pY(i,1)]=min(abs([X(i,:),1]*totalu)./normu,[],2);
+        end
+    end
+    if getAC(pY,tY)>0.9999
+        flag=1;
+    end
+end
+end
+
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Additional functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">   
+
+function u=FirstStep(A)
+% compute: min ||Aw+be||, s.t. ||w||=1.
+% u=[w;b]
+m=size(A,1);
+H=A'*(1/m*ones(m,m)-eye(m))*A;
+[V,D]=eig(H);
+[tmp,n]=min(abs(diag(D)));
+w=V(:,n);
+b=-1/m*sum(A,1)*w;
+u=[w;b];
+end
+
+function code=Code(Dis,num)
+% Dis (2*num,1): |f1|, |f2|, |f3|, |f1-1|, |f2-1|, |f3-1|
+%        w(k), c(k+1)
+%  c1  1    -1  -1  -1      1     1         1            -1            0              -1               1                0
+%  c2  -1  1    -1  1      -1     1         -1           1             0             1                -1               0
+%  c3  ...
+code=zeros(num,4*num);
+for i=1:num
+    for j=1:num
+        if Dis(j)<=Dis(j+num)
+            if j==i
+                code(i,j)=1;
+            else
+                code(i,j)=-1;
+            end
+        else
+            if j==i
+                code(i,j+num)=-1;
+            else
+                code(i,j+num)=1;
+            end
+        end
+    end
+    [~,ind]=min(Dis(1:num));
+    if ind==i
+        if code(i,i)==1
+            code(i,2*num+i)=2;
+        else
+            code(i,2*num+i)=0;
+        end
+    else
+        code(i,2*num+ind)=-1;
+        if code(i,ind)==-1
+            code(i,2*num+ind)=-2;
+        else
+            code(i,2*num+ind)=0;
+        end
+    end
+    
+    val=sum(code(i,1:2*num))/num;
+    code(i,1:2*num)=zeros(1,2*num);
+    code(i,1)=val;
+end
+end
+
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to wangzhen@imu.edu.cn.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Apr 21, 2018
+
+
+<br />
+<br />
+
+<div class="rssfeed"> 
+</div>
+
+</div>
+
+</div>
+
+</body>
+</htm

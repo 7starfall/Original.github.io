@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>NHSVM</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+
+<h5><font face="Times New Roman" size="4"><b>NSVM</b></font></h5>
+<hr />
+<p> A Matlab code for nonparallel hyperplane support vector machine. 
+(You could Right-Click <a href="./NHSVM/NHSVM.rar">[Code]</a> , and Save, then you can download the whole matlab code.) </p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+
+<hr />
+<li style="margin-right:5mm; margin-bottom:5mm;"> <u>Y.-H. Shao</u>, W.-J. Chen,N.-Y. Deng.  Nonparallel hyperplane support vector machine for binary classification problems.</a> Information Sciences, 2013, inpress
+<br />
+<br />
+
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+<p>Need kernel function and SOR function.</p>
+
+<div style="white-space:pre">
+<b class="purple">function Predict_Y = NSVM(TestX,DataTrain,FunPara)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% NSVM: Nonparallel support vector machine
+%
+% Predict_Y = NSVM(TestX,DataTrain,FunPara)
+% 
+% Input:
+%    TestX - Test Data matrix. Each row vector of fea is a data point.
+%
+%    DataTrain - Struct value in Matlab(Training data).
+%                DataTrain.A: Positive input of Data matrix.
+%                DataTrain.B: Negative input of Data matrix.
+%
+%    FunPara - Struct value in Matlab. The fields in options that can be set: 
+%                c1: [0,inf] Paramter to tune the weight. 
+%                c2: [0,inf] Paramter to tune the weight. 
+%                kerfPara:Kernel parameters. See kernelfun.m.
+%
+% Output:
+%    Predict_Y - Predict value of the TestX.
+%
+% Examples:
+%    DataTrain.A = rand(50,10);
+%    DataTrain.B = rand(60,10);
+%    TestX=rand(20,10);
+%    FunPara.c1=0.1;
+%    FunPara.c2=0.1;
+%    FunPara.kerfPara.type = 'lin';
+%    Predict_Y =NSVM(TestX,DataTrain,FunPara);
+%
+% Reference:
+%    Yuan-Hai Shao, Wei-Jie Chen and Nai-Yang Deng, "Nonparallel hyperplane 
+%  support vector machine for binary classification problems " Submitted 2013
+%
+%    Version 1.0 --Apr/2013 
+%
+%    Written by Wei-Jie Chen (wjcper2008@126.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+%tic;
+Xpos = DataTrain.A;
+Xneg = DataTrain.B;
+m1 = size(Xpos,1);
+m2 =  size(Xneg,1);
+n = m1 + m2;
+c1 = FunPara.c1;
+c2 = FunPara.c2;
+kerfPara = FunPara.kerfPara;  
+
+e1 = ones(length(Xpos(:,1)),1);
+e2 = ones(length(Xneg(:,1)),1);
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Compute Kernel 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+if strcmp(kerfPara.type,'lin')
+    Xpos=[Xpos,e1];
+    Xneg=[Xneg,e2];
+    Xbar=[Xpos;-Xneg];
+else
+    if n>=1000
+        TempX=[Xpos;Xneg];
+        X = TempX(crossvalind('Kfold',TempX(:,1),10)==1,:);
+        clear TempX;
+    else
+        X=[Xpos;Xneg];
+    end
+    Xpos=[kernelfun(Xpos,kerfPara,X),e1];
+    Xneg=[kernelfun(Xneg,kerfPara,X),e2];
+    Xbar=[Xpos;-Xneg];
+end
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Compute (w1,b1) and (w2,b2)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+H=Xpos'*Xpos;
+G=Xneg'*Xneg;
+clear Xpos Xneg;
+H = H + 1/c1*eye(size(H)); %regularization
+G = G + 1/c1*eye(size(G));
+H = H\Xbar';
+G = G\Xbar';
+kerH=Xbar*(H + G);
+clear Xbar;
+		 
+alpha=qpSOR(kerH,0.7,c2,0.01); %SOR solver
+vpos=H*alpha;
+vneg=-G*alpha;
+w1=vpos(1:(length(vpos)-1));
+b1=vpos(length(vpos));
+w2=vneg(1:(length(vneg)-1));
+b2=vneg(length(vneg));
+clear G vpos vneg
+%toc;    
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict and output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+m=size(TestX,1);
+if strcmp(kerfPara.type,'lin')
+    H=TestX;
+    w11=sqrt(w1'*w1);
+    w22=sqrt(w2'*w2);
+    y1=H*w1+b1*ones(m,1);
+    y2=H*w2+b2*ones(m,1);    
+else
+    C=[DataTrain.A;DataTrain.B];
+    H=kernelfun(TestX,kerfPara,C);
+    w11=sqrt(w1'*kernelfun(X,kerfPara,C)*w1);
+    w22=sqrt(w2'*kernelfun(X,kerfPara,C)*w2);
+    y1=H*w1+b1*ones(m,1);
+    y2=H*w2+b2*ones(m,1);
+end
+clear H; clear C;
+m1=y1/w11;
+m2=y2/w22;
+Predict_Y = sign(abs(m2)-abs(m1));
+</b>
+
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to shaoyuanhai21@163.com and wjcper2008@126.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: April 5, 2013
+
+<br />
+<br />
+
+
+</div>
+
+</div>
+
+</body>
+</html>

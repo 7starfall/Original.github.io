@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>MLSPTSVM</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>MLSPTSVM</b></font></h5>
+<hr />
+<p> A Matlab code for Multi-class least squares recursive projection twin support vector machine . <a href="./MLSPTSVM/MLSPTSVM.rar">[Code]</a></p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Yuan-Hai Shao, Nai-Yang Deng*, Zhi-Min Yang. Least squares recursive projection twin support vector machine for classification[J]. <b>Pattern Recognition</b>, 2012, 45(6): 2299-2307.</p>
+<p>Chun-Na Li, Yun-Feng Huang, He-Ji Wu, Yuan-Hai Shao, Zhi-Min Yang. Multiple recursive projection twin support vector machine for multi-class classification. <b>International Journal of Machine Learning and Cybernetics</b>, 2014,DOI: 10.1007/s13042-014-0289-2.</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+
+<div style="white-space:pre">
+<b class="purple">[Predict_Y] = K_CLASSLSPTSVM(TestX,DataTrain,FunPara)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MLSPTSVM: Multi-class least squares recursive projection twin support vector machine 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
+%%%%%%%%% Inputs: %%%%%%%%%%
+% TestX:       Denote the input features of testing patterns.
+% DataTrain:   Include the input features (DataTrain.X) and corresponding
+               class labels (DataTrain.Y) of training patterns, and the number
+               of classes (DataTrain.Type).
+% FunPara:     Gather all the parameters we used, including penalty
+               parameters c and v ( FunPara.c and  FunPara.v), kernel type
+               (lin or rbf)，kernel width  pars (only for rbf kernel) and
+               desired number of projention axes(FunPara.loop).
+%%%%%%%%% Outputs: %%%%%%%%%
+% Predict_Y:   The corresponding predict labels of TestX.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Example: %%%%%%%%%
+% DataTrain.X = rand(100,10);      
+% DataTrain.Y = [ones(20,1);2*ones(20,1);3*ones(20,1);4*ones(20,1);5*ones
+               (20,1)];
+% DataTrain.Type = 5;
+% FunPara.c = 10; FunPara.v = 9;
+% FunPara.kerfPara.type = 'rbf';FunPara.kerfPara.pars = 10;
+% TestX = rand(60,10);
+% FunPara.loop = 2;
+% [Predict_Y] = K_CLASSLSPTSVM(TestX,DataTrain,FunPara)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%% Algorithm Starting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% Training %%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+kerfPara = FunPara.kerfPara;
+m = size(DataTrain.X,1);   
+n = size(TestX,1);
+TestBack = TestX;
+C = DataTrain.X;    
+Dis = zeros(n,DataTrain.Type); 
+<b class="green">
+% Distance matrix between projection of test patterns and projected centers.
+</b><b class="code">
+Predict_Y = zeros(n,1);
+for i = 1:DataTrain.Type
+<b class="green">  
+    % Determine the projection axes for each class.
+</b><b class="code">
+    W1=[];
+    loop = FunPara.loop;
+    SubclassIndex = find(DataTrain.Y==i);
+    trainXA = DataTrain.X(SubclassIndex,:);
+<b class="green">  
+    % Training patterns of the i-th class.
+</b><b class="code"> 
+    trainXB = DataTrain.X(setdiff(1:m,SubclassIndex),:);
+<b class="green">
+    % Training patterns of all the classes except for the i-th class.
+</b><b class="code">
+    if ~strcmp(kerfPara.type,'lin')
+<b class="green">  
+    % Nonliner kernel: Gaussian, Polynomial and so on.
+</b><b class="code">
+            if m >= 1000
+<b class="green">  
+               % Whether to use rectangular kernel technique.
+</b><b class="code"> 
+               ReduceIndex = randperm(m,int16(0.05*m));
+<b class="green"> 
+               % Select 5% of the training patterns. 
+</b><b class="code">
+               C = DataTrain.X(ReduceIndex,:);           
+            end
+            trainXA = kernelfun(trainXA,kerfPara,C); 
+<b class="green">
+            % Training patterns of the i-th class in the kernel space.
+</b><b class="code">
+            trainXB = kernelfun(trainXB,kerfPara,C); 
+            TestX = kernelfun(TestBack,kerfPara,C);
+    end
+    w1 = zeros(size(trainXA,2),1);
+<b class="green"> 
+    % Initialize the projection axis of the i-th class.
+</b><b class="code">
+    centerA = mean(trainXA);
+    while loop>0
+<b class="green">  
+          % Seeking multiple projection axes for each class.
+</b><b class="code">
+        trainXA = trainXA - trainXA*w1*w1';
+<b class="green">
+        % Update samples by recursive.
+</b><b class="code">              
+        trainXB = trainXB - trainXB*w1*w1';
+<b class="green"> 
+        % Update samples by recursive.
+</b><b class="code">
+        m1 = size(trainXA,1); m2 = size(trainXB,1);
+        e1 = ones(m1,1); e2 = ones(m2,1); 
+        I1 = eye(size(trainXB,2));
+        meanA = 1/m1*e1'*trainXA;
+        H = trainXA - e1*meanA;
+        G = trainXB - e2*meanA;
+        Y = H'*H /FunPara.c + FunPara.v/FunPara.c*I1;
+<b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%  Determine the projection axes for the i-th class %%%%%%%%%%%%%%%%%
+</b><b class="code">
+        if ~strcmp(kerfPara.type,'lin') && m < 1000 
+<b class="green">
+            % Whether to employ the SMW technique for nonlinear case.
+</b><b class="code">
+            I2 = eye(size(trainXA,1));
+            I3 = eye(size(trainXB,1));
+            HH = I2 + H*H'/FunPara.v;
+            YY = FunPara.c/FunPara.v*(I1 - H'*(HH\H)/FunPara.v);
+<b class="green"> 
+            % Require one matrix inverse of order m1*m1.
+</b><b class="code"> 
+            GG = I3 + G*YY*G'; 
+            w1 = (YY - YY*G'*(GG\G)*YY)*G'*e2;
+<b class="green">
+          % Require two matrix inverses of order m1*m1 and m2*m2 (m=m1+m2).
+</b><b class="code">
+        else
+            w1 = (Y+G'*G)\G'*e2;
+<b class="green">
+            % Require one matrix inverse of order m*m.
+</b><b class="code">
+        end
+        w1 = w1/norm(w1);     
+        W1 = [W1 w1]; 
+<b class="green"> 
+        % All the desired projection axes of the i-th class.
+</b><b class="code">
+        loop = loop-1;
+    end
+    clear trainXA trianXB H G Y HH YY GG;   
+    for t = 1:n
+        Dis(t,i) = norm(TestX(t,:)*W1 - centerA*W1); 
+    end
+end
+<b><b class="green">
+%%%%%%%%%%% output and predict %%%%%%%%%
+</b><b class="code">
+for s = 1:n
+    Predict_Y(s,1) = find(Dis(s,:)==min(Dis(s,:)));
+end
+</b>
+</b>
+</b>
+
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to shaoyuanhai21@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Dec 27, 2014
+
+<br />
+<br />
+
+
+</div>
+
+</div>
+
+</body>
+</html>
+

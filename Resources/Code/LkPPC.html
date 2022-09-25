@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>LkPPC</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+
+<h5><font face="Times New Roman" size="4"><b>LkPPC</b></font></h5>
+<hr />
+<p> A Matlab code for local k-Proximal Plane Clustering. 
+(You could Right-Click <a href="./LkPPC/LkPPC.rar">[Code]</a> , and Save, then you can download the whole matlab code.) </p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Yuan-Hai Shao,Yan-Ru Guo and Zhi-Min Yang. Local k-Proximal Plane Clustering,2013,Submitted. </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+<p>Need stdata,adjacency,GepOneSide,getcu,getcX,GetchushiW function.</p>
+
+<div style="white-space:pre">
+<b class="purple">function pY =LkPPC(X,cX,k,hknn,c,g,W);</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LkPPC: local k-Proximal Plane Clustering
+%
+%  pY =LkPPC(X,cX,k,hknn,c,g,W);
+% 
+% Input:  X -  data points matrix. Each row vector of fea is a data point
+%         cX-  the data points who is used to construct the initial plane
+%         k-   number of cluster;
+%         hknn- the upper bound of the KNN;
+%         W- the construct the initial plane;
+%         c: [0,inf] appropriate parameter to tune the weight. 
+%         g:[0,1] is used to control the localization of the clustering plane. 
+% Output: pY - Predict the class of X.
+%    
+%
+% Examples:
+%    X = rand(50,10);Y=[ones(20,1); ones(20,1)+1; ones(10,1)+2];
+%    c=0.01; g=0.1; k=3;
+%   pY =LkPPC(X,cX,k,hknn,c,g,W);
+%
+% Reference:
+%   Yuan-Hai Shao,Yan-Ru Guo and Zhi-Min Yang. Local k-Proximal Plane Clustering,2013,Submitted. 
+%
+%    Version 1.0 --Dec/2013 
+%
+%    Written by Yan-Ru Guo ("Guoyanru211@163.com")
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+%tic;
+[s,t]=size(X);hknn=20;B=1;knn=1; bknn=[];cX=[];ccY=[];i=1; 
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Each data point is normalized with the mean 0 and standard deviation 1. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+stX=stdata(X);
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Use KNN to find cX: the initial points
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+[cX,bknn]= getcX(stX,k,hknn); 
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Construct the initial plane W
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+W=GetchushiW(cX,k,c);   
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Update plane W:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+pYnew=zeros(s,1);[s,t]=size(stX);[mm,nn]=size(cX);pY=crossvalind('kfold',s,k);
+z=0;q=zeros(k,t); V=zeros(s,k);
+while(~isempty(find(pY~=pYnew, 1)) && z~=1000)   
+    pYnew=pY;
+    z=z+1;
+    % update W
+     for i=1:k
+             tA=stX((pY==i),:);
+             tB=stX((pY~=i),:); 
+             mi=size(tA,1);
+         if ~isempty(find(pY==i, 1))
+            W(i,:)=GepOneSide(tA,tB,c); 
+             q(i,:)=sum(tA)/mi;  
+         end         
+     end   
+    for l=1:s
+         for ff=1:k    
+             V(l,ff)=(norm((stX(l,:)-q(ff,:)),2)^2);
+         end
+     end
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict and output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+ pY=abs(stX*W(:,1:t)'+ones(s,1)*W(:,t+1)')+g*V(:,:);
+               [tmp,pY]=min(pY');
+                pY=pY';
+end
+</b>
+
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to shaoyuanhai21@163.com and Guoyanru211@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: December 27, 2013
+
+<br />
+<br />
+
+
+</div>
+
+</div>
+
+</body>
+</html>

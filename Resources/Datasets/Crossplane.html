@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>Crossplane data</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>Crossplane Data</b></font></h5>
+<hr />
+<p> A two dimensional crossplane (Xor) data generator.</p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>References</b></font></h5>
+<hr />
+
+<p>Yuan-Hai Shao, Chun-Hua Zhang, Xiao-Bo. Wang, Nai-Yang Deng*. Improvements on Twin Support Vector Machines[J]. <b>IEEE Transactions on Neural Networks</b>, 2011, 22(6): 962-968. </p>
+
+<p>Yuan-Hai Shao, Nai-Yang Deng*, Zhi-Ming Yang, Wei-Jie Chen, Zhen Wang. Probabilistic outputs for twin support vector machines[J]. <b>Knowledge-Based Systems</b>, 2012, 33: 145–151.</p>
+
+<p>Yuan-Hai Shao, Nai-Yang Deng*, Zhi-Min Yang. Least squares recursive projection twin support vector machine for classification[J]. <b>Pattern Recognition</b>, 2012, 45(6): 2299-2307. </p>
+
+<p>Yuan-Hai Shao, Zhen Wang, Wei-Jie Chen, Nai-Yang Deng*. A regularization for the projection twin support vector machine[J]. <b>Knowledge-Based Systems</b>, 2013, 37: 203–210. </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+<div style="white-space:pre">
+
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% generate m1 positive points
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+m1=50;
+k1=0.7;
+b1=0.1;
+x1=rand(m1,1);
+% x1=sqrt(x1);
+y1=rand(m1,1);
+% y1=sqrt(y1);
+x1=sort(x1);
+y1=sort(y1);
+y1=k1*y1+b1;
+plot(x1,y1,'ko')
+hold on 
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% generate m2 negative points
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+m2=50;
+k2=0.6;
+b2=1;
+x2=rand(m2,1);
+y2=rand(m2,1);
+x2=sort(x2);
+y2=sort(y2);
+y2=-k2*y2+b2;
+plot(x2,y2,'k+')
+hold off
+
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to shaoyuanhai21@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: May 25, 2013
+
+
+<br />
+<br />
+
+
+
+
+
+
+
+  <div class="rssfeed">
+    
+ </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

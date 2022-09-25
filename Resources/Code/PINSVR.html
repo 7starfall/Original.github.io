@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>PINSVR</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>PINSVR</b></font></h5>
+<hr />
+<p> A Matlab code for parametric-insensitive nonparallel support vector machine for regression. <a href="./PINSVR/PINSVR.rar">[Code]</a></p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Zhi-Min Yang, Xiang-Yu Hua, Yuan-Hai Shao*, Ya-Fen Ye. A novel parametric-insensitive nonparallel support vector machine for regression, 
+<b>Submitted</b>,2014.</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+<div style="white-space:pre">
+<b class="purple">function [PredictY,PredictYu,PredictYd]=PINSVR(TestX,X,Y,c1,c2,c3,c4,kersign,p)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PINSVR: A novel parametric-insensitive nonparallel support vector machine for regression
+% [PredictY,PredictYu,PredictYd]=PINSVR(TestX,X,Y,c1,c2,c3,c4,kersign,p)
+% 
+% Input:
+%  TestX - Test sample matrix. Each row vector of fea is a test sample.
+%  X - Training sample matrix. Each row vector of fea is a training sample.
+%  Y - Training sample vector. Each element is a value of a training sample.
+%  c1 - [0,inf] Paramter to tune the weight.
+%  c2 - [0,inf] Paramter to tune the weight.
+%  c3 - [0,inf] Paramter to tune the weight.
+%  c4 - [0,inf] Paramter to tune the weight.
+%  kersign - kernel type.
+%  p - kernel parameter.
+% 
+% Output:
+%  Predict_Y - Predict value of the TestX.
+%  PredictYu - Predict up-bound value of the TestX.
+%  PredictYd - Predict down-bound value of the TestX. 
+% 
+% Example:
+% load ExamIA.mat X Y TestX TestY
+% c1=2^(-1);
+% c2=2^(-1);
+% c3=0.01;
+% c4=0.01;
+% kersign='rbf';
+% p=3;
+% [PredictY,PredictYu,PredictYd]=PINSVR(TestX,X,Y,c1,c2,c3,c4,kersign,p);
+% 
+% Reference: Zhi-Min Yang, Xiang-Yu Hua, Yuan-Hai Shao, Ya-Fen Ye,
+% A novel parametric-insensitive nonparallel support vector machine for regression,
+% Submitted, 2014.
+%
+% Version 1.0 - Sep/2014
+%
+% Written by Xiang-Yu Hua (hxy9069@163.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+%tic;
+kerfPara.type=kersign;
+kerfPara.pars=p;
+epsilon=1e-10;
+[m,n]=size(X);
+e1=ones(m,1);
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Compute Kernel 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+if strcmp(kerfPara.type,'lin')
+   G=[X e1];
+   I1=eye(n+1);
+   I2=eye(m);
+else
+   G=[kernelfun(X,kerfPara,X) e1];
+   I1=eye(m+1);
+   I2=eye(m);
+end
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Train Samples using QP solver
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+U1=(G'*G+c3*I1)\G';
+U2=(G'*G+c4*I1)\G';
+QPH01=[1/c3*(G*G') 1/c3*(G*G');1/c3*(G*G') (G*U1+1/c3*(G*G'))];
+QPH02=[1/c4*(G*G') 1/c4*(G*G');1/c4*(G*G') (G*U2+1/c4*(G*G'))];
+QPH01=QPH01+epsilon*eye(size(QPH01));
+QPH02=QPH02+epsilon*eye(size(QPH02));
+QPH1=(QPH01+QPH01')/2; QPH2=(QPH02+QPH02')/2;
+clear QPH01 QPH02
+QPf1=[zeros(m,1);-(Y'*(G*U1-I2))'];
+QPf2=[zeros(m,1);(Y'*(G*U2-I2))'];
+QPA1=[];QPb1=[];QPB1=[];QPd1=[];
+QPvlb1=zeros(2*m,1);QPvub1=[inf*ones(m,1);c1*ones(m,1)];
+QPA2=[];QPb2=[];QPB2=[];QPd2=[];
+QPvlb2=zeros(2*m,1);QPvub2=[inf*ones(m,1);c2*ones(m,1)];
+QPx1=quadprog(QPH1,QPf1,QPA1,QPb1,QPB1,QPd1,QPvlb1,QPvub1);
+QPx2=quadprog(QPH2,QPf2,QPA2,QPb2,QPB2,QPd2,QPvlb2,QPvub2);
+%x=[alpha;beta]
+alpha1=QPx1(1:m);beta1=QPx1((m+1):2*m);
+alpha2=QPx2(1:m);beta2=QPx2((m+1):2*m);
+u1=U1*(Y-beta1);
+u3=1/c3*G'*(alpha1+beta1);
+u2=U2*(Y+beta2);
+u4=1/c4*G'*(alpha2+beta2);
+clear G
+%u=[w;b]
+k=size(u1,1);
+w1=u1(1:(k-1));b1=u1(k);
+w2=u2(1:(k-1));b2=u2(k);
+w3=u3(1:(k-1));b3=u3(k);
+w4=u4(1:(k-1));b4=u4(k);
+   
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict and output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+e2=ones(size(TestX,1),1);
+if strcmp(kerfPara.type,'lin')
+   f1=TestX*w1+b1*e2;
+   f2=TestX*w2+b2*e2;
+   g1=TestX*w3+b3*e2;
+   g2=TestX*w4+b4*e2; 
+else
+   H=kernelfun(TestX,kerfPara,X);
+   f1=H*w1+b1*e2;
+   f2=H*w2+b2*e2;
+   g1=H*w3+b3*e2;
+   g2=H*w4+b4*e2;
+end
+PredictY=0.5*(f1+f2);
+PredictYu=f2+g2;
+PredictYd=f1-g1;
+end
+</b>
+
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to hxy9069@163.com or shaoyuanhai21@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Sep 10, 2014
+
+
+<br />
+<br />
+
+
+
+
+
+
+
+  <div class="rssfeed">
+    
+ </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

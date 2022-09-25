@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>STPMSVM</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>STPMSVM</b></font></h5>
+<hr />
+<p> A Matlab code for smooth twin parametric-margin support vector machine.(You could Right-Click <a href="./STPMSVM/STPMSVM.rar">[Code]</a> , and Save, then you can download the whole matlab code.) </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Zhen Wang, Yuan-Hai Shao, Tie-Ru Wu. A GA-based model selection for 
+smooth twin parametric-margin support vector machine[J]. <b>Pattern Recognition</b>, 46(8) (2013) 2267-2277. </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+<p>This is the linear version STPMSVM, the nonlingear one can be down load from the [Code].</p>
+
+<div style="white-space:pre">
+<b class="purple">function testY = Stpmsvm(testX,DataTrain,FunPara)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% STPMSVM: linear smooth twin parametric-margin support vector machine
+%
+% testY = Stpmsvm(testX,DataTrain,FunPara)
+% 
+% Input:
+%    testX - test Data matrix. Each row vector of fea is a data point.
+%
+%    DataTrain - Struct value in Matlab(Training data).
+%                DataTrain.A: Positive input of Data matrix.
+%                DataTrain.B: Negative input of Data matrix.
+%
+%    FunPara - Struct value in Matlab. The fields in options that can be set: 
+%              c1: [0,inf] Paramter to tune the weight. 
+%              c2: [0,inf] Paramter to tune the weight. 
+%              v1: [0,inf] Paramter to tune the weight. 
+%              v2: [0,inf] Paramter to tune the weight. 
+%
+% Output:
+%    test_Y - Predict value of the TestX.
+%
+% Examples:
+%    DataTrain.A = rand(50,10);
+%    DataTrain.B = rand(60,10);
+%    testX=rand(20,10);
+%    FunPara.c1=0.1;
+%    FunPara.c2=0.1;
+%    FunPara.v1=0.1;
+%    FunPara.v2=0.1;
+%    testY = Stpmsvm(testX,DataTrain,FunPara);
+%
+% Reference:
+%    Zhen Wang, Yuan-Hai Shao, Tie-Ru Wu.A GA-based model selection for 
+%    smooth twin parametric-margin support vector machine
+%    Pattern Recognition, 46(8) (2013) 2267¨C2277
+%
+%    Version 1.0 --Apr/2013 
+%
+%    Written by Zhen-Wang (wangzhen1882@126.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+%tic;
+inputA = DataTrain.A;
+inputB = DataTrain.B;
+c1 = FunPara.c1;
+c2 = FunPara.c2;
+v1 = FunPara.v1;
+v2 = FunPara.v2;
+A=[inputA,ones(size(inputA,1),1)];
+B=[inputB,ones(size(inputB,1),1)];
+w1=-ones(size(A,2),1); %w0
+w2=-ones(size(B,2),1); %w0
+tol=0.001; %eps
+Max=1000;  % iteration max count
+%training
+[w1,w2]=train(A,B,c1,c2,v1,v2,w1,w2,tol,Max);
+%toc
+%testing
+testY=test(w1,w2,testX);
+ 
+end
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Training function 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+function [w1,w2]=train(A,B,c1,c2,v1,v2,w1,w2,tol,max_ite)
+% training process
+[n1,m1]=size(A);
+[n2,m2]=size(B);
+e1=ones(n1,1); %Aeq
+e2=ones(n2,1);
+% solve first optimal problem
+flag=1; 
+tol0=tol;
+ite=0;
+while flag>tol0 && ite<max_ite
+    ite=ite+1;
+    plus=max(-A*w1,0);
+    % compute gradient
+    grad=w1+v1/n2*B'*e2-c1/n1*A'*plus;
+    % terminal condition
+    if grad'*grad>tol0
+        % compute Hessian
+        index=find(plus>0);
+        Q=eye(m1)+c1/n1*A(index,:)'*A(index,:);
+        % Newton stepsize
+        z=Q\(-grad);
+        w1=w1+z;
+    else
+        flag=tol0;
+    end
+end
+% solve second optimal problem
+flag=1; 
+tol0=tol;
+ite=0;
+while flag>tol0 && ite<max_ite
+    ite=ite+1;
+    plus=max(B*w2,0);
+    % compute gradient
+    grad=w2-v2/n1*A'*e1+c2/n2*B'*plus;
+    % terminal condition
+    if grad'*grad>tol0
+        % compute Hessian
+        index=find(plus>0);
+        Q=eye(m2)+c2/n2*B(index,:)'*B(index,:);
+        % Newton stepsize
+        z=Q\(-grad);
+        w2=w2+z;
+    else
+        flag=tol0;
+    end
+end
+end
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict function 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+function Y=test(w1,w2,X)
+% testing process
+% w1,w2 all have been considered the bias 'b'!
+% X not considered the bias 'e'
+[m,n]=size(w1);
+norm1=norm(w1(1:(m-1),:),2);
+norm2=norm(w2(1:(m-1),:),2);
+Y=sign(X*(w1(1:(m-1),1)/norm1+w2(1:(m-1),1)/norm2)+(w1(m,1)/norm1+w2(m,1)/norm2));
+end
+
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to wangzhen1882@126.com and shaoyuanhai21@163.com
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: May 25, 2013
+
+
+<br />
+<br />
+
+<div class="rssfeed"> 
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

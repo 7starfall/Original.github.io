@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>ESQSVR</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>ESQSVR</b></font></h5>
+<hr />
+<p> A Matlab code for Laplacian support vector regression for the extensive semi-quantitative regression problem. <a href="./ESQSVR/ESQSVR.zip">[Code]</a></p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Yuan-Hai Shao,  Ya-Fen Ye, Yong-Cui Wang, Nai-Yang Deng. Extensive semi-quantitative regression. Submitted.</p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+<p>Need kernel function and laplacian function.</p>
+
+<div style="white-space:pre">
+<b class="purple">function [g1 g2 predictY]=ESQSVR(Data,FunPara)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ESQSVR: Laplacian support vector regression for the extensive semi-quantitative regression problem
+% Usage: [g1 g2 predictY]=ESQSVR(Data,FunPara)
+% 
+% Input:
+%   DataTrain - stuct value in Matlab-----Training data.
+%       Data.XA: The quantitative input;
+%       Data.YA: The quantitative labels;
+%       Data.XB: The semi-quantitative input;
+%       Data.testX: The semi-quantitative input;
+%   
+%   FunPara - Struct value in Matlab
+%       FunPara.c1: [0,inf] Paramter to tune the weight;
+%       FunPara.c2: [0,inf] Paramter to tune the weight;
+%       FunPara.eps: [0,inf] Paramter to tune the weight;
+%       FunPara.Yl: Paramter to the threshold for the negative qualitative data;
+%       FunPara.Yh: Paramter to the threshold for the negative qualitative data;
+%       FunPara.knn:  knn parameter is an integer greater than 0;
+%       kerfPara: kernel parameters. See kernelfun.m;
+% 
+% Output:
+%     g1 - Predict value of the Data.XA;
+%     g2 - Predict value of the Data.XB;
+% 
+% Examples:
+% load sinN1.mat XA XB YA;
+% Data.XA = XA;
+% Data.XB = XB;
+% Data.YA = YA;
+% Data.testX = XB;
+% FunPara.c1=2^(2);
+% FunPara.c2=2^(-3);
+% FunPara.eps=0.02;
+% FunPara.Yl=0.8;
+% FunPara.Yh=1.2;
+% FunPara.knn=2;
+% FunPara.kerfPara.type = 'lin';
+%           FunPara.kerfPara.pars = 4;
+%           [g1 g2 predictY]=ESQSVR(Data,FunPara);
+% 
+% Reference: Yuan-Hai Shao, Ya-Fen Ye, Yong-Cui Wang, Nai-Yang Deng. 
+% Extensive semi-quantitative regression problem. Submitted.
+%
+%    Version 1.0 --Oct/2013 
+%    Written by Ya-Fen Ye (yafenye@163.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+%tic;
+Xpos=Data.XA;
+Ypos=Data.YA;
+Xneg=Data.XB;
+c1= FunPara.c1;
+c2= FunPara.c2;
+eps = FunPara.eps;
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Matrices are defined using the same symbols with the paper
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+[m1,n1]=size(Xpos);
+[m2,n1]=size(Xneg);
+e1=ones(m1,1);
+e2=ones(m2,1);
+e=[e1;e2];
+I1=eye(m1,m1);
+I2=eye(m2,m2);
+eps=[eps*I1,zeros(m1,m2);
+    zeros(m2,m1),eps*I2];
+M=[I1,zeros(m1,m2);
+    zeros(m2,m1),zeros(m2,m2)];
+N=[zeros(m1,m1),zeros(m1,m2);
+    zeros(m2,m1),I2];
+X=[Xpos;Xneg];
+Y=[Ypos;zeros(m2,1)];
+YL=[zeros(m1,1);FunPara.Yl*e2];
+YH=[zeros(m1,1);FunPara.Yh*e2];
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Construct laplacian matrix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+L=laplacian1(X,FunPara.knn); 
+L=(L+L')/2;
+L=abs(L);
+% L=eye(size(X),size(X));
+LM=inv(L+M);
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Compute Kernel 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+kerfPara = FunPara.kerfPara;
+if strcmp(kerfPara.type,'lin')
+  G=[Xpos,e1;Xneg,e2];
+   %min [alpha,beta,gamma]*Q*[alpha,beta,gamma]'+P'*[alpha,beta,gamma]'
+   Q=[G*G'+(1/c2)*LM,-G*G'-(1/c2)*LM,   -(1/c2)*LM*N', (1/c2)*LM*N';
+     -G*G'-(1/c2)*LM, G*G'+(1/c2)*LM,    (1/c2)*LM*N', -(1/c2)*LM*N';
+     -(1/c2)*N*LM',    (1/c2)*N*LM',  (1/c2)*N*LM*N', -(1/c2)*N*LM*N'
+     (1/c2)*N*LM',    -(1/c2)*N*LM',  -(1/c2)*N*LM*N', (1/c2)*N*LM*N']; 
+  P=[-Y'*M*LM+(eps*e)', Y'*M*LM+(eps*e)',Y'*M*LM*N'-YL',-Y'*M*LM*N'+YH']';
+else
+    HH=kernelfun(X,kerfPara,X)+e*e';
+  % min [alpha,beta,gamma]*Q*[alpha,beta,gamma]'+P'*[alpha,beta,gamma]'
+  Q=[HH+(1/c2)*LM,-HH-(1/c2)*LM,   -(1/c2)*LM*N', (1/c2)*LM*N';
+     -HH'-(1/c2)*LM, HH+(1/c2)*LM,    (1/c2)*LM*N', -(1/c2)*LM*N';
+     -(1/c2)*N*LM',    (1/c2)*N*LM',  (1/c2)*N*LM*N', -(1/c2)*N*LM*N'
+     (1/c2)*N*LM',    -(1/c2)*N*LM',  -(1/c2)*N*LM*N', (1/c2)*N*LM*N']; 
+  P=[-Y'*M*LM+(eps*e)', Y'*M*LM+(eps*e)',Y'*M*LM*N'-YL',-Y'*M*LM*N'+YH']';
+end
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Train Data using QP solver
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+LB=[zeros(m1+m2,1);zeros(m1+m2,1);zeros(m1+m2,1);zeros(m1+m2,1)];
+UB=[c1*e;c1*e;c1*e;c1*e];
+Q=(Q+Q')/2;
+soll=quadprog(Q,P,[],[],[],[],LB,UB);
+%toc
+alpha=soll(1:m1+m2);
+beta=soll(m1+m2+1:2*(m1+m2));
+gamma=soll(2*(m1+m2)+1:3*(m1+m2));
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict and output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+if strcmp(kerfPara.type,'lin')
+   z=G'*(alpha-beta);
+   m=size(z,1);
+   g=(1/c2)*inv(L+M)*(c2*M'*Y-alpha+beta+N'*gamma);
+   g1=Xpos*z(1:m-1)+z(m)*e1;
+   g2=Xneg*z(1:m-1)+z(m)*e2;
+   predictY=Data.testX*z(1:m-1)+z(m)*ones(size(Data.testX(:,1)),1);
+else
+   g=HH*(alpha-beta);
+   g1=g(1:m1);
+   g2=g(m1+1:m1+m2);
+   HHnew=kernelfun(X,kerfPara,Data.testX);
+   predictY=HHnew'*(alpha-beta);
+end
+</b>
+
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to yafenye@163.com or shaoyuanhai21@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Apr 4, 2016
+
+
+<br />
+<br />
+
+
+
+
+<div class="rssfeed">
+    
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>L1BLDA</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>L1BLDA</b></font></h5>
+<hr />
+<p> A Matlab code for  Robust Bhattacharyya bound LDA through adaptive non-greedy algorithms. <a href="./L1BLDA/L1BLDA.zip">[Code]</a></p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Chun-Na Li, Yuan-Hai Shao, Zhen Wang, Nai-Yang Deng. "Robust Bhattacharyya bound linear discriminant analysis through adaptive non-greedy algorithms". Submitted, 2018. </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+<div style="white-space:pre">
+<b class="purple">function [W_all] = L1BLDA(Data,FunPara)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % % % Input:
+%   Data.X: Data matrix. Each column vector of Data is a data point.
+%   Data.Y: Data label vector.
+%   FunPara.rho: ADMM penalty rho.
+% 
+% % % % Eample:
+% Data.X = rand(2,20);
+% Data.Y = [ones(10,1);-ones(10,1)];
+% FunPara.rho = 1;
+% [W_all] = L1BLDA(Data,FunPara)
+%
+% % % % Reference:
+%   "Robust Bhattacharyya bound linear discriminant analysis through adaptive non-greedy algorithms".
+%    Chun-Na Li, Yuan-Hai Shao, Zhen Wang, Nai-Yang Deng
+%    Version 1.0 -- July/2018 
+%    Written by Chun-Na Li (na1013na@163.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+Maxstep = 20;
+rho = FunPara.rho;
+eps1 = 10^(-3);  
+eps2 = 10^(-3);  
+[nFea,nSmp] = size(Data.trainX); 
+desireDim = nFea;
+W_all = cell(desireDim,1);
+classLabel = unique(Data.trainY);
+nClass = length(classLabel);
+C_mean = zeros(nFea,nClass);
+nSmpClass = zeros(1,nClass);
+subX = Data.trainX;
+Sw = zeros(nFea,nFea);
+Sb = zeros(nFea,nFea);
+Omega = 0; 
+% Calculate Sw 
+for i=1:nClass
+    Index(i,:) = (Data.trainY==classLabel(i));
+    C_mean(:,i) = mean(subX(:,Index(i,:)),2); 
+    nSmpClass(i) = size((subX(:,Index(i,:))),2); 
+    TempM = subX(:,Index(i,:)) - repmat(C_mean(:,i),1,nSmpClass(i));
+    Sw = Sw + TempM*TempM'; 
+end
+% Calculate Sb and Omega
+for i = 1:nClass
+    for j = 1:nClass
+        if i<j 
+           Sb =  Sb + nSmpClass(i)*nSmpClass(j)/nSmp^2*(C_mean(:,i)-C_mean(:,j))*(C_mean(:,i)-C_mean(:,j))';
+           Omega = Omega + sqrt(nFea*nSmpClass(i)*nSmpClass(j))/nSmp*norm(C_mean(:,i)-C_mean(:,j),1);
+        end
+    end
+end
+Omega = Omega/4;
+% Calculate G
+G = Sw + Sb + eye(nFea);
+for d = 1:desireDim
+    tic
+    if d < nFea
+        for i = 1:nClass
+            for j = 1:nClass
+                if i<j 
+                  alpha(i,j,:) = zeros(d,1);
+                  B(i,j,:) = ones(d,1); 
+                 end
+            end
+        end
+        for i=1:nClass
+            for j = 1:nSmpClass(i)
+                beta(i,j,:) = zeros(d,1);
+                Z(i,j,:) = ones(d,1);
+            end   
+        end
+
+        Gamma = zeros(nFea,d);   
+        D = ones(nFea,d); 
+        A = zeros(nFea,d); 
+
+        P_con1 = 1; P_con2 = 1; P_con3 = 1;  P_con = 1;
+        D_con1 = 1;  D_con2 = 1; D_con3 = 1; D_con = 1;
+        Po_con1 = 0; Po_con2 = 0; Po_con3 = 0;  Po_con = 0;
+        Do_con1 = 0;  Do_con2 = 0; Do_con3 = 0; Do_con = 0;
+        rho_new = rho;
+        step = 0;
+
+        while (P_con1 > eps1 ||  P_con2 > eps1 ||  P_con3 > eps1  ||  D_con1 > eps1  || D_con2 > eps1 || D_con3 > eps1 )
+            % ADMM, W
+            B0 = B;
+            for i = 1:nClass
+               for j = 1:nClass
+                   if i<j 
+                      A = A + sqrt(nSmpClass(i)*nSmpClass(j))/nSmp*((B(i,j)-alpha(i,j))*(C_mean(:,i)-C_mean(:,j))')';
+                   end
+               end
+            end    
+            for i=1:nClass
+                TempM = subX(:,Index(i,:));
+                for j=1:nSmpClass(i)
+                    A = A + (reshape(Z(i,j,:) - beta(i,j,:),d,1)*(TempM(:,j) - C_mean(:,i))')';
+                end
+            end
+
+            A = A + (D + Gamma);     
+            W = QPSM(G,A);
+
+            % ADMM, B
+            for i = 1:nClass
+               for j = 1:nClass
+                   if i<j
+                      B(i,j,:) = sqrt(nSmpClass(i)*nSmpClass(j))/nSmp*W'*(C_mean(:,i)-C_mean(:,j))+alpha(i,j);
+                      D_con10(i,j) = norm(rho_new*(C_mean(:,i)-C_mean(:,j))*(B(i,j)-B0(i,j))');
+                      tempijalpha = sqrt(nSmpClass(i)*nSmpClass(j))/nSmp*W'*(C_mean(:,i)-C_mean(:,j))-B(i,j);
+                      alpha(i,j,:) = alpha(i,j) + tempijalpha;
+                      P_con10(i,j) = norm(tempijalpha);
+                   end
+               end
+            end
+            B(B>=0) = B(B>=0) + 1/rho_new;
+            B(B<0) = B(B<0) - 1/rho_new;
+
+            % ADMM, Z       
+            Z0 = Z;
+            for i=1:nClass
+                Temp = subX(:,Index(i,:));
+                for j=1:nSmpClass(i)
+                    Z(i,j,:) = W'*(Temp(:,j)-C_mean(:,i))+beta(i,j);
+                    D_con20(i,j) = norm(rho_new*(Temp(:,j)-C_mean(:,i))*(Z(i,j)-Z0(i,j))');
+                end
+            end
+
+            ka = Omega/rho_new;
+            Z(Z > ka) = Z(Z > ka) - ka;
+            Z(Z < -ka) = Z(Z < -ka) + ka;
+            Z(Z<=ka & Z>=-ka) = 0;
+
+            % ADMM, D
+            D0 = D;
+            D = W - Gamma;
+
+            Po_con1 = P_con1; Po_con2 = P_con2; Po_con3 = P_con3;
+            Do_con1 = D_con1; Do_con2 = D_con2; Do_con3 = D_con3;
+            for i=1:nClass
+                 xi = subX(:,Index(i,:));
+                 for j=1:nSmpClass(i)
+                    tempijbeta = W'*(xi(:,j)-C_mean(:,i))-Z(i,j);
+                    beta(i,j,:) = beta(i,j)+tempijbeta; 
+                    P_con20(i,j) = norm(tempijbeta);
+                 end
+            end
+            Gamma = Gamma + (D-W);
+
+            P_con1 = max(max(P_con10));
+            P_con2 = max(max(P_con20));
+            P_con3 = norm(D-W);
+
+            D_con1 = max(max(D_con10));
+            D_con2 = max(max(D_con20));
+            D_con3 = norm(rho_new*(D-D0));
+            P_con = max(P_con1,max(P_con2,P_con3));
+            D_con = max(D_con1,max(D_con2,D_con3));
+            mu=10;t_incr=2;t_decr=2;
+            if P_con>mu*D_con
+                rho_new=t_incr*rho_new;
+            elseif D_con>mu*P_con
+                rho_new=rho_new/t_decr;
+            else
+                rho_new=rho_new;
+            end
+            if abs(Po_con1 - P_con1) < eps2 && abs(Po_con2 - P_con2) < eps2 && abs(Po_con3 - P_con3) < eps2 < eps2 && abs(Do_con1 - D_con1) < eps2 && abs(Do_con2 - D_con2) < eps2 && abs(Do_con3 - D_con3) < eps2 
+                break;
+             end
+            if step>Maxstep
+                break
+            end
+            step = step +1;
+            TP_con1(step) = P_con1;
+            TP_con2(step) = P_con2;
+            TP_con3(step) = P_con3;
+            TD_con1(step) = D_con1;
+            TD_con2(step) = D_con2;
+            TD_con3(step) = D_con3;
+        end
+        W_all{d} = W;
+        clear W B alpha Z beta D Gamma
+    else % when d = n
+        for i = 1:nClass
+            for j = 1:nClass
+                if i<j 
+                  alpha(i,j,:) = zeros(nFea,1);
+                  B(i,j,:) = ones(nFea,1);
+                 end
+            end
+        end
+        
+        for i=1:nClass
+            for j = 1:nSmpClass(i)
+                beta(i,j,:) = zeros(nFea,1);
+                Z(i,j,:) = ones(nFea,1);
+            end   
+        end
+
+        Gamma = zeros(nFea,nFea);
+        D = ones(nFea,nFea); 
+        A = zeros(nFea,nFea); 
+
+        P_con1 = 1; P_con2 = 1; P_con3 = 1;  P_con = 1;
+        D_con1 = 1;  D_con2 = 1; D_con3 = 1; D_con = 1;
+        Po_con1 = 0; Po_con2 = 0; Po_con3 = 0;  Po_con = 0;
+        Do_con1 = 0;  Do_con2 = 0; Do_con3 = 0; Do_con = 0;
+        rho_new = rho;
+        step = 0;
+
+        while (P_con1 > eps1 ||  P_con2 > eps1 ||  P_con3 > eps1  ||  D_con1 > eps1  || D_con2 > eps1 || D_con3 > eps1 )
+            % ADMM, W
+            B0 = B;
+            for i = 1:nClass
+               for j = 1:nClass
+                   if i<j 
+                      A = A + sqrt(nSmpClass(i)*nSmpClass(j))/nSmp*((B(i,j)-alpha(i,j))*(C_mean(:,i)-C_mean(:,j))')';
+                   end
+               end
+            end    
+            for i=1:nClass
+                TempM = subX(:,Index(i,:));
+                for j=1:nSmpClass(i)
+                    A = A + (reshape(Z(i,j,:) - beta(i,j,:),nFea,1)*(TempM(:,j) - C_mean(:,i))')';
+                end
+            end
+
+            A = A + (D + Gamma);     
+            [U, ~, V] = svd(A);
+            W = U*V';
+
+            % ADMM, B
+            for i = 1:nClass
+               for j = 1:nClass
+                   if i<j
+                      B(i,j,:) = sqrt(nSmpClass(i)*nSmpClass(j))/nSmp*W'*(C_mean(:,i)-C_mean(:,j))+alpha(i,j);
+                      D_con10(i,j) = norm(rho_new*(C_mean(:,i)-C_mean(:,j))*(B(i,j)-B0(i,j)));
+                      tempijalpha = sqrt(nSmpClass(i)*nSmpClass(j))/nSmp*W'*(C_mean(:,i)-C_mean(:,j))-B(i,j);
+                      alpha(i,j,:) = alpha(i,j) + tempijalpha;
+                      P_con10(i,j) = norm(tempijalpha);
+                   end
+               end
+            end
+            B(B>=0) = B(B>=0) + 1/rho_new;
+            B(B<0) = B(B<0) - 1/rho_new;
+
+            % ADMM, Z        
+            Z0 = Z;
+            for i=1:nClass
+                Temp = subX(:,Index(i,:));
+                for j=1:nSmpClass(i)
+                    Z(i,j,:) = W'*(Temp(:,j)-C_mean(:,i))+beta(i,j);
+                    D_con20(i,j) = norm(rho_new*(Temp(:,j)-C_mean(:,i))*(Z(i,j)-Z0(i,j)));
+                end
+            end
+
+            ka = Omega/rho_new;
+            Z(Z > ka) = Z(Z > ka) - ka;
+            Z(Z < -ka) = Z(Z < -ka) + ka;
+            Z(Z<=ka & Z>=-ka) = 0;
+
+            % ADMM, D
+            D0 = D;
+            D = W - Gamma;
+
+            Po_con1 = P_con1; Po_con2 = P_con2; Po_con3 = P_con3;
+            Do_con1 = D_con1; Do_con2 = D_con2; Do_con3 = D_con3;
+
+            for i=1:nClass
+                 xi = subX(:,Index(i,:));
+                 for j=1:nSmpClass(i)
+                    tempijbeta = W'*(xi(:,j)-C_mean(:,i))-Z(i,j);
+                    beta(i,j,:) = beta(i,j)+tempijbeta; 
+                    P_con20(i,j) = norm(tempijbeta);
+                 end
+            end
+            Gamma = Gamma + (D-W);
+
+            P_con1 = max(max(P_con10));
+            P_con2 = max(max(P_con20));
+            P_con3 = norm(D-W);
+
+            D_con1 = max(max(D_con10));
+            D_con2 = max(max(D_con20));
+            D_con3 = norm(rho_new*(D-D0));
+            
+            P_con = max(P_con1,max(P_con2,P_con3));
+            D_con = max(D_con1,max(D_con2,D_con3));
+            mu=10;t_incr=2;t_decr=2;
+            if P_con>mu*D_con
+                rho_new=t_incr*rho_new;
+            elseif D_con>mu*P_con
+                rho_new=rho_new/t_decr;
+            else
+                rho_new=rho_new;
+            end
+            if abs(Po_con1 - P_con1) < eps2 && abs(Po_con2 - P_con2) < eps2 && abs(Po_con3 - P_con3) < eps2 < eps2 && abs(Do_con1 - D_con1) < eps2 && abs(Do_con2 - D_con2) < eps2 && abs(Do_con3 - D_con3) < eps2 
+                break;
+             end
+            if step>Maxstep
+                break
+            end
+            step = step +1;
+            TP_con1(step) = P_con1;
+            TP_con2(step) = P_con2;
+            TP_con3(step) = P_con3;
+            TD_con1(step) = D_con1;
+            TD_con2(step) = D_con2;
+            TD_con3(step) = D_con3;
+
+        end
+        W_all{d} = W;
+    end
+end
+     
+function [W] = QPSM(G,A)
+itmax = 10; 
+eps = 10^-4;
+it2 = 0; 
+[m,k] = size(A);
+[~,D_G] = eig(G);
+D_G = diag(D_G);
+alpha =  max(D_G) + 0.01;
+W = [eye(k);zeros(m-k,k)]; 
+while it2 < itmax
+    it2 = it2 + 1;
+    W0 = W;
+    M = 2*(alpha*eye(m) - G)*W - 2*A;
+    [U,~,V] = svd(M,0);
+    W = U*V';
+    if norm(W - W0) < eps
+        break;
+    end
+end
+
+</b>
+
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to na1013na@163.com or shaoyuanhai21@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: July 24, 2018
+
+
+<br />
+<br />
+
+<div class="rssfeed"> 
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

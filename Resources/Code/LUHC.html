@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>LUHC for PU problem</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>LUHC</b></font></h5>
+<hr />
+<p> A Demo Matlab code for Laplacian Unit-Hyperplane Learning for PU problem. 
+(You could Right-Click <a href="./LUHC/LUHC.rar">[Code]</a>, and Save, then you can download the whole matlab code.) </p>
+
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Yuan-Hai Shao, Wei-Jie Chen, Nai-Yang Deng*. Laplacian unit-hyperplane learning from positive and unlabeled examples[J]. Submitted.</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+<p>Need kernel function and laplacian function.</p>
+
+<div style="white-space:pre">
+<b class="purple">function [PredictY Times] = LUHL(TestX,Data,FunPara)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LUHL: Laplacian Unit-Hyperplane Learning for PU problem
+%
+%       Predict_Y = LUHL(TestX,DataTrain,FunPara)
+% 
+%       Input:
+%               TestX       - Test Data matrix. 
+%                   Each row vector of fea is a data point.
+%
+%               DataTrain   - Struct value in Matlab------Training data.
+%                   Data.X: Feature X matrix.
+%                   Data.Y: Label Y matrix. 
+%                           If Y is positive, set 0; else(unlabel), set 0
+%
+%               FunPara - Struct value in Matlab. The fields in options
+%                         that can be set:
+%                   c1: [0,inf] Paramter to tune the weight. 
+%                   c2: [0,1] Paramter to tune the weight. 
+%                   kerfPara:Kernel parameters. See kernelfun.m.
+%
+%       Output:
+%               Predict_Y - Predict value of the TestX.
+%
+%
+%       Examples:
+%
+%           DataTrain.A = rand(50,10);
+%           A = rand(100,2);
+%           B = rand(100,2)+ 1.5;
+%           X = [A;B];
+%           Y = [ones(4,1);zeros(96,1);zeros(100,1)];
+%           Data.X = X;Data.Y = Y;
+%           TestX = [rand(100,2);rand(100,2)+ 1.5;];
+%           TestY = [ones(100,1);-ones(100,1)];
+%           FunPara.p1=2;
+%           FunPara.p2=0.1;
+%           FunPara.kerfPara.type = 'rbf';
+%           FunPara.kerfPara.pars = 0.5;
+%           Predict_Y =LUHL(TestX,Data,FunPara);
+% 
+%Reference:
+%   Yuan-Hai Shao, Wei-Jie Chen and Nai-Yang Deng, "Laplacian unit-hyperplane
+%   learning from positive and unlabeled examples" Submitted 2013
+%
+%   version 1.0 --May/2013 
+%
+%   Written by Wei-Jie Chen (wjcper2008@126.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+tic;
+A = Data.X((Data.Y==1),:);
+U = Data.X((Data.Y~=1),:);
+K = Data.X;
+m1 = size(A,1); m2 =  size(U,1); 
+m = size(Data.X,1); n = size(Data.X,2);
+c1 = FunPara.p1; c2=FunPara.p2;
+e1 = ones(m1,1); e = ones(m,1);
+if m1>8, knn = 8; else knn = m1 - 1; end
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Construct laplacian matrix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+LA = laplacian(knn,A);  
+LU = laplacian(knn,U); 
+L = [LA zeros(m1,m2);zeros(m2,m1) LU];
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cache kernel matrix 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+kerfPara = FunPara.kerfPara;
+if ~strcmp(kerfPara.type,'lin')    
+    K = kernelfun(Data.X,kerfPara);
+    A = kernelfun(A,kerfPara,Data.X);
+    O1 = speye(m+1);
+else
+    O1 = speye(n+1);
+end    
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Train classifier using QP solver
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+H = [A,e1];  
+J = [K,e]; 
+V = (J'*L*J + c1*O1)\H';
+HH= H*V;
+HH = (HH + HH')/2;
+options = optimset('Algorithm','active-set','Display','off');
+alpha=quadprog(HH,0*e1,-e1',-c2,[],[],0*e1,e1/m1,0*e1,options);
+v1=V*alpha;
+rhoIndex = 0 < v1 & v1< 1/m1;
+rhov1 = v1; rhov1(~rhoIndex) = 0;
+rho = mean(J*rhov1);
+clear HH V alpha
+Times= toc;
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict and output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+m3 = size(TestX,1);
+e = ones(m3,1);
+
+if ~strcmp(kerfPara.type,'lin')    
+    K = [kernelfun(TestX,kerfPara,Data.X),e];
+else
+    K = [TestX, e];  
+end
+PredictY = sign(K*v1 - rho);
+end
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to shaoyuanhai21@163.com and wjcper2008@126.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: May 19, 2013
+
+
+<br />
+<br />
+
+
+
+
+
+
+
+  <div class="rssfeed">
+    
+ </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

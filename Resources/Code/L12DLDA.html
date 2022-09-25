@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>L12DLDA</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>L12DLDA</b></font></h5>
+<hr />
+<p> A Matlab code for  L1-norm two-dimension LDA. 
+(You could Right-Click <a href="./L12DLDA/L12DLDA.rar">[Code]</a> , and Save, then you can download the whole matlab code.) </p>
+
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Chun-Na Li, Yuan-Hai Shao, Nai-Yang Deng "Robust L1-norm two-dimensional linear discriminant analysis" Submitted 2014.</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+<div style="white-space:pre">
+<b class="purple"> function [W] = L12DLDA(X,Y,itmax)  </b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% L12DLDA: The L1-norm LDA for two-dimension redundency
+%
+% useage: [W] = L12DLDA(X,Y,itmax)
+% 
+% Input:
+%    X: input of Data.
+%    Y: the class label.
+%    itmax: the iteration (No.) step.
+% Output:
+%    W: transfer matrix.
+%
+% Examples:
+%    load('2Dexample.mat');
+%    [W] = L12DLDA(X,Y)
+% Reference:
+%    Chun-Na Li, Yuan-Hai Shao, Nai-Yang Deng "Robust L1-norm two-dimensional 
+%    linear discriminant analysis" Submitted 2014
+%
+%    Version 1.2 --Oct/2014 
+%
+%    Written by Chun-Na Li (na1013na@163.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+if (nargin <2 | nargin>3) % check correct number of arguments
+    help L12DLDA
+else
+    fprintf('_____________________________\n')
+    if (nargin<3) itmax=1000; end
+end
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initialization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+X=X/255.0;
+[d,n,N]=size(X); % N samples，each sample is with d*n dimension.
+c=size(unique(Y),1); % c classes.
+w = rand(d,1); % Random initialization.
+w = w/norm(w); % Normalize w.
+wk=[]; % The k-th projection vector.
+W=[]; % The final projection matrix.
+dim=30; % The maximum reduced dimension.
+delta=0.05; % The learning rate. 
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The following is to obtain W （for k=1:dim）. The size of W is d times dim.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+for k=1:dim  
+    %-------All mean and the mean of the i-th class------
+    barX=zeros(d,n);
+    barX=mean(X,3);% All mean.
+    Xmean=zeros(d,n,c); % The matrix of means for c classes.
+    num=zeros(c,1);      
+     %-------N_i times Y_i------
+    allNitimesYi=zeros(d,n,c);
+    for i=1:c
+        tempMatrix=X(:,:,find(Y==i)); % Put the samples of the i-th calss in tempMatrix.
+        num(i,1)=size(tempMatrix,3);
+        Xmean(:,:,i)=sum(tempMatrix,3)/num(i,1);% Compute the i-th mean and save it in Xmean(:,:,i).
+        allNitimesYi(:,:,i)=num(i,1)*(Xmean(:,:,i)-barX);
+    end
+    %-------Z_ij------
+    allZij=X-Xmean(:,:,Y(1:N));
+    it=0;
+    while 1
+        it=it+1;
+        b=zeros(d,1);
+        p=zeros(d,1);
+        r=ones(n,1);
+        s=ones(n,1);
+        numeratorw=0;
+        denominatorw=0;
+        %-------numerator of (6)------
+        for i=1:c
+            numeratorw=numeratorw+norm(w'*allNitimesYi(:,:,i),1);
+        end
+        %-------denominator of (6)------
+        for h=1:N
+            denominatorw=denominatorw+norm(w'*allZij(:,:,h),1);
+        end
+        %--------p(t)-------------
+        for i=1:c
+            temp=find(w'*(allNitimesYi(:,:,i))<0);
+            r(temp')=-1;
+            p=p+(allNitimesYi(:,:,i)*r);
+        end
+       %--------b(t)-------------
+        for h=1:N
+            temp=find(w'*(allZij(:,:,i))<0);
+            s(temp')=-1;
+            b=b+(allZij(:,:,h)*s);
+        end
+        %--------g(w(t))-------------
+        if b==0
+            g=p/(w'*p);
+        else
+            g=p/(w'*p)-b/(w'*b);
+        end
+        wk=w+delta*g;
+        wk=wk/norm(wk);
+        if wk'*b==0 || wk'*p==0
+             wk=wk+(0.001+0.002*rand(d,1));
+             wk=wk/norm(wk);
+        end
+        %--------compute new objective numerator and denominator of (6)-------------
+        numeratorwk=0;
+        denominatorwk=0;
+        for i=1:c
+           numeratorwk=numeratorwk+norm(wk'*allNitimesYi(:,:,i),1);
+        end
+        for h=1:N
+           denominatorwk=denominatorwk+norm(wk'*allZij(:,:,h),1);
+        end
+        %-------convergence check-------
+        if (abs(numeratorwk/denominatorwk-numeratorw/denominatorw)-(1e-6)<0)|| norm(w-wk) < 1e-6 ||it>itmax
+            break;
+        end
+        w=wk;        
+    end
+     %-------Projcet samples in each recursive procedure------
+    for h = 1:N
+        X(:,:,h) = X(:,:,h)-wk*wk'*X(:,:,h);   % Makesure the projections are orthogonal to each other
+    end
+    W=[W,wk];
+end 
+
+
+</b>
+
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to na1013na@163.com or shaoyuanhai21@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Otc 27, 2014
+
+
+<br />
+<br />
+
+<div class="rssfeed"> 
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

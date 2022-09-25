@@ -1,0 +1,320 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>RampTWSVC</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>RampTWSVC</b></font></h5>
+<hr />
+<p> A Matlab code for Ramp-based twin support vector clustering. (You could Right-Click <a href="./RampTWSVC/RampTWSVC.rar">[Codes]</a> , and Save, then you can download the results.) </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Zhen Wang, et.al. Ramp-based Twin Support Vector Clustering. submitted.</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+<div style="white-space:pre">
+function Y= RampTWSVC(X,iY,c1,c2)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% RampTWSVC: main function
+%   
+% Y= RampTWSVC(X,iY,c1,c2)
+% 
+% Input:
+%    X: Data matrix. (nolinear version is obtained by K(X,X))
+%    iY: First initial labels of X (can be given randomly or by NN-graph).
+%	then, it would be updated in iteration.
+%    Parameters - c1,c2. The fields in options that can be set:
+%              c1,c2: (0,inf) Paramter to tune the weight. 
+%              
+% Output:
+%     Y: The prediction of X in this iteration.
+% Examples:
+%    X=rand(50,10);
+%    iY = randint(50,1,[1,5]);
+%    c1=1;c2=1;
+%    Y= RampTWSVC(X,iY,c1,c2)
+% Reference:
+%    Zhen Wang, Yuan-Hai Shao, Nai-Yang Deng, "Ramp-based Twin support vector clustering" Submitted.
+%
+%    Version 1.0 --Nov/2018 
+%
+%    Written by Zhen Wang (wangz11@mails.jlu.edu.cn)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+mu=0;
+Y= iY;
+som=1;
+ite=0;
+delta=0.3;
+s=-0.2;
+num=max(iY);
+m=size(X,1);
+while som>1e-3 && ite<100
+    ite=ite+1;
+    totalw=[];
+    totalb=[];
+    for i=1:num
+        if ~isempty(find(iY==i, 1))
+            tY=iY;
+            tY(tY==i)=-999;
+            tY(tY>0)=-1;
+            tY(tY==-999)=1;
+            [w,b]=Trainone(X,tY,c1,c2,mu,delta,s);
+            if norm(w)>0
+                totalw=[totalw,w];
+                totalb=[totalb,b];
+            end
+        end
+    end
+    n=size(totalw,2);
+     val=zeros(m,n);
+    for i=1:m
+        for j=1:n
+            val(i,j)=abs(X(i,:)*totalw(:,j)+totalb(1,j));
+        end
+    end
+    if ~isempty(totalw)
+        [~,pY]=min(val,[],2);
+    else
+        pY=ones(size(X,1),1);
+    end   
+    som=norm(pY-Y,1);
+    Y=pY;
+end
+end
+
+
+function [w,b]= Trainone(X,Y,c1,c2,mu,delta,s)
+%Train a classifier, using training set to compute alpha
+[m,n]=size(X);
+m1=length(find(Y==1));
+m2=m-m1;
+X1=X(Y==1,:);
+X2=X(Y~=1,:);
+MAXITE=100;
+ite=0;
+tol=1e-2;
+%%%% Initialization %%%%
+[w,b] = SVM(X,Y,c1);
+tmp=X1*w+b;
+d1=zeros(m1,1);
+d1(tmp<s-2-delta,1)=1;
+d1(tmp>2+delta-s,1)=-1;
+tmp=X2*w+b;
+d2=zeros(m2,1);
+d2(tmp<s,1)=1;
+d2(tmp>-s,1)=-1;
+w_old=ones(n,1);
+%%%%%%%%%%%%%%
+if mu<=0
+    X11=X1*X1';
+    X12=X1*X2';
+    X22=X2*X2';
+else
+    ;
+end
+H=[X11,-X11,X12,-X12;
+    -X11,X11,-X12,X12;
+    X12',-X12',X22,-X22;
+    -X12',X12',-X22,X22];
+Aeq=[ones(1,m1),-ones(1,m1),ones(1,m2),-ones(1,m2)];
+%Lb=zeros(2*m,1);
+Ub=[c1*ones(2*m1,1);c2*ones(2*m2,1)];
+while norm(w-w_old)>tol && ite<MAXITE
+    w_old=w;
+    ite=ite+1;
+    g=[1-delta-c1*X11*d1-c2*X12*d2;
+        1-delta+c1*X11*d1+c2*X12*d2;
+        -1-delta-c1*X12'*d1-c2*X22*d2;
+        -1-delta+c1*X12'*d1+c2*X22*d2];
+   % alpha=quadprog(H,g,[],[],Aeq,c1*sum(d1)+c2*sum(d2),Lb,Ub);
+    alpha=SMO(H,-g,Aeq',c1*sum(d1)+c2*sum(d2),Ub);
+    w=-c1*X1'*d1-c2*X2'*d2+X1'*(alpha(1:m1,1)-alpha(m1+1:2*m1,1))+X2'*(alpha(2*m1+1:2*m1+m2,1)-alpha(2*m1+m2+1:2*m1+2*m2,1));
+    b=0;
+    for i=1:2*(m1+m2)
+        if alpha(i,1)>tol
+            if i<=2*m1 && alpha(i,1)<c1
+                if i<=m1
+                    b=-1+delta-X1(i,:)*w;
+                    break;
+                else
+                    b=1-delta-X1(i-m1,:)*w;
+                    break;
+                end
+            elseif i>2*m1 && alpha(i,1)<c2
+                if i<=2*m1+m2
+                    b=1+delta-X2(i-2*m1,:)*w;
+                    break;
+                else
+                    b=-1-delta-X2(i-2*m1-m2,:)*w;
+                    break;
+                end
+            end
+        end
+    end
+    tmp=X1*w+b;
+    d1=zeros(m1,1);
+    d1(tmp<s-2-delta,1)=1;
+    d1(tmp>2+delta-s,1)=-1;
+    tmp=X2*w+b;
+    d2=zeros(m2,1);
+    d2(tmp<s,1)=1;
+    d2(tmp>-s,1)=-1;
+end
+end
+
+function [w,b] = SVM(X,Y,C)
+%SVM solver by SMO
+m=size(X,1);
+e=ones(m,1);
+a= SMO(X*X',e,Y,0,C*e);
+w=0;
+for i=1:m
+    if a(i)~=0
+        w=w+a(i)*Y(i)*X(i,:)';
+    end
+end
+b=0;
+for i=1:m
+    if a(i)>0 && a(i)<C
+        b=Y(i)-X(i,:)*w;
+        break;
+    end
+end
+end
+
+
+function a= SMO(H,f,y,delta,C)
+%SMO solver
+% min 0.5 a'Ha-f'a
+% s.t. y'a=delta,  0<=a<=C
+% where H is positive definite
+%      f,C are vectors
+%      y is a vector with +-1
+%      delta is a constant.
+tol=1e-2;
+m=size(H,1);
+Maxite=100;
+% step 1: initialization
+a=zeros(m,1);
+posind=find(y>0);   %The index of y>0
+if delta>sum(C)
+    disp('Error: delta>sum(C)');
+    return;
+else
+    tmp=0;
+    j=1;
+    for i=1:m
+        tmp=tmp+C(i,1);
+        if j>length(posind)
+            break;
+        end
+        if tmp<=delta
+            a(posind(j),1)=C(i,1);
+            j=j+1;
+        else
+            a(posind(j),1)=delta-sum(a);
+            break;
+        end
+    end
+end
+ma=-inf;
+i1=-1;
+Ma=inf;
+i2=-1;
+for i=1:m
+    if (a(i,1)<C(i,1) && y(i,1)>0) || (a(i,1)>0 && y(i,1)<0)
+        tmp=y(i,1)*(f(i,1)-H(i,:)*a);
+        if tmp>ma
+            ma=tmp;
+            i1=i;
+        end
+    elseif (a(i,1)<C(i,1) &&y(i,1)<0) || (a(i,1)>0 && y(i,1)>0)
+        tmp=y(i,1)*(f(i,1)-H(i,:)*a);
+        if tmp<Ma
+            Ma=tmp;
+            i2=i;
+        end
+    end
+end
+ind=1:m;
+t=1;
+while ma-Ma>tol && t<Maxite
+    t=t+1;
+    Dt=a(i1,1)*y(i1,1)+a(i2,1)*y(i2,1);
+    tmpind=ind~=i1 & ind ~=i2;
+    a(i2,1)=(H(i1,i1)*Dt*y(i2,1)-f(i1,1)*y(i1,1)*y(i2,1)+f(i2,1)+a(tmpind,1)'*H(tmpind,i1)*y(i1,1)*y(i2,1)-a(tmpind,1)'*H(tmpind,i2))/(H(i1,i1)+H(i2,i2)-2*H(i1,i2)*y(i1,1)*y(i2,1));
+    if (y(i1,1)>0 && y(i2,1)>0) || (y(i1,1)<0 && y(i2,1)<0)
+        U=max([0,y(i1,1)*Dt-C(i1,1)]);
+        V=min([C(i2,1),y(i1,1)*Dt]);
+    else
+        U=max([0,-y(i1,1)*Dt]);
+        V=min([C(i2,1),C(i1,1)-y(i1,1)*Dt]);
+    end
+    if a(i2,1)>V
+        a(i2,1)=V;
+    elseif a(i2,1) < U
+        a(i2,1)=U;
+    end
+    a(i1,1)=y(i1,1)*Dt-y(i1,1)*y(i2,1)*a(i2,1);
+    ma=-inf;
+    i1=-1;
+    Ma=inf;
+    i2=-1;
+    for i=1:m
+        if (a(i,1)<C(i,1) && y(i,1)>0) || (a(i,1)>0 && y(i,1)<0)
+          tmp=y(i,1)*(f(i,1)-H(i,:)*a);
+          if tmp>ma
+             ma=tmp;
+             i1=i;
+          end
+        elseif (a(i,1) < C(i,1) &&y(i,1)<0) || (a(i,1)>0 && y(i,1)>0)
+         tmp=y(i,1)*(f(i,1)-H(i,:)*a);
+            if tmp < Ma
+            Ma=tmp;
+                i2=i;
+            end
+        end
+    end
+end
+end
+
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to wangzhen1882@126.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Nov 28, 2018
+
+
+<br />
+<br />
+
+<div class="rssfeed"> 
+</div>
+
+</div>
+
+</div>
+
+</body>
+</htm

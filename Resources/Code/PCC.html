@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>PCC</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>PCC</b></font></h5>
+<hr />
+<p> A Matlab code for proximal classifier with consistency. 
+(You could Right-Click <a href="./PCC/PCC.rar">[Code]</a> , and Save, then you can download the whole matlab code.) </p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p> <u>Y.-H. Shao</u>,  N.-Y. Deng, W.-J. Chen. A proximal classifier with consistency, Knowledge-Based Systems,2013, 49:171-178 </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+<p>Need kernel function.</p>
+
+<div style="white-space:pre">
+<b class="purple">function Predict_Y = PCC(TestX,DataTrain,FunPara)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PCC: A proximal classifier with consistency
+%
+% Predict_Y = PCC(TestX,DataTrain,FunPara)
+% 
+% Input:
+%    TestX - Test Data matrix. Each row vector of fea is a data point.
+%
+%    DataTrain - Struct value in Matlab(Training data).
+%                DataTrain.A: Positive input of Data matrix.
+%                DataTrain.B: Negative input of Data matrix.
+%
+%    FunPara - Struct value in Matlab. The fields in options that can be set:
+%              c: [0,inf] Paramter to tune the weight. 
+%              mu: [0,inf] Paramter to tune the weight. 
+%              kerfPara:Kernel parameters. See kernelfun.m.
+%
+% Output:
+%    Predict_Y - Predict value of the TestX.
+%
+% Examples:
+%    DataTrain.A = rand(50,10);
+%    DataTrain.B = rand(60,10);
+%    TestX=rand(20,10);
+%    FunPara.c=0.1;
+%    FunPara.mu=0.1;
+%    FunPara.kerfPara.type = 'lin';
+%    Predict_Y =PCC(TestX,DataTrain,FunPara);
+% 
+% Reference:
+%    Yuan-Hai Shao, Nai-Yang Deng and Wei-Jie Chen, "A proximal classifier
+%    with consistency" Submitted 2013
+%
+%    Version 1.0 --Apr/2013 
+%
+%    Written by Wei-Jie Chen (wjcper2008@126.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+%tic;
+Xpos = DataTrain.A;
+Xneg = DataTrain.B;
+c = FunPara.c;
+mu = FunPara.mu;
+kerfPara = FunPara.kerfPara;
+
+m1=size(Xpos,1);m2=size(Xneg,1);
+e1=ones(m1,1);e2=ones(m2,1);
+TrainX=[Xpos;Xneg];
+[m,n]=size(TestX);
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Compute Kernel 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+if ~strcmp(kerfPara.type,'lin')
+Xpos=kernelfun(Xpos,kerfPara,TrainX);
+    Xneg=kernelfun(Xneg,kerfPara,TrainX);
+    TestX=kernelfun(TestX,kerfPara,TrainX);
+end
+    Hpos=[Xpos e1]'*[Xpos e1];
+    Hneg=[Xneg e2]'*[Xneg e2];
+    M=Hpos-mu*Hneg; 
+    N=Hneg-mu*Hpos;
+if ~strcmp(kerfPara.type,'lin')
+    M=M+c*eye(m1+m2+1);
+    N=N+c*eye(m1+m2+1);
+else
+    M=M+c*eye(n+1);
+    N=N+c*eye(n+1);
+end
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Compute (w1,b1) and (w2,b2)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+[a1,a2]=eig(M);
+[a3,a4]=eig(N);
+[~,index_w1]=min(diag(a2));
+[~,index_w2]=min(diag(a4));
+if strcmp(kerfPara.type,'lin')
+    w1=a1(:,index_w1);
+    w2=-a3(:,index_w2);
+else
+    w1=a1(1:(m1+m2+1),index_w1);
+    w2=-a3(:,index_w2);
+end 
+normw1=norm(w1);
+normw2=norm(w2);
+</b><b class="green">	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% If necessary;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+if abs(normw1-normw2)>eps
+    a2(:,index_w1)=a2(:,index_w1)+10000;
+    a4(:,index_w2)=a2(:,index_w2)+10000;
+    [~,index_w1]=min(diag(a2));
+    [~,index_w2]=min(diag(a4));
+    w11=a1(:,index_w1);
+    w22=-a3(:,index_w2);
+    diff=[];
+    lamda=0.1;
+    for i=1:1:10
+        w111=lamda*i*w1+(1-lamda*i)*w11;
+        w222=lamda*i*w2+(1-lamda*i)*w22;
+        normw1=norm(w111);
+        normw2=norm(w222);
+        diff(i)=abs(normw1-normw2);
+    end
+    [~,index_diff]=min(diff);
+    w1=lamda*index_diff*w1+(1-lamda*index_diff)*w11;
+    w2=lamda*index_diff*w2+(1-lamda*index_diff)*w22;
+end
+%toc; 
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict and output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+if strcmp(kerfPara.type,'lin')
+    Y1=TestX*w1(1:n)+w1(n+1)*ones(m,1);      %testX 
+    Y2=TestX*w2(1:n)+w2(n+1)*ones(m,1);      %testX 
+else
+    mm = m1+m2;
+    Y1=TestX*w1(1:mm)+w1(mm+1)*ones(m,1);    %testX
+    Y2=TestX*w2(1:mm)+w2(mm+1)*ones(m,1);    %testX
+end
+Predict_Y = sign(abs(Y2)-abs(Y1));
+</b>
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to shaoyuanhai21@163.com and wjcper2008@126.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Apirl 5, 2013
+
+
+<br />
+<br />
+
+</div>
+
+</div>
+
+</body>
+</html>

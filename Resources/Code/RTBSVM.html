@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>RTBSVM</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>RTBSVM</b></font></h5>
+<hr />
+<p> RTBSVM is a robust rescaled hinge loss twin support vector machine for binary classification. This package provides a Demo Matlab code for RTBSVM. (You could Right-Click <a href="RTBSVM/RTBSVM.zip">[Code]</a> , and Save, then you can download the whole matlab code.) </p>
+
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Ling-Wei Huang, Yuan-Hai Shao*, Jun Zhang, Yu-Ting Zhao, Jia-Ying Teng. Robust Rescaled Hinge Loss Twin Support Vector Machine for Imbalanced Noisy Classification[J].</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+<p>Need kernel function and quadprog function.</p>
+
+<div style="white-space:pre">
+<b class="purple">function Predict_Y = RTBSVM(TestX,DataTrain,FunPara)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% RTBSVC: Robust Rescaled Hinge Loss Twin Support Vector Machine 
+%
+% USEAGE: Predict_Y = RTBSVM(TestX,DataTrain,FunPara)
+%
+% Input:
+%     TestX - Test Data matrix. Each row vector of feature is a data point.
+%
+%     DataTrain - Struct value in Matlab (Training data).
+%                 DataTrain.A: Positive input of Data matrix.
+%                 DataTrain.B: Negative input of Data matrix.
+%
+%     FunPara - Struct value in Matlab. The fields in options that can be set:
+%             p1~p5: [0,inf] Paramter to tune the weight. 
+%             kerfPara: Kernel parameters. See kernelfun.m.
+% 
+% Output:
+%     Predict_Y - Predict value of the TestX.
+%
+% Examples:
+%     DataTrain.A = rand(50,10); 
+%     DataTrain.B = rand(60,10); 
+%     TestX = rand(20,10);
+%     FunPara.p1=0.1;
+%     FunPara.p2=0.1;
+%     FunPara.p3=0.1;
+%     FunPara.p4=0.1;
+%     FunPara.p5=0.1;
+%     FunPara.kerfPara.type = 'lin';
+%     Predict_Y = RTBSVM(TestX,DataTrain,FunPara);
+% 
+% Reference:
+%     Ling-Wei Huang, Yuan-Hai Shao, Jun Zhang, Yu-Ting Zhao, Jia-Ying
+%     Teng, "Robust Rescaled Hinge Loss Twin Support Vector Machine for
+%     Imbalanced Noisy Classification" Submitted 2019
+% 
+%     Version 1.0 --Mar/2019
+% 
+%     Written by Ling-Wei Huang (xhuanglw@163.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+</b><b class="green">
+% %===================================================================
+% ■■ Initailization ■■
+% %===================================================================
+</b><b class="code">
+DataTrain = DataTypeTrans(DataTrain,1);
+Xpos = DataTrain.A;
+Xneg = DataTrain.B;
+cpos = FunPara.p1;    % c1, c2 (parameters in loss terms)
+cneg = FunPara.p1;
+eps1 = FunPara.p2;    % c3, c4 (parameters in regularization terms)
+eps2 = FunPara.p2;
+eta = FunPara.p3;     % rescaled parameter eta
+kerfPara = FunPara.kerfPara;
+    
+m1 = size(Xpos,1);    m2 = size(Xneg,1);
+e1 = -ones(m1,1);     e2 = -ones(m2,1);
+upbound1=-cpos*e2;
+upbound2=-cneg*e1;
+</b><b class="green">
+% %===================================================================
+% ■■ Compute Kernel ■■
+% %===================================================================
+</b><b class="code">
+if strcmp(kerfPara.type,'lin')
+    H=[Xpos,-e1];
+    G=[Xneg,-e2];
+else
+    X=[DataTrain.A;DataTrain.B];
+    H=[kernelfun(Xpos,kerfPara,X),-e1];
+    G=[kernelfun(Xneg,kerfPara,X),-e2];
+end
+</b><b class="green">
+% %===================================================================
+% ■■ Initial [w1,b1] by TBSVM
+% %=================================================================== 
+</b><b class="code">
+%%% ===== TBSVM+ =====
+HH = H'*H;
+HH = HH + eps1*eye(size(HH));
+HHG = HH\G';
+kerH1 = G*HHG;
+kerH1 = (kerH1+kerH1')/2;
+options = optimoptions('quadprog','Algorithm','interior-point-convex','Display','off');
+alpha = quadprog(kerH1,e2,[],[],[],[],0*e2,upbound1,[],options);
+vpos = -HHG*alpha;
+%%% ===== TBSVM- =====
+QQ = G'*G;
+QQ = QQ + eps2*eye(size(QQ));
+QQP = QQ\H';
+kerH2 = H*QQP;
+kerH2 = (kerH2+kerH2')/2;
+gamma = quadprog(kerH2,e1,[],[],[],[],0*e1,upbound2,[],options);
+vneg = QQP*gamma;
+    
+clear H G HH QQ;
+w1 = vpos(1:end-1);
+b1 = vpos(end);
+w2 = vneg(1:end-1);
+b2 = vneg(end);
+
+</b><b class="green">
+% %===================================================================
+% ■■ Iteration ■■
+% %===================================================================
+</b><b class="code">
+% %     w1 = rand(size(Xpos,2),1);  % random initialization [w,b]
+% %     w2 = rand(size(Xneg,2),1);
+% %     b1 = rand(1);
+% %     b2 = rand(1);
+s = 0;  	
+S = 5;
+upos = zeros(m1,1);uneg = zeros(m2,1);
+beta = 1/(1-exp(-eta));
+
+while s < S
+    if strcmp(kerfPara.type,'lin') 
+        zpos = Xpos*w1+b1*ones(m1,1);
+        zneg = -Xneg*w2+b2*ones(m2,1);
+    else
+        X=[DataTrain.A;DataTrain.B];
+        zpos = kernelfun(Xpos,kerfPara,X)*w1+b1*ones(m1,1);
+        zneg = -kernelfun(Xneg,kerfPara,X)*w2+b2*ones(m2,1);
+    end
+    
+    for i=1:m1
+        if (1-zpos(i,1)>0)
+            upos(i) = -exp(-eta*(1-zpos(i,1)));
+        else,upos(i) = -1;
+        end
+    end
+    for i=1:m2
+        if (1-zneg(i,1)>0)
+            uneg(i) = -exp(-eta*(1-zneg(i,1)));
+        else,uneg(i) = -1;
+        end
+    end
+    upbound1 = cpos*(eta * beta)*(-uneg);
+    upbound2 = cneg*(eta * beta)*(-upos);
+    
+% % ===== Compute [w,b] =====
+    options = optimoptions('quadprog','Algorithm','interior-point-convex','Display','off');
+    alpha = quadprog(kerH1,e2,[],[],[],[],0*e2,upbound1,[],options);
+    vpos = -HHG*alpha;
+    gamma = quadprog(kerH2,e1,[],[],[],[],0*e1,upbound2,[],options);
+    vneg = QQP*gamma;
+    w1 = vpos(1:end-1);
+    b1 = vpos(end);
+    w2 = vneg(1:end-1);
+    b2 = vneg(end);
+    s = s+1;
+end
+
+</b><b class="green">
+% %===================================================================
+% ■■ Predict and output ■■
+% %===================================================================
+</b><b class="code">
+kerfPara = FunPara.kerfPara;
+m=size(TestX,1);
+if strcmp(kerfPara.type,'lin')
+    H=TestX;
+    w11=sqrt(w1'*w1);
+    w22=sqrt(w2'*w2);
+    y1=H*w1+b1*ones(m,1);
+    y2=H*w2+b2*ones(m,1);    
+else
+    C=[DataTrain.A;DataTrain.B];
+    H=kernelfun(TestX,kerfPara,C);
+    w11=sqrt(w1'*kernelfun(X,kerfPara,C)*w1);
+    w22=sqrt(w2'*kernelfun(X,kerfPara,C)*w2);
+    y1=H*w1+b1*ones(m,1);
+    y2=H*w2+b2*ones(m,1);
+end
+clear H; clear C;
+
+    if w11==0,m1=0;else,m1=y1/w11;end
+    if w22==0,m2=0;else,m2=y2/w22;end
+    Predict_Y = sign(abs(m2)-abs(m1));
+end
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to xhuanglw@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: March 3, 2019
+
+
+<br />
+<br />
+
+
+
+
+
+
+
+  <div class="rssfeed">
+    
+ </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

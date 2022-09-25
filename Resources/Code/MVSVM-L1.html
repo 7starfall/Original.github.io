@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>MVSVM-L1 for multi-projections problems with outliers</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+<link rel="stylesheet" href="../styles/xcode.css">
+<script src="../styles/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>MVSVM<SUB>L1</SUB></b></font></h5>
+<hr />
+<p> A Demo Matlab code for MVSVM<SUB>L1</SUB> for multi-projections problems with outliers. 
+(You could Right-Click <a href="./MVSVM_L1/MVSVM_L1.zip">[Code]</a> , and Save, then you can download the whole matlab code.) </p>
+
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p><a href="../member/cwj.html">Wei-Jie Chen</a>, Chun-Na Li, <a href="../member/syh.html">Yuan-Hai Shao</a> and Nai-Yang Deng. 
+Robust L<SUB>1</SUB>-norm multi-weight vector projection support vector
+machine for pattern recognition[J].<a> <b>Submitted.</b> 2017.</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+<font size = "5" face="Georgia">
+<b>
+<pre>
+<code class="matlab">
+function ClassAC = MVSVM_L1(Data,d)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MVSVM_L1: 
+%       Robust L1-norm based MVSVM classifier for multi-projections problems with outliers.
+%
+%       ClassAC = MVSVM_L1(Data,d)
+% 
+%       Input:
+%           Data  - Struct value in Matlab (including train and test dataset)              
+%              Data.TrainX: Input dataset N-by-D data matrix. (N examples, D dimensions)
+%              Data.TrainY: Label Y matrix.(Label 1 and 2)
+%
+%              Data.TestX: Input dataset N-by-D data matrix. (N examples, D dimensions)
+%              Data.TestY: Label Y matrix. (Label 1 and 2)
+%
+%           d - number of projection vectors (d <= Feature).
+%
+%       Output:
+%           ClassAC - The test accuracy.
+%
+%
+%       Examples:
+%           nFea = 10; 
+%           nTrain = 100; 
+%           nTest = 100;
+%           Data.TrainX = [rand(nTrain,nFea);rand(nTrain,nFea)+ 2];
+%           Data.TrainY = [ones(nTrain,1);2*ones(nTrain,1)];
+%           Data.TestX = [rand(nTest,nFea);rand(nTest,nFea)+ 2;];
+%           Data.TestY = [ones(nTest,1);2*ones(nTest,1)];
+%           ClassAC = MVSVM_L1(Data,10);
+% 
+% Reference:
+%   Wei-Jie Chen, Chun-Na Li, Yuan-Hai Shao and Nai-Yang Deng, "Robust L1-norm 
+%      multi-weight vector projection support vector machine for pattern recognition" Submitted. 2015.
+%
+%   version 1.0 --Jun/2015 
+%   version 1.1 --Aug/2015
+%   Written by Wei-Jie Chen (wjcper2008@126.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[~,nFea] = size(Data.TrainX); 
+gamma = 0.0005; %the learning rate parameter
+classLabel = unique(Data.TrainY);
+nClass = length(classLabel);
+ClassAC = zeros(d,1);     
+fw = zeros(nFea,d,nClass); 
+Mean = zeros(nClass,nFea);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Greedy Search Algorithm find multiple features for each class
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+for c = 1:nClass
+  A = Data.TrainX((Data.TrainY==classLabel(c)),:); 
+  N_A = length(A(:,1));
+  B = Data.TrainX; N_B = length(B(:,1));
+  Mean(c,:) = mean(A,1); %mean of k-class, row vector
+
+  % MVSVM_L1 with multiple projection vectors
+  for k=1:d    
+    mean_k = mean(A,1); %mean of k-class in subspace
+    BarA = A - repmat(mean_k,N_A,1);  BarB= B - repmat(mean_k,N_B,1);
+    
+    obj = 0;
+	
+    % w-random initialization
+    Norm2X = sum(BarB.^2,2).^0.5;
+    [~,index] = max(Norm2X);
+    w = Data.TrainX(index,:)';
+    w = w/norm(w);	
+
+    % MVSVM_L1 for one projection vector
+    while 1
+      % Polarity check
+      Q = sign(BarA*w);
+      P = sign(BarB*w);
+      
+      % Update g(wn) for equ(22)
+      GL = sum(diag(P)*BarB); GLD = GL*w;
+      GR = sum(diag(Q)*BarA); GRD = GR*w;        
+
+      % Check two denominators in equ (22) whether to 0
+      if (GLD ==0) || (GRD ==0)
+        w = w + (rand(nFea, 1)-0.5)*0.002;
+        w = w/norm(w); %normalize w
+        fprintf('Convergence break,De:%d\n',k);
+        continue;
+      end
+        
+      G = GL/GLD -GR/GRD;
+      wn = w + gamma*G';
+      wn = wn/norm(wn); %normalize wn
+
+      % Convergence check
+      objn = sum(abs(BarA*wn))/sum(abs(BarB*wn));
+      if abs(objn - obj) < 0.0001
+        fprintf('Convergence for Class: %d, %d projection vectors\n',c,k);
+        break;
+      end
+      obj = objn;
+      w = wn;
+    end	
+	
+    fw(:,k,c) = wn/norm(wn);
+    % remainder of Data in subspace for equ(41) 
+    A = A - (A*wn)*wn'; B = B - (B*wn)*wn'; 
+    clear BarA BarB
+	
+  end
+  clear A B
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict and output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+nTest = length(Data.TestX(:,1));
+DemTeX = zeros(nTest,d,c);
+for c=1:nClass
+  DemTeX(:,:,c) =abs( (Data.TestX - repmat(Mean(c,:),nTest,1) )*fw(:,:,c) ); 
+end
+for k=1:d
+  [~,PTestY] = min(sum(DemTeX(:,1:k,:),2),[],3); 
+  ClassAC(k) = sum(PTestY == Data.TestY)/length(PTestY);
+end
+</code>
+</pre>
+</b>
+</font>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to wjcper2008@126.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Oct 12, 2015
+
+
+<br />
+<br />
+
+
+
+
+
+
+
+  <div class="rssfeed">
+    
+ </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

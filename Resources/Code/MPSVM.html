@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>MPSVM for SSL problem</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>MPSVM</b></font></h5>
+<hr />
+<p> A Demo Matlab code for Manifold proximal SVM for SSC problem. 
+(You could Right-Click <a href="./MPSVM/MPSVM.rar">[Code]</a> , and Save, then you can download the whole matlab code.) </p>
+
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p><b class="blue">Wei-Jie Chen</b>*, Yuan-Hai Shao, Deng-Ke Xu and Yong-Feng Fu. <a href="http://dx.doi.org/10.1007/s10489-013-0491-z">
+Manifold proximal support vector machine for semi-supervised classification[J].<a> <b>Applied Intelligence.</b> 2014,40(4):623-638.(SCI, IF:1.875)</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+<p>Need kernel function and laplacian function.</p>
+
+<div style="white-space:pre">
+<b class="purple">function [PredictY Times]= MPSVM(TestX,Data,FunPara)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MPSVM: Manifold proximal SVM for SSC problem
+%
+%       Predict_Y = MPSVM(TestX,DataTrain,FunPara)
+% 
+%       Input:
+%           TestX       - Test Data matrix. 
+%              Each row vector of fea is a data point.
+%
+%           DataTrain   - Struct value in Matlab------Training data.
+%              Data.X: Input dataset N-by-D data matrix.
+%                  (N examples, D dimensions)
+%              Data.Y: Label Y matrix. 
+%                  (If Y is positive/negative, set 1/-1; else unlabel, set 0)
+%
+%           FunPara - Struct value in Matlab. The fields in options
+%                         that can be set:
+%              c1: [0,inf] penalty factor for empirical risks. 
+%              c2: [0,inf] penalty factor for manifold term. 
+%              kerfPara:Kernel parameters. See kernelfun.m.
+%
+%       Output:
+%           Predict_Y - Predict value of the TestX.
+%
+%
+%       Examples:
+%
+%           A = rand(100,2);
+%           B = rand(100,2)+ 2;
+%           X = [A;B];
+%           Y = [ones(4,1);zeros(96,1);-ones(4,1);zeros(96,1)];
+%           Data.X = X;Data.Y = Y;
+%           TestX = [rand(100,2);rand(100,2)+ 2;];
+%           TestY = [ones(100,1);-ones(100,1)];
+%           FunPara.p1=1;FunPara.p2=1;
+%           FunPara.kerfPara.type = 'lin';
+%           Predict_Y =MPSVM(TestX,Data,FunPara);
+%           Accuracy = sum(Predict_Y == TestY)/length(TestY)
+% 
+%Reference:
+%   Wei-Jie Chen, Yuan-Hai Shao, Deng-Ke Xu and Hong Ning, "Manifold proximal 
+%   support vector machine for semi-supervised classification" Submitted 2013
+%
+%   version 1.0 --May/2013 
+%   version 1.1 --Aug/2013
+%   Written by Wei-Jie Chen (wjcper2008@126.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+tic;
+A = Data.X((Data.Y==1),:);
+B = Data.X((Data.Y==-1),:);
+K = Data.X;
+m1 = size(A,1); m2 = size(B,1);
+m = size(Data.X,1);
+n = size(Data.X,2);
+c1 = FunPara.p1; c2 = FunPara.p2;
+e1 = ones(m1,1); e2=ones(m2,1); e = ones(m,1);
+kerfPara = FunPara.kerfPara;
+L = laplacian(12,Data.X); 
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cache kernel matrix 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+if ~strcmp(kerfPara.type,'lin')    
+    K = kernelfun(Data.X,kerfPara);
+    A = kernelfun(A,kerfPara,Data.X);
+    B = kernelfun(B,kerfPara,Data.X);
+end
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Train classifier using Eig solver
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+H = [A,e1];  HH = H'*H;
+G = [B,e2];  GG = G'*G;
+J = [K,e];
+M = J'*L*J;
+HH1 = HH - c1*GG + c2*M;
+GG1 = GG - c1*HH + c2*M;
+[a1,a2]=eig(HH1);[a3,a4]=eig(GG1);
+[~,index_v1]=min(diag(a2));
+[~,index_v2]=min(diag(a4));
+v1=a1(:,index_v1);
+v2=a3(:,index_v2);
+clear HH beta
+Times= toc;
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict and output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+m3 = size(TestX,1);
+e = ones(m3,1);
+if ~strcmp(kerfPara.type,'lin')    
+    w1 = sqrt(v1(1:m)'*K*v1(1:m));
+    w2 = sqrt(v2(1:m)'*K*v2(1:m));
+    K = [kernelfun(TestX,kerfPara,Data.X),e];
+else
+    w1 = sqrt(v1(1:n)'*v1(1:n));
+    w2 = sqrt(v2(1:n)'*v2(1:n));
+    K = [TestX, e];    
+end
+PredictY = sign(abs(K*v2/w2)-abs(K*v1/w1));
+end
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to wjcper2008@126.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Aug 12, 2013
+
+
+<br />
+<br />
+
+
+
+
+
+
+
+  <div class="rssfeed">
+    
+ </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

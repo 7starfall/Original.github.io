@@ -1,0 +1,145 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>TWSVC</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>TWSVC</b></font></h5>
+<hr />
+<p> A Matlab code for twin support vector clustering. (You could Right-Click <a href="./TWSVC/TWSVCres.rar">[Some Results]</a> , and Save, then you can download the results.) </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Zhen Wang, Yuan-Hai Shao*, Nai-Yang Deng. TWSVC: twin support vector machine for clustering[J]. IEEE TNNLS. 2015</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+<div style="white-space:pre">
+<b class="purple"> function pY= IteOne(X,Y,c) </b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TWSVC: one iteration in twin support vector clustering
+%   
+% pY= IteOne(X,Y,c,mu)
+% 
+% Input:
+%    X: Data matrix. (nolinear version is obtained by K(X,X))
+%    Y: First initial labels of X (can be given randomly or by NN-graph).
+%	then, it would be updated in iteration.
+%    Parameters - c,mu. The fields in options that can be set:
+%              c: (0,inf) Paramter to tune the weight. 
+%              
+% Output:
+%     pY: The prediction of X in this iteration.
+% Examples:
+%    X=rand(50,10);
+%    Y = randint(50,1,[1,5]);
+%    c=1;mu=0.1;
+%    pY= IteOne(X,Y,c)
+% Reference:
+%    Zhen Wang, Yuan-Hai Shao, Nai-Yang Deng, "Twin support vector machine for clustering" IEEE TNNLS 2015
+%
+%    Version 2.0 --Nov/2016 
+%
+%    Written by Zhen Wang (wangz11@mails.jlu.edu.cn)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Main
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+%tic;
+tol=0.001;
+eps=0.0000001;
+num=max(Y);
+totalu=zeros(1+size(X,2),num);
+for i=1:num
+    inputA=X(Y==i,:);
+    inputB=X(Y~=i,:);
+    u0=FirstStep(inputA);
+    [m1,n]=size(inputA);
+    m2=size(inputB,1);
+    if mu<=0
+        u=zeros(n+1,1);
+    end
+    ite=0;
+    som=1;
+    con=0;
+    while som>tol && ite<30
+        ite=ite+1;
+        u=u0;
+        e1=ones(m1,1);
+        e2=ones(m2,1);
+        G=[inputB,e2];
+        G=diag(sign(inputB*u(1:n,:)+u(n+1,1)))*G;
+        H=[inputA,e1];           
+        kerH=G*((H'*H+eps*eye(n+1))\G');
+        kerH=(kerH+kerH')/2;
+        gamma=quadprog(kerH,-e2,[],[],[],[],0*e2,c*e2,[],optimset('display','off'));
+        %    gamma=qpSOR(kerH,0.7,c,0.05); %SOR
+        u0=(H'*H+eps*eye(n+1))\G'*gamma;
+        som=norm(u-u0);        
+    end
+    totalu(:,i)=u0;
+end
+[tmp,pY]=min(abs([X,ones(size(X,1),1)]*totalu),[],2);
+end
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Additional functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">   
+
+function u=FirstStep(A)
+% compute: min ||Aw+be||, s.t. ||w||=1.
+% u=[w;b]
+m=size(A,1);
+H=A'*(1/m*ones(m,m)-eye(m))*A;
+[V,D]=eig(H);
+[tmp,n]=min(abs(diag(D)));
+w=V(:,n);
+b=-1/m*sum(A,1)*w;
+u=[w;b];
+end
+
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to wangz11@mails.jlu.edu.cn.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Nov 11, 2016
+
+
+<br />
+<br />
+
+<div class="rssfeed"> 
+</div>
+
+</div>
+
+</div>
+
+</body>
+</htm

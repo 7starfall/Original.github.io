@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>MPSVM for SSL problem</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>MPSVM</b></font></h5>
+<hr />
+<p> A Demo Matlab code for MLTSVM for multi-label learning problem.
+(You could Right-Click <a href="./MLTSVM/MLTSVM.rar">[Code]</a> , and Save, then you can download the whole matlab code.) </p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Wei-Jie Chen, Yuan-Hai Shao*, Chun-Na Li and Nai-Yang Deng.
+Multi-label twin support vector machine for pattern classification[J].<b>Submitted.</b> </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+<p>Need kernel function, SOR solver, and Evaluate function. (included in Demo)</p>
+
+<div style="white-space:pre">
+<b class="purple">function PredictY= MLTSVM(TestX,Data,FunPara)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MLTSVM: Multi-label twin SVM for multi-label learning
+%
+%       PredictY = MLTSVM(TestX,Data,FunPara)
+%
+%       Input:
+%           TestX       - Test Data matrix.
+%              Each row vector of fea is a data point.
+%
+%           DataTrain   - Struct value in Matlab------Training data.
+%              Data.X: Input dataset N-by-D data matrix.
+%                  (N examples, D dimensions)
+%              Data.Y: Label Y N-by-L matrix.
+%                  (N examples, L labels)
+%                  If instance x is associated with "label 1", then set label 1 as +1, otherwise -1)
+%              Data.MLSize: the kinds of label
+%
+%           FunPara - Struct value in Matlab. The fields in options
+%                         that can be set:
+%              p1: [0,inf] penalty factor for empirical risks.
+%              p2: [0,inf] penalty factor for RKHS term.
+%              kerfPara:Kernel parameters. See kernelfun.m.
+%
+%       Output:
+%           PredictY - Predict label set of the TestX.
+%
+%
+%       Examples:
+%
+%             A = rand(100,2);
+%             B = rand(100,2)+ 2;
+%             C = rand(30,2) + 1;
+%             X = [A;B;C];
+%             Y = [ones(100,1) -1*ones(100,1);...
+%                 -1*ones(100,1) ones(100,1);...
+%                 ones(30,1) ones(30,1);];
+%             Data.X = X;Data.Y = Y;
+%             TestX = [rand(20,2);rand(20,2)+ 2;rand(20,2)+ 1;];
+%             TestY = [ones(20,1) -1*ones(20,1);...
+%                 -1*ones(20,1) ones(20,1);...
+%                 ones(20,1) ones(20,1);];
+%             FunPara.p1=1;FunPara.p2=1;
+%             FunPara.kerfPara.type = 'lin';
+%             PredictY =MLTSVM(TestX,Data,FunPara);
+%             Evaluate(PredictY,TestY, 1);
+%
+%Reference:
+%   Wei-Jie Chen, Yuan-Hai Shao*, Chun-Na Li and Nai-Yang Deng.
+%   "Multi-label twin support vector machine for pattern classification", Submitted 2015
+%
+%   version 1.0 --May/2014
+%   version 1.1 --Nov/2014
+%   Written by Wei-Jie Chen (wjcper2008@126.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initialization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+MLSize = Data.MLSize;
+c1 = FunPara.p1 * ones(MLSize,1); c2 = FunPara.p2 *ones(MLSize,1);
+n = size(Data.X,2);
+m = size(Data.X,1);
+Alpha = cell(Data.MLSize,1); U = cell(Data.MLSize,1);
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Train classifier using SOR solver
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+for k = 1:MLSize
+    A = Data.X((Data.Y(:,k)==1),:);
+    B = Data.X((Data.Y(:,k)==-1),:);
+    m1 = size(A,1); m2 = size(B,1);
+    e1 = ones(m1,1); e2=ones(m2,1);
+</b><b class="green">    % Cache kernel matrix</b><b class="code">	
+    kerfPara = FunPara.kerfPara;
+    if ~strcmp(kerfPara.type,'lin')
+        A = kernelfun(A,kerfPara,Data.X);
+        B = kernelfun(B,kerfPara,Data.X);
+        O1 = speye(m+1);
+    else
+        O1 = speye(n+1);
+    end
+    H = [A,e1];
+    G = [B,e2];
+</b><b class="green">    % Solve QPP by SOR solver</b><b class="code">    
+    HH= (H'*H+c2(k)*O1)\G';
+    HHG = G*HH;
+    HHG = (HHG+HHG')/2;
+    Alpha(k)={qpSOR(HHG,0.5,c1(k),0.05)};
+    U(k) = {-HH*Alpha{k}};
+    clear A B H G HH HHG
+end
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict and output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+mT = size(TestX,1);
+e = ones(mT,1);
+NormU = zeros(Data.MLSize,1);
+if ~strcmp(kerfPara.type,'lin')
+    K = [kernelfun(TestX,kerfPara,Data.X),e];
+    for k = 1:Data.MLSize
+        NormU(k) = 1/sqrt(U{k}(1:m)'*U{k}(1:m));
+    end
+else
+    K = [TestX, e];
+    for k = 1:Data.MLSize
+        NormU(k) = 1/sqrt(U{k}(1:n)'*U{k}(1:n));
+    end
+end
+cutoff = min(NormU);
+Distance = [];
+for k = 1:Data.MLSize
+    Distance = [Distance K*U{k}*NormU(k)];
+end
+Distance = abs(Distance) - cutoff;
+PredictY = (Distance <= 0) -1*(Distance > 0);
+MsLable = find(sum((PredictY ==-1),2)==Data.MLSize);
+[~,index] = min(Distance(MsLable,:),[],2);
+for i =1:length(index)
+    PredictY(MsLable(i),index(i)) = 1;
+end
+end
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to wjcper2008@126.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Feb 1, 2015
+
+
+<br />
+<br />
+
+
+
+
+
+
+
+  <div class="rssfeed">
+    
+ </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

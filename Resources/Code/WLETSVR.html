@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>WLETSVR</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>ETSVR</b></font></h5>
+<hr />
+<p> A Matlab code weighted twin support vector machine for regression. <a href="./WLETSVR/WLETSVR.zip">[Code]</a></p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Ya-Fen Ye, Lan Bai, Yuan-Hai Shao, N.-Y. Deng, Zhen Wang. An efficient weighted twin support vector machine for regression. <b>submitted</b>,(2013).</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+<p>Need kernel function.</p>
+
+<div style="white-space:pre">
+<b class="purple">function PredictY= WLETSVR(TestX,DataTrain,FunPara)</b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% WLETSVR: An efficient weighted twin support vector machine for regression
+% PredictY= WLETSVR(TestX,DataTrain,FunPara)
+% 
+% Input:
+%  TestX - Test Data matrix. Each row vector of fea is a data point.
+%  DataTrain - stuct value in Matlab-----Training data.
+%      
+%   
+%   FunPara - Struct value in Matlab
+%       FunPara.p1: [0,inf] Paramter to tune the weight;
+%       FunPara.p2: [0,inf] Paramter to tune the weight;
+%       FunPara.p3: [0,inf] Paramter to tune the weight;
+%       FunPara.p4: [0,inf] Paramter to tune the weight;
+%       FunPara.p5: [0,inf] Paramter to tune the weight;
+%       FunPara.p6: [0,inf] Paramter to tune the weight;
+%       FunPara.p7: [0,inf] Paramter to tune the weight;
+%       FunPara.p8: [0,inf] Paramter to tune the weight;
+%       FunPara.p9: [0,inf] Paramter to tune the weight;
+%       FunPara.p10: [0,inf] Paramter to tune the weight;
+%
+%       kerfPara: kernel parameters. See kernelfun.m;
+% 
+% Output:
+%     Predict_Y - Predict value of the TestX.
+% 
+% Examples:
+% load SincTN1.mat X Y TestX TestY
+% DataTrain.X = X;
+% DataTrain.Y = Y;
+% FunPara.p1=2^(-1);
+% FunPara.p2=2^(-1);
+% FunPara.p3=0.01;
+% FunPara.p4=0.01;
+% FunPara.p5=0.1;
+% FunPara.p6=0.1;
+% FunPara.p7=100;
+% FunPara.p8=100;
+% FunPara.p9=0.005;
+% FunPara.p10=0.005;
+% FunPara.kerfPara.type = 'rbf';
+%           FunPara.kerfPara.pars = 3;
+%           PredictY= WLETSVR(TestX,DataTrain,FunPara);
+% 
+%
+%
+%    Version 1.0 --Jul/2014 
+%
+%    Written by Ya-Fen Ye (yafenye@163.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+%tic;
+c1= FunPara.p1;
+c2= FunPara.p2;
+v1= FunPara.p3;
+v2= FunPara.p4;
+eps1 = FunPara.p5;
+eps2 = FunPara.p6;
+itmax1=FunPara.p7;
+itmax2=FunPara.p8;
+tol1=FunPara.p9;
+tol2=FunPara.p10;
+kerfPara = FunPara.kerfPara;
+m = size(DataTrain.X,1);
+n = size(DataTrain.X,2);
+e = ones(m,1);
+beta1=1.6/c1;
+beta2=1.6/c2;
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Compute Kernel 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+kerfPara = FunPara.kerfPara;
+if strcmp(kerfPara.type,'lin')
+        G = [DataTrain.X e];
+else
+        G = [kernelfun(DataTrain.X,kerfPara) e];
+end
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Training data
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+  if strcmp(kerfPara.type,'lin')
+    Q1=eye(m,m)/c1+G*((G'*G+v1*eye(n+1,n+1))\G');
+    Q2=eye(m,m)/c2+G*((G'*G+v2*eye(n+1,n+1))\G');
+    p1=(eye(m,m)-G*((G'*G+v1*eye(n+1,n+1))\G'))*DataTrain.Y+eps1*e;
+    p2=(-eye(m,m)+G*((G'*G+v2*eye(n+1,n+1))\G'))*DataTrain.Y+eps2*e;
+    alpha=inv(Q1)*e;oldalpha=alpha+1;it1=0;
+    gamma=(Q2)\e;oldgamma=gamma+1;it2=0;
+    
+    while it1<itmax1 & norm(oldalpha-alpha)>tol1
+      z1= Q1*alpha+p1-beta1*alpha;
+      pl=(abs(z1)+z1)/2-p1;
+      oldalpha=alpha;
+      alpha=Q1\pl;
+      it1=it1+1;
+    end;
+ 
+    while it2<itmax2 & norm(oldgamma-gamma)>tol2
+      z2= Q2*gamma+p2-beta2*gamma;
+      p2=(abs(z2)+z2)/2-p2;
+      oldgamma=gamma;
+      gamma=Q2\p2;
+      it2=it2+1;
+   end;
+ 
+   u1=(G'*G+v1*eye(n+1,n+1))/G'*(DataTrain.Y-alpha);
+   u2=((G'*G+v2*eye(n+1,n+1))\G')*(DataTrain.Y-gamma);
+
+   
+else 
+    
+    
+   Q1=eye(m,m)/c1+G*((G'*G+v1*eye(m+1,m+1))\G');
+   Q2=eye(m,m)/c2+G*((G'*G+v2*eye(m+1,m+1))\G');
+   p1=(eye(m,m)-G*((G'*G+v1*eye(m+1,m+1))\G'))*DataTrain.Y+eps1*e;
+   p2=(-eye(m,m)+G*((G'*G+v2*eye(m+1,m+1))\G'))*DataTrain.Y+eps2*e;
+   alpha=(Q1)\e;oldalpha=alpha+1;it1=0;   
+   gamma=(Q2)\e;oldgamma=gamma+1;it2=0; 
+   
+   while it1<itmax1 & norm(oldalpha-alpha)>tol1
+      z1= Q1*alpha+p1-beta1*alpha;
+      pl=(abs(z1)+z1)/2-p1;
+      oldalpha=alpha;
+      alpha=Q1\pl;
+      it1=it1+1;
+   end;
+    
+   while it2<itmax2 & norm(oldgamma-gamma)>tol2
+      z2= Q2*gamma+p2-beta2*gamma;
+      pl=(abs(z2)+z2)/2-p2;
+      oldgamma=gamma;
+      gamma=Q2\pl;
+      it2=it2+1;
+   end; 
+   
+    u1=(G'*G+v1*eye(m+1,m+1))\G'*(DataTrain.Y-alpha);
+    u2=((G'*G+v2*eye(m+1,m+1))\G')*(DataTrain.Y-gamma);
+    
+    
+end  
+   
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Predict and output
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+e=ones(size(TestX,1),1);
+m = size(u1,1);
+if strcmp(kerfPara.type,'lin')
+    Y1=TestX*u1(1:m-1)+u1(m)*e;
+    Y2=TestX*u2(1:m-1)+u2(m)*e;        
+else
+    H=kernelfun(TestX,kerfPara,DataTrain.X);
+    Y1=H*u1(1:m-1)+u1(m)*e;
+    Y2=H*u2(1:m-1)+u2(m)*e;
+end
+    DarwY.Y1 = Y1 - eps1;
+    DarwY.Y2 = Y2 + eps1;
+    PredictY=0.5*(Y1+Y2);
+end
+</b>
+
+</div>
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to yafenye@163.com and shaoyuanhai21@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Jul 22, 2014
+
+
+<br />
+<br />
+
+
+
+
+
+
+
+  <div class="rssfeed">
+    
+ </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

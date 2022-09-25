@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>MBLDA</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>MBLDA</b></font></h5>
+<hr />
+<p> A Demo Matlab code for MBLDA. <a href="http://optimal-group.org/Resource/MBLDA/MBLDA.zip">[Code]</a></p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Zhen Wang, Yuan-Hai Shao*, Lan Bai, Chun-Na Li, Li-Ming Liu, Nai-Yang Deng. MBLDA: a novel multiple between-class linear discriminant analysis[J]. Submitted.</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+<div style="white-space:pre">
+<b class="purple">function function [rX,W]= MBLDA(X,Y) </b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MBLDA: Multiple between-class LDA
+%
+% [rX,W]= MBLDA(X,Y)
+% 
+% Input:
+%    X - Data matrix. Each row vector is a data point.
+%    Y - Data labels. Each element is a label of a point.
+% Output:
+%    rX - Data matrix after reducing dimension. The upper bound of       
+%         dimension is 0.5*m*(m-1), where m is the number of points.
+%    W - Projection matrix. rX=X*W.
+% Examples:
+%    X = rand(50,10);
+%    Y = [ones(10,1);2*ones(10,1);3*ones(10,1);4*ones(10,1);5*ones(10,1)];
+%    [rX,W]= MBLDA(X,Y)
+%
+% Reference:
+%    Zhen Wang, Yuan-Hai Shao, Lan Bai, Chun-Na Li, Li-Ming Liu, and Nai-
+%   Yang Deng. MBLDA: a novel multiple between-class linear discriminant 
+%   analysis. IEEE Transactions on Cybernetics, submitted, 2015
+%    Version 1.0 --Apr/2015 
+%
+%    Written by Zhen Wang (wangzhen1882@126.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Main
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+t=max(Y); % number of classes
+[m,n]=size(X);
+A=zeros(n,n);
+meanA=zeros(t,n); % the mean of each class
+for i=1:t
+    Xt=X(Y==i,:);
+    mt=size(Xt,1);
+    meanA(i,:)=sum(Xt,1)/mt;
+    A=A+Xt'*(eye(mt)-ones(mt,mt)/mt)*Xt;
+end
+A=A/m+eye(n)*1e-10;
+nW=t*(t-1)/2;
+tmpW=zeros(n,nW); % all projection
+tmpL=zeros(1,nW); % all minimum lambda
+k=1;
+for i=1:t
+    for j=i+1:t
+        a=meanA(i,:)-meanA(j,:);
+        norma2=a*a';
+        a1_sign=find(a~=0,1);
+        if a1_sign~=1
+            a(1,1)=a(1,a1_sign);
+            a(1,a1_sign)=0;
+            tmp=A(:,1);
+            newA=[A(:,a1_sign),A(:,2:n)];
+            newA(:,a1_sign)=tmp;
+            tmp=newA(1,:);
+            newA(1,:)=newA(a1_sign,:);
+            newA(a1_sign,:)=tmp;
+        else
+            newA=A;
+        end
+        V=eye(n);
+        V(:,1)=a';
+        V(1,2:n)=-a(2:n)/a(1);
+        U=zeros(n-1,n);
+        for h=2:n
+            U(:,h)=-a(h)*a(2:n)';
+            U(h-1,h)=U(h-1,h)+norma2;
+        end
+        U(:,1)=-a(1)*a(2:n)';
+        U=U*newA*V;
+        for h=1:n
+            f=zeros(n,1);
+            f(h)=1;
+            tmp=(U*U'+1e-10*eye(n-1))\U(:,h);
+            b=f-U'*tmp;
+            if b'*b>1e-8
+                break;
+            end
+        end
+        if b(1)==0
+            tmpL(1,k)=inf;
+            tmpW(:,k)=zeros(n,1);
+        else
+            tmpL(1,k)=a*newA*V*b/(norma2^2*b(1));
+            tmpW(:,k)=V*b;
+            if a1_sign~=1
+                tmp=tmpW(1,k);
+                tmpW(1,k)=tmpW(a1_sign,k);
+                tmpW(a1_sign,k)=tmp;
+            end
+        end
+        k=k+1;
+    end
+end
+ind=find(tmpL~=inf);
+tW=tmpW(:,ind);
+meanAp=meanA*tW;
+Dis=zeros(nW,length(ind));
+for i=1:length(ind)
+    k=1;
+    for j=1:t
+        for h=j+1:t
+            Dis(k,i)=abs(meanAp(j,i)-meanAp(h,i));
+            k=k+1;
+        end
+    end
+end
+tL=min(Dis,[],1);
+W=SelectW(tW,1./tL);
+rX=X*W;
+end
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Select W
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+function fW=SelectW(tW,V)
+tol=1e-10;
+% (1) the best w is the smallest value in V;
+% (2) v in W who abs(v'w)=1 is discarded
+% (3) one direction is selected if the cosine^2 with other selected
+%     directions is the smallest.
+[m,n]=size(tW);
+W=zeros(m,n);
+for i=1:n
+    W(:,i)=tW(:,i)/norm(tW(:,i));
+end
+Monitor=1:n;
+[tmp,ind]=min(V);
+Monitor(ind)=0; % 0 stands for selected, -1 stands for ignored
+fW=[W(:,ind),zeros(m,n-1)];
+for i=2:n
+    sM=0; % special monitor
+    ind=Monitor(Monitor>0);
+    l=length(ind);
+    if l<1
+        break;
+    end
+    val=zeros(l,1);
+    tmpW=W(:,Monitor==0); % selected w
+    len=size(tmpW,2);
+    for j=1:l
+        for r=1:len
+            tmp=abs(tmpW(:,r)'*W(:,ind(j)));
+            if abs(tmp-1)<tol
+                Monitor(ind(j))=-1;
+                val(j,1)=inf;
+                sM=sM+1;
+                break;
+            else
+                val(j,1)=val(j,1)+tmp^2;
+            end
+        end
+    end
+    if sM~=l
+        [tmp,index]=min(val);
+        index2=find(abs(val-tmp)<tol);
+        if length(index2)>1
+            tlen=ind(index2);
+            newV=V(tlen);
+            [tmp,index2]=min(newV);
+            fW(:,i)=W(:,tlen(index2));
+            Monitor(tlen(index2))=0;
+        else
+            fW(:,i)=W(:,ind(index));
+            Monitor(ind(index))=0;
+        end
+    end
+end
+fW(:,n-length(find(Monitor==-1))+1:n)=[];
+end
+
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to shaoyuanhai21@163.com and wangzhen1882@126.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Apri 15, 2015
+
+
+<br />
+<br />
+
+
+<div class="rssfeed">
+    
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

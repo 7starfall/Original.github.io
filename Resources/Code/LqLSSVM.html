@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>LqLSSVM</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>L12DLDA</b></font></h5>
+<hr />
+<p> A Matlab code for  Lq-norm LSSVM for feature selection. <a href="./LqLSSVM/LqLSSVM.zip">[Code]</a></p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p> Yuan-Hai Shao, Chun-Na Li,Zhen Wang, Ming-Zeng Liu, Nai-Yang Deng "Feature selection via sparse $L_q$-norm least squares support vector machines for small size samples" Submitted 2015.</p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+
+<div style="white-space:pre">
+<b class="purple"> function [Predict_Y,w,b,t]=QLSSVM(TestX,X,Y,FunPara)  </b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% QLSSVM: q-norm LSSVM
+% [Predict_Y,w,b]=QLSSVM(TestX,DataTrain,FunPara);
+% Input:
+%    TestX - Test Data matrix. Each row vector of fea is a data point.
+%
+%    DataTrain - Struct value in Matlab(Training data).
+%                DataTrain.X:  Training input of Data matrix.
+%                DataTrain.Y:  Training output of Data vector, the value should be +1 and -1.
+%
+%    FunPara - Struct value in Matlab. The fields in options that can be set:
+%              FunPara.epsilon:     small value the parameter in the QLSSVM. 
+%              FunPara.q:       (0,1)       the parameter in the QLSSVM.
+%              FunPara.rho:     [0,inf)     the parameter in the QLSSVM.
+%              FunPara.gamma:   [0,inf)     the parameter in the QLSSVM.
+%
+% Output:
+%    Predict_Y - Predict value of the TestX.
+%    w         - weight vector.
+%    b         - bias.
+%
+% Examples:
+%    load('example.mat');
+%      load('hepatitis.mat');
+%      DataTrain.X=X;
+%      DataTrain.Y=Y;
+%      TestX=X;
+%    FunPara.epsilon=eps;
+%    FunPara.q=0.5;
+%    FunPara.rho=1;
+%    FunPara.gamma=1;
+%    [Predict_Y,w,b]=QLSSVM(TestX,DataTrain,FunPara);
+% 
+% Reference:
+%    Yuan-Hai Shao, Chun-Na Li, Zhen Wang, Ming-Zeng Liu, and Nai-Yang Deng, "Sparse q-norm least 
+%    squares support vector machines for feature selection" Submitted 2015
+%
+%    Version 1.0 --Jan/2015
+%    Written by Yuan-Hai Shao (shaoyuanhai21@163.com)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initialization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+[m,n]=size(X);
+%epsilon1 is an important parameter![0.001-0.00001]
+FunPara.epsilon=10e-7;
+u=ones(n+1,1);
+itt=1000;
+t=0;
+
+% first u1
+u1=rand(n+1,1);
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% training
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+
+% tic   
+    aa=FunPara.q*FunPara.rho;
+    % Yi must be +1 and -1
+    [e,ee]=size(Y(:,1));
+    e=ones(e,1);
+    I=diag(ones(n,1));
+    H=[((Y'*X)'*(Y'*X)+1/FunPara.gamma*I),(Y'*X)'*(e'*Y); ((e'*Y)*X'*Y)',e'*Y*e'*Y];
+    clear I;
+    d=[X e]'*Y;
+    b=H'*d; 
+%     clear e d X Y
+    H=H'*H;
+%     H=(H+H')/2;
+%     u1=H\d;
+while(t<=itt) && abs(norm(u1)-norm(u))>=eps  
+    cc=FunPara.epsilon+u1.^2;
+    bb=cc.^(1-FunPara.q/2);
+    A=diag(aa./bb);
+    A=sparse(A);
+    H=A+H;
+    H=(H+H')/2;
+    u=u1;
+%     H=sparse(H);
+    u1=H\b;
+    t=t+1;
+%     if sum(y)<(n+1)/2 % Theorem 3.
+%         break
+%     end
+end
+% clear H A b bb cc
+% toc
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% output and predict
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+w=u1(1:n);
+for i=1:n
+    if abs(w(i)) < sqrt(FunPara.epsilon)
+        w(i)=0;
+    end
+end
+b=u1(n+1);
+Predict_Y=sign(TestX*w+ones(size(TestX,1),1)*b);
+</b>
+</div>
+
+
+
+<br />
+<br />
+<br />
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to na1013na@163.com or shaoyuanhai21@163.com.
+
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Apri 8, 2015
+
+
+<br />
+<br />
+
+<div class="rssfeed"> 
+</div>
+
+
+</div>
+
+</div>
+
+</body>
+</html>

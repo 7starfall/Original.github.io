@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>MDR</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>MDR</b></font></h5>
+<hr />
+<p> A Matlab code of Minimum deviation distribution machine for large scale regression. <a href="./MDR/MDR.rar">[Code]</a></p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Ming-Zeng Liu, Yuan-Hai Shao*, Zhen Wang, Wei-Jie Chen, Chun-Na
+Li. Minimum deviation distribution machine for large scale regression[J]. Submitted. <a href="./MDR/MDR.pdf">[Slides]</a></p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Exam</b></font></h5>
+<hr />
+
+<div style="white-space:pre">
+<b>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% exam
+clc
+clear all
+close all
+
+addpath('MDRCD')
+addpath('MDRASGD\matlab')
+
+%% kernel MDR
+load('X23.mat')
+
+[preY time]= mdr_cd(TestX, X, Y, [2^8 2^8 2^-8 0.05], 2^0);
+time
+
+%% primal MDR
+load('E2006A1Train.mat')
+load('E2006A1Test.mat')
+
+%% model = mdr_asgd_train(trainY, trainX, [lambda1, lambda2, C, epsilon], '-s 1 -k 0')
+%% preY = mdr_asgd_predict(testX, trainX, model)
+%% trainX: each row represents an instance
+tic
+model = mdr_asgd_train(trainY, trainX, [2^-4 2^-4 2^8 0.01], '-s 1 -k 0');
+preY = mdr_asgd_predict(testX, trainX, model);
+toc
+
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to mzliu@dlut.edu.cn or shaoyuanhai21@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: March 22, 2017
+
+
+<br />
+<br />
+
+<div class="rssfeed"> 
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

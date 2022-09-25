@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>FSTWSVM</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>FSTWSVM</b></font></h5>
+<hr />
+<p> A Matlab code for feature selection twin support vector machines. <a href="./FSTWSVM/FSTWSVM.rar">[Code]</a></p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Lan Bai, Zhen Wang, Yuan-Hai Shao*. A novel feature selection method for twin support
+vector machine[J]. Submitted. </p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Main Function</b></font></h5>
+<hr />
+<p>Need "Main1norm" and "kerf" function.</p>
+
+<div style="white-space:pre">
+<b class="purple"> function [w1,b1,w2,b2,bestE,ite] = FSTWSVM(inputA,inputB,c11,c12,c21,c22,mu,sigma,rho) </b>
+<b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FSTWSVM: The feature selection method for nonlinear L1-TWSVM
+%
+% [w1,b1,w2,b2,bestE,ite] = FSTWSVM(inputA,inputB,c11,c12,c21,c22,mu,sigma,rho)
+% 
+% Input:
+%    inputA: Positive input of Data matrix.
+%    inputB: Negative input of Data matrix.
+%
+%    Parameters - c11,c12,c21,c22,mu,sigma,rho The fields in options that can be set:
+%              c11,c12,c21,c22: (0,inf) Paramter to tune the weight. 
+%              mu: (0,inf) Kernel parameters, Gaussian Kernel.
+%              sigma: [0,inf) Parameter to tune the weight of features (No.).
+%              rho: (0,inf) Paramter to tune the two objective in the MOMIPP
+%            typically, rho=[9,4,7/3,3/2,1,2/3,3/7,0.25,1/9] corresponds to 
+%            lambda=[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9] in the reference, respectively
+%
+% Output:
+%    w1,b1,w2,b2: defined the hyperplanes in L1-TWSVM after feature selection.
+%    bestE: the feature selection matrix.
+%    ite: the iteration (No.) of feature selection.
+%
+% Examples:
+%    inputA= rand(50,10);
+%    inputB = rand(60,10);
+%    c11=1;c12=1;c21=1;c22=1;mu=0.1;sigma=0;rho=1;
+%    [w1,b1,w2,b2,bestE,ite] = FSTWSVM(inputA,inputB,c11,c12,c21,c22,mu,sigma,rho);
+% Reference:
+%    Lan Bai, Zhen Wang, Yuan-Hai Shao, "A novel feature selection for twin support vector 
+%    machine" Submitted 2013
+%
+%    Version 1.0 --June/2013 
+%
+%    Written by Zhen Wang (wangz11@mails.jlu.edu.cn)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Initailization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+%tic;
+[m1,n]=size(inputA);
+ite=1;
+maxiteE=100;
+tol=1e-6;
+% ran=rand(1,n);
+% ran(ran>0.5)=1;
+% ran(ran<=0.5)=0;
+% E=diag(ran);
+% AE=inputA*E;
+% BE=inputB*E;
+AEend=kerf(inputA,[inputA;inputB],mu);
+BEend=kerf(inputB,[inputA;inputB],mu);
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% L_1-norm TWSVM
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">
+[w1,b1,w2,b2]=Main1norm(AEend,BEend,c11,c12,c21,c22);
+Mval=zeros(1,n);
+for i=1:n
+    E=zeros(n,n);
+    E(i,i)=1;
+    AEend=kerf(inputA*E,[inputA*E;inputB*E],mu);
+    BEend=kerf(inputB*E,[inputA*E;inputB*E],mu);
+    Mval(1,i)=TerminateCondition(AEend,BEend,w1,b1,w2,b2,c11,c12,c21,c22,sigma,E,rho);
+end
+Mscore=Mval/sum(Mval);
+E=eye(n);
+for i=1:n
+    if Mscore(1,i)<1/n
+        E(i,i)=0;
+    end
+end
+AE=inputA*E;
+BE=inputB*E;
+AEend=kerf(AE,[AE;BE],mu);
+BEend=kerf(BE,[AE;BE],mu);
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Main function
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">  
+[w1,b1,w2,b2]=Main1norm(AEend,BEend,c11,c12,c21,c22);
+
+% Terminate condition (1) (2) (3)
+valS=TerminateCondition(AEend,BEend,w1,b1,w2,b2,c11,c12,c21,c22,sigma,E,rho);
+valF=inf;
+bestE=[];
+%%% Solve w1,b1 and w2,b2 %%%
+while valF-valS>tol
+    ite=ite+1;
+    valF=valS;
+    bestE=E;
+    for i=1:maxiteE
+        funDall=0;
+        for j=1:n
+            funDu=ConditionE(AEend,BEend,w1,b1,w2,b2,c11,c12,c21,c22,sigma,E,rho);
+            if E(j,j)==1
+                E(j,j)=0;
+            else
+                E(j,j)=1;
+            end
+            AE=inputA*E;
+            BE=inputB*E;
+            AEend=kerf(AE,[AE;BE],mu);
+            BEend=kerf(BE,[AE;BE],mu);
+            funDd=ConditionE(AEend,BEend,w1,b1,w2,b2,c11,c12,c21,c22,sigma,E,rho);
+            % check in (c)            
+            if funDu-funDd>tol
+                funDall=funDall+abs(funDu-funDd);
+            else
+                if E(j,j)==1
+                    E(j,j)=0;
+                else
+                    E(j,j)=1;
+                end
+            end  
+        end
+        if funDall<=tol
+            break;
+        end
+    end
+    AE=inputA*E;
+    BE=inputB*E;
+    AEend=kerf(AE,[AE;BE],mu);
+    BEend=kerf(BE,[AE;BE],mu);
+    [w1,b1,w2,b2]=Main1norm(AEend,BEend,c11,c12,c21,c22);
+    valS=TerminateCondition(AEend,BEend,w1,b1,w2,b2,c11,c12,c21,c22,sigma,E,rho);
+end
+AE=inputA*bestE;
+BE=inputB*bestE;
+AEend=kerf(AE,[AE;BE],mu);
+BEend=kerf(BE,[AE;BE],mu);
+[w1,b1,w2,b2]=Main1norm(AEend,BEend,c11,c12,c21,c22);
+end
+
+</b><b class="green">
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Additional functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+</b><b class="code">   
+
+function val=TerminateCondition(inputA,inputB,w1,b1,w2,b2,c11,c12,c21,c22,sigma,E,rho)
+P11=inputA*w1+b1;
+P12=inputA*w2+b2;
+P21=inputB*w1+b1;
+P22=inputB*w2+b2;
+val=norm(w1,1)+rho*norm(w2,1)+trace(E)*sigma+c11*norm(P11,1)+rho*c21*norm(P22,1)+c12*sum(max(1+P21,0))+rho*c22*sum(max(1-P12,0));
+end
+  
+function val=ConditionE(inputA,inputB,w1,b1,w2,b2,c11,c12,c21,c22,sigma,E,rho)
+P11=inputA*w1+b1;
+P12=inputA*w2+b2;
+P21=inputB*w1+b1;
+P22=inputB*w2+b2;
+val=trace(E)*sigma+c11*norm(P11,1)+rho*c21*norm(P22,1)+c12*sum(max(1+P21,0))+rho*c22*sum(max(1-P12,0));
+end
+
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to wangz11@mails.jlu.edu.cn.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Jul 28, 2013
+
+
+<br />
+<br />
+
+<div class="rssfeed"> 
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

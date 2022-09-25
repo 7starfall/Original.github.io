@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>RSLDA</title>
+<link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+
+<body>
+<div class="logo" align="center"><a href="http://www.optimal-group.org" target="_blank"></a></div> 
+<div id="container">
+<p align="right">[<a href="http://www.optimal-group.org" target="_self" >Home</a>]</p> 
+</br>
+<h5><font face="Times New Roman" size="4"><b>MDR</b></font></h5>
+<hr />
+<p> A Matlab code of Robust and sparse linear discriminant analysis via
+alternating direction method of multipliers </p>
+(You could Right-Click <a href="./RSLDA/RSLDA.zip">[Code]</a> , and Save, then you can download the whole matlab code.) </p>
+(You could Right-Click <a href="./RSLDA/Facedata.rar">[Facedata]</a> , and Save, then you can download the whole datasets.) </p>
+
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Reference</b></font></h5>
+<hr />
+<p>Chun-Na Li, Yuan-Hai Shao*, Wo-Tao Yin, and Ming-Zeng Liu. Robust and sparse linear discriminant analysis via
+alternating direction method of multipliers[J]. Submitted. <a href="./RSLDA/RSLDApresent.pdf">[Slides]</a></p>
+
+<br />
+<h5><font face="Times New Roman" size="4"><b>Exam</b></font></h5>
+<hr />
+
+<div style="white-space:pre">
+<b>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function [W] = RSLDA(Data, Prjdim, RSLDAPara)
+%
+% RLDA and RSLDA: Robust and sparse linear discriminant analysis via 
+%                 alternating direction method of multiplier
+% Input:
+%       Data: Data.trainX - the training samples;
+%             Data.trainY - the labels corresponding to training samples;
+%       Prjdim:      - the dimension to be projected;
+%       RSLDAPara.method  - 0 or 1, 0 to perform RLDA, and 1 to perform RSLDA
+%       RSLADPara: the parameters for RLDA and RSLDA.
+%       RSLDAPara.rho - the augment lagrangian parameter;
+%       RSLDAPara.lambda - the lambda for RLDA and RSLDA.
+%       RSLDAPara.sigm   - the sigma for RLDA and RSLDA.
+%       RSLDAPara.tol    - the epsilon for RLDA and RSLDA.
+%Ouput:
+%       W:               -the project vectors: dim x Prjdim;
+%                         dim: the dimension of samples;
+%                         Prjdim: the number of projection vector;
+% Example:
+%    Data.trainX = rand(50,10);
+%    Data.trainY = [ones(25,1);-ones(25,1)]
+%    Prjdim = 5;
+%    RSLDAPara.method = 1;
+%    RSLDAPara.rho = 5;
+%    RSLDAPara.lambda = 0.5;
+%    RSLDAPara.sigm = 0.05;;
+%    RSLDAPara.tol = 1e-3;
+%    Predict_Y = RSLDA(Data, Prjdim, RSLDAPara);
+%
+% Reference:
+%    Li C N, Shao Y H, Yin W T, Liu M Z. Robust and sparse linear discriminant
+%    analysis via alternating direction method of multipliers.
+%
+%    Version 1.0 -- Oct/2017 
+%    Written by Ming-Zeng Liu and Chun-Na Li (mzliu@dlut.edu.cn and na1013na@163.com)
+%% function begin ....
+rho = RSLDAPara.rho;
+lambda = RSLDAPara.lambda;
+sigm = RSLDAPara.sigm;
+tol = RSLDAPara.tol;
+
+fea = Data.trainX;
+gnd = Data.trainY;
+[nsams, dim] = size(fea);
+I = eye(dim);
+
+[nsamsc,labels] = hist(gnd, unique(gnd));
+nc = numel(labels);
+
+% Proj vector matrix;
+W = zeros(dim,Prjdim);
+for k = 1:Prjdim
+    clsmean = zeros(nc, dim); % mean for each class
+    Sw = zeros(dim,dim); % Sw: Scatter matrix within class
+    for i = 1:nc
+        %% calculate the mean of each class
+        cls_idx = (gnd == labels(i));
+        clsmean(i,:) = mean(fea(cls_idx,:),1);
+        Sw = Sw + (fea(cls_idx,:)-repmat(clsmean(i,:),nsamsc(i),1))'*...
+                  (fea(cls_idx,:)-repmat(clsmean(i,:),nsamsc(i),1));    
+    end
+    Sw = Sw/nsams; 
+    
+    X0 = (clsmean - repmat(mean(fea,1),nc,1))' * diag(nsamsc);
+
+    % rand initial
+    w = rand(dim,1);
+    u2 = rand(dim,1);
+    y = rand(nc,1);
+    u1 = rand(nc,1);
+    
+    % convergence conditions
+    % eps_pri_one, eps_pri_two eps_dual_one, eps_dual_two
+    eps_pri_one = 1.0;
+    eps_pri_two = 1.0;
+    eps_dual_one = 1.0;
+    eps_dual_two = 1.0;
+    
+    % iteration count
+    iter_while = 1;
+    Ginv = (X0*X0' + I + 2*lambda/rho * Sw)\I;
+    
+    while  (  (eps_pri_one > tol) || ...
+             (eps_pri_two  > tol) || ...
+             (eps_dual_one > tol) || ...
+             (eps_dual_two > tol) )
+        %% solve z
+        z = Ginv * (X0 * (y - u1) + (w - u2)); % Ginv * g
+        
+        %% solve y
+        y0 = y;
+        Xz = X0'*z;
+        y = Xz + u1;
+        y(y>=0) = y(y>=0) + 1/rho;
+        y(y<0) = y(y<0) - 1/rho;      
+        
+        %% solve w
+        
+        w0 = w;
+        w = z - u2; % The solution of w to RLDA
+        % For RSLDA, the following codes are also needed
+        if RSLDAPara.method == 1
+            ka = sigm/rho;
+            w(w > ka) = w(w > ka) - ka;
+            w(w < -ka) = w(w < -ka) + ka;
+            w( w<=ka & w>=-ka) = 0;
+        end
+        
+        %% solve u1 and u2
+        u1 = u1 + Xz - y;
+        u2 = u2 + w - z;
+        
+        %
+        eps_pri_one_old = eps_pri_one;
+        eps_pri_two_old = eps_pri_two;
+        eps_dual_one_old = eps_dual_one;
+        eps_dual_two_old = eps_dual_two;
+        
+        eps_pri_one = norm(Xz - y);
+        eps_pri_two = norm(w - z);
+        eps_dual_one = norm( X0*(y - y0));
+        eps_dual_two = norm(w - w0);
+        
+        
+        if iter_while > 1000
+            break;
+        end
+        
+        if ( (abs(eps_pri_one - eps_pri_one_old ) < 1E-3) && ...
+             (abs(eps_pri_two - eps_pri_two_old ) < 1E-3) && ...
+             (abs(eps_dual_one - eps_dual_one_old ) < 1E-3 )&& ...
+             (abs(eps_dual_two - eps_dual_two_old ) < 1E-3)  )
+            break;
+        end
+
+        iter_while = iter_while + 1;        
+    end % end while
+    W(:,k) = w;
+    fea = fea - (fea * w) * w';
+end 
+    fprintf('\n');
+end
+
+</b>
+
+</div>
+
+
+<h5><a name="C1"><font face="Times New Roman" size="4.5">Contacts</font></a></font face="Times New Roman" size="4.5"></a> </h5>
+<hr />
+
+<br />
+Any question or advice please email to na1013na@163.com or shaoyuanhai21@163.com.
+
+<p />
+
+<hr />
+</p><ul><li>Last updated: Jan 5, 2019
+
+
+<br />
+<br />
+
+<div class="rssfeed"> 
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
