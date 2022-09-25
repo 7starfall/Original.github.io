@@ -36,7 +36,7 @@ function [V,X] = S2DLDAL1(X,Y,v0,sigma,delta,p,dim)
 % close all; clear variables;
 % Useage:
 %     Input -  X: the trainig data, is a 3-dimensional data of size d1*d2*N
-%              Y£º the label vector corresponding to X
+%              Yï¼š the label vector corresponding to X
 %              v0: the initialization projection vector
 %              sigma: the L2-norm regularization term parameter
 %              delta: the Lp-norm regularization term parameter
@@ -63,8 +63,8 @@ function [V,X] = S2DLDAL1(X,Y,v0,sigma,delta,p,dim)
 %     Version 1.0 -- 15.April/2018 
 % 
 % Written by Meng-Qi Shang,17858527466@163.com
-%ÊäÈë£ºÊý¾Ý¾ØÕó£¬±êÇ©Êý¾Ý£¬³õÊ¼Öµw£¬sÍ¶Ó°Î³¶È£¬Ã¿¸öÍ¼Ïñ¾ØÕó²ÎÊýÐÐºÍÁÐ
-%Êä³öÍ¶Ó°¾ØÕó£¬Óë¸üÐÂºóµÄÔ­Ê¼Êý¾Ý
+%è¾“å…¥ï¼šæ•°æ®çŸ©é˜µï¼Œæ ‡ç­¾æ•°æ®ï¼Œåˆå§‹å€¼wï¼ŒsæŠ•å½±çº¬åº¦ï¼Œæ¯ä¸ªå›¾åƒçŸ©é˜µå‚æ•°è¡Œå’Œåˆ—
+%è¾“å‡ºæŠ•å½±çŸ©é˜µï¼Œä¸Žæ›´æ–°åŽçš„åŽŸå§‹æ•°æ®
 A = X;
 V = zeros(size(X,2),dim);
 d=1;
@@ -79,11 +79,11 @@ end
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [v] = main2(X,Y,v,sigma,delta,p)
-%ÊäÈë£ºÑµÁ·Êý¾Ý¼¯£¬³õÊ¼w£¬Ã¿¸öÊý¾Ý¾ØÕóµÄÐÐÁÐ
-%Êä³ö£ºÊÕÁ²µÄw
+%è¾“å…¥ï¼šè®­ç»ƒæ•°æ®é›†ï¼Œåˆå§‹wï¼Œæ¯ä¸ªæ•°æ®çŸ©é˜µçš„è¡Œåˆ—
+%è¾“å‡ºï¼šæ”¶æ•›çš„w
 maxiter = 0;
 v0 = 0;
-while max(abs(v-v0))>0.0001 && maxiter<100%¼ì²âÄ¿±êÖµÊÇ·ñÊÕÁ²ºÏ¸ñ
+while max(abs(v-v0))>0.0001 && maxiter<100%æ£€æµ‹ç›®æ ‡å€¼æ˜¯å¦æ”¶æ•›åˆæ ¼
    v0 = v;
    new_v = main1(X,Y,v,sigma,delta,p);
    v = new_v;
@@ -96,7 +96,7 @@ end
 function [v]=main1(X,lable,v0,sigma,delta,p)
 class = unique(lable);
 c = length(class);
-matrix1 = mean(X,3);%×Ü¾ùÖµ¾ØÕó
+matrix1 = mean(X,3);%æ€»å‡å€¼çŸ©é˜µ
 [m,n,~] = size(X);
 h = 0;H = zeros(n);
 for i=1:c
@@ -123,15 +123,15 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [sample_data,mean_data,num]=find_matrix(X,Y,C)
-%ÊäÈë£ºXÑù±¾Êý¾Ý£¬YÎªÑù±¾±êÇ©£¬CÎªÀà±ð
-%Êä³ö£ºx1ÎªµÚcÀàÑù±¾Êý¾Ý£¬x2ÎªµÚcÀàÑù±¾¾ùÖµ£¬numÎªcÀàÑù±¾ÊýÁ¿
+%è¾“å…¥ï¼šXæ ·æœ¬æ•°æ®ï¼ŒYä¸ºæ ·æœ¬æ ‡ç­¾ï¼ŒCä¸ºç±»åˆ«
+%è¾“å‡ºï¼šx1ä¸ºç¬¬cç±»æ ·æœ¬æ•°æ®ï¼Œx2ä¸ºç¬¬cç±»æ ·æœ¬å‡å€¼ï¼Œnumä¸ºcç±»æ ·æœ¬æ•°é‡
 sample_data = X(:,:,Y == C);
 mean_data = mean(sample_data,3);
 num = length(sample_data(1,1,:));
 end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [newX] = updata(X,V)
-%¸üÐÂÔ­Ê¼Êý¾Ý
+%æ›´æ–°åŽŸå§‹æ•°æ®
 [~,m,n]=size(X);
 newX = zeros(size(X));
 for i=1:n
